@@ -1,0 +1,119 @@
+```{r setupvarpart, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(kableExtra)
+if(knitr:::is_html_output()) options(knitr.table.format = "html") 
+if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
+library(tidyverse)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+```
+
+# Variance partitioning
+
+This small chapter aim at demonstrating the importance of balanced design in varaince partitioning in opposition to numerous papers reportnig inter- versus intra-specific variation in unbalanced designs.
+
+I simulated 100 species with a species variance of 1 for a given trait with 100 individuals per species with a variance of 1 for the same trait. I tested four variance partitioning. One partitioning with all data. And three partitioning with 100 individuals, unbalanced in species (25 species with 4 individuals), unbalanced in individuals (4 species with 25 individuals) and balanced (10 species with 10 individuals). The results demonstrate the need to use a balance sampling design to correctly assess and compare functional variation among and within species (Fig. \@ref(fig:varpart)).
+
+## Generating data
+
+```{r, echo=T}
+S <- 100
+I <- 100
+sigma_sp <- 1
+sigma_ind <- 1
+data <- data.frame(species = 1:S, trait = rnorm(S, 0, sigma_sp)) %>% 
+  group_by(species) %>% 
+  do(data.frame(individual = 1:I, trait = rnorm(I, .$trait, sigma_ind))) %>% 
+  mutate_at(c("species", "individual"), as.factor)
+```
+
+```{r}
+ggplot(data, aes(trait, group = species)) +
+  geom_density(alpha = 0.3)
+```
+
+```{r, echo=T}
+varcomp0 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
+```
+
+## Unbalanced design
+
+### More species
+
+Taking 25 species with 4 individuals.
+
+```{r, echo=T}
+subdata1 <- data %>% 
+  filter(species %in% unique(data$species)[1:25]) %>% 
+  group_by(species) %>% 
+  sample_n(4) %>% 
+  ungroup()
+```
+
+```{r}
+ggplot(subdata1, aes(trait, group = species)) +
+  geom_density(alpha = 0.3)
+```
+
+```{r, echo=T}
+varcomp1 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, subdata1), 1)
+```
+
+### More individuals
+
+Taking 4 species with 25 individuals.
+
+```{r, echo=T}
+subdata2 <- data %>% 
+  filter(species %in% unique(data$species)[1:4]) %>% 
+  group_by(species) %>% 
+  sample_n(25) %>% 
+  ungroup()
+```
+
+```{r}
+ggplot(subdata2, aes(trait, group = species)) +
+  geom_density(alpha = 0.3)
+```
+
+```{r, echo=T}
+varcomp2 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, subdata2), 1)
+```
+
+## Balanced design
+
+Taking 10 species with 10 individuals.
+
+```{r, echo=T}
+subdata3 <- data %>% 
+  filter(species %in% unique(data$species)[1:10]) %>% 
+  group_by(species) %>% 
+  sample_n(10) %>% 
+  ungroup()
+```
+
+```{r}
+ggplot(subdata3, aes(trait, group = species)) +
+  geom_density(alpha = 0.3)
+```
+
+```{r, echo=T}
+varcomp3 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, subdata3), 1)
+```
+
+## Comparison
+
+```{r varpart, fig.cap="Variance partitioning with balanced and unbalanced sampling design. Description..."}
+lapply(list("full" = varcomp0, 
+            "unbalanced species" = varcomp1, 
+            "unbalanced individuals" = varcomp2, 
+            "balanced" = varcomp3), function(x) 
+  data.frame(level = names(x), variance = as.vector(x))) %>% 
+  bind_rows(.id = "type") %>% 
+  ggplot(aes(x = type, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack")
+```
+

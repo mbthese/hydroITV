@@ -1,0 +1,9 @@
+# Introduction {-}
+
+In collaboration with Marion, we plan to study variation in hydraulic and foliar traits of 10 species x 10 individuals per species representing 100 individuals to assess inter- and intra-specific variation in covariation of functional traits and to partition variation between and within species. If the results are convincing, perhaps we will study variation within and between species with topography. 
+
+**Point to be discussed:**
+
+* BEWARE ONTOGENY AND HEIGHT
+* Non-random sampling of 10 individuals across the TWI gradient
+* Measured hydraulic & foliar traits

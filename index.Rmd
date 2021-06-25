@@ -1,0 +1,23 @@
+--- 
+title: "Hydraulic ITV"
+subtitle: "Hydraulic trait inter- versus intra-specific local variability."
+author: "Sylvain Schmitt"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+csl: /home/sylvain/Documents/Bibliography/csl/mee.csl
+bibliography: /home/sylvain/Documents/Bibliography/library.bib
+link-citations: yes
+colorlinks: yes
+description: "Mutation in the tropical tree canopy."
+---
+
+`r if (knitr:::is_html_output()) '# Preface {-}'`
+
+`r if (knitr:::is_html_output()) '![stability-wip](https://img.shields.io/badge/stability-work_in_progress-lightgrey.svg)'`
+
+`r if (knitr:::is_html_output()) 'In collaboration with Marion, we plan to study variation in hydraulic and foliar traits of 10 species x 10 individuals per species representing 100 individuals to assess inter- and intra-specific variation in covariation of functional traits and to partition variation between and within species. If the results are convincing, perhaps we will study variation within and between species with topography.'`
+
+`r if (knitr:::is_html_output()) 'Have a nice reading.'`
+
+`r if (knitr:::is_html_output()) '<div align="right">  *Sylvain*'`
