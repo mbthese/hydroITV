@@ -1,0 +1,54 @@
+# Traits
+
+**TODO: define traits and protocols with Marion.**
+
+This chapter define measured and sampled traits with associated protocols.
+
+## Soft traits
+
+* **LA**: leaf area $cm^{2}$
+* **LDMC**: leaf dry matter content $g.g^{-1}$
+* **LT**: leaf thickness ($\mu m$)
+* **CC**: chlorophyll content ($\mu g.cm^{-2}$)
+* **SLA**: specific leaf area ($g.cm^{-2}$)
+
+## Hydraulic traits
+
+* **RWC**:
+* **$\Psi _{TLP}$**:
+* **$g_{min}$**:
+* **Stomatal density**:
+* **Nervation density**:
+* **$\frac{Fv}{Fm}$**: Photosynthesis efficiency
+
+## Measured traits
+
+* Soft traits
+    * Fresh
+        * thickness (3 points)
+        * SPAD (3 points)
+        * weight
+        * area (scan)
+    * Dry
+        * weight
+* Hydraulic traits
+
+## Protocols
+
+**Protocols to be merged between Marion and me.**
+
+Sylvain's:
+
+* [Dawkins index](protocols/Dawkins.pdf)
+* [Sampling protocol](protocols/Field.pdf)
+* [ Fresh measurement protocol](protocols/Fresh.pdf)
+
+Marion's:
+
+* Canopy trees
+* Collect in the upper crown
+* Assess tree and branch height
+* Assess tree and branch Dawkins
+* Collect tree with a DBH in the 10th to 90th quantiles of the species
+* 10 species (6 generalists, 2 terra-firme and 2 bottomlands) remainging with 40 individuals
+

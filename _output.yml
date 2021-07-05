@@ -3,9 +3,9 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="./">HydraulicITV</a></li>
+        <li><a href="./">hydroITV</a></li>
       after: |
-        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+        <li><a href="https://github.com/sylvainschmitt/hydroITV" target="blank">Source</a></li>
   includes:
     in_header: hypothesis.html
     before_body: open_review_block.html

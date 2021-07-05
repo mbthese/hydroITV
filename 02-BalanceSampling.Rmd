@@ -1,0 +1,144 @@
+```{r setupvarpart, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(kableExtra)
+if(knitr:::is_html_output()) options(knitr.table.format = "html") 
+if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
+library(tidyverse)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+```
+
+```{r varpartdata1}
+S <- 100
+I <- 100
+sigma_sp <- 1
+sigma_ind <- 1
+data <- data.frame(species = 1:S, trait = rnorm(S, 0, sigma_sp)) %>% 
+  group_by(species) %>% 
+  do(data.frame(individual = 1:I, trait = rnorm(I, .$trait, sigma_ind))) %>% 
+  mutate_at(c("species", "individual"), as.factor)
+subdata1 <- data %>% 
+  filter(species %in% unique(data$species)[1:25]) %>% 
+  group_by(species) %>% 
+  sample_n(4) %>% 
+  ungroup()
+subdata2 <- data %>% 
+  filter(species %in% unique(data$species)[1:4]) %>% 
+  group_by(species) %>% 
+  sample_n(25) %>% 
+  ungroup()
+subdata3 <- data %>% 
+  filter(species %in% unique(data$species)[1:10]) %>% 
+  group_by(species) %>% 
+  sample_n(10) %>% 
+  ungroup()
+data <- list("full" = data, 
+             "unbalanced species" = subdata1, 
+             "unbalanced individuals" = subdata2, 
+             "balanced" = subdata3) %>% 
+  bind_rows(.id = "sampling") %>% 
+  mutate(sampling = factor(sampling, levels = c("full", "unbalanced species",
+                                                "unbalanced individuals", "balanced")))
+```
+
+# A not on balance sampling 
+
+**TODO: run back using `stan` models.**
+
+This chapter aim at demonstrating the importance of balanced design in variance partitioning in opposition to numerous papers reporting inter- versus intra-specific variation in unbalanced designs. It also explore the possibilities for evaluating leaf and measurement variations.
+
+## Species and individual sampling
+
+I simulated 100 species with a species variance of 1 for a given trait with 100 individuals per species with a variance of 1 for the same trait. I tested the effect of four sampling strategy on variance partitioning (Fig. \@ref(fig:traitdist)):
+
+1. Full sampling of the community
+1. Sampling of 100 individuals unbalanced in species (25 species with 4 individuals)
+1. Sampling of 100 individuals unbalanced in individuals (4 species with 25 individuals)
+1. Sampling of 100 individuals unbalanced in species and individual (10 species with 10 individuals)
+
+The results demonstrate the need to use a balance sampling design to correctly assess and compare functional variation among and within species (Fig. \@ref(fig:varpart)).
+
+```{r traitdist, fig.cap="Trait distribution per species with balanced and unbalanced sampling design. Description..."}
+ggplot(data, aes(trait, group = species)) +
+  geom_density(alpha = 0.3) +
+  facet_wrap(~ sampling, scales = "free")
+```
+
+```{r varpart, fig.cap="Variance partitioning with balanced and unbalanced sampling design. Description..."}
+fun <- function(data){
+  var <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
+  return(data.frame(level = names(var), variance = as.vector(var)))
+}
+data %>% 
+  group_by(sampling) %>% 
+  do(var = fun(.)) %>% 
+  unnest(var) %>% 
+  ggplot(aes(x = sampling, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack")
+```
+
+## Leaf varaitions and measurement errors
+
+Similarly, we looked at a sampling of 10 individuals in 10 species, 10 leaves in 10 individuals, and 10 measures in 10 leaves to evaluate each level of variation independently instead of an unrealistic sampling of 10 species times 10 individuals times 10 leaves times 10 measures resulting in 10 thousand measures! We found a very stable measures across levels using very different variations between levels (Fig. \@ref(fig:varpart2)).
+
+```{r varpartdata2}
+S <- 10
+I <- 10
+L <- 10
+M <- 10
+sigma_sp <- 6
+sigma_ind <- 4
+sigma_leaf <- 2
+sigma_meas <- 1
+data <- data.frame(species = 1:S, trait = rnorm(S, 0, sigma_sp)) %>% 
+  group_by(species) %>% 
+  do(data.frame(individual = 1:I, trait = rnorm(I, .$trait, sigma_ind))) %>% 
+  group_by(species, individual) %>% 
+  do(data.frame(leaf = 1:L, trait = rnorm(L, .$trait, sigma_leaf))) %>% 
+  group_by(species, individual, leaf) %>% 
+  do(data.frame(measure = 1:M, trait = rnorm(M, .$trait, sigma_meas))) %>% 
+  ungroup() %>% 
+  mutate_at(c("species", "individual", "leaf", "measure"), as.factor)
+subdata <- bind_rows(
+  # 10 sps & 10 inds
+  data %>% 
+    filter(leaf == 1) %>% 
+    filter(measure == 1),
+  # 10 inds & 10 leaves
+  data %>% 
+    filter(species == 1) %>% 
+    filter(measure == 1),
+  # 10 leaves & 10 measures
+  data %>% 
+    filter(species == 1) %>% 
+    filter(individual == 1)
+)
+```
+
+```{r varpart2,  fig.cap="Variance partitioning with balanced sampling design across levels. Description..."}
+fun <- function(data){
+  var1 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
+  var2 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|individual/leaf, 
+                                 filter(data, species == 1)), 1)
+  var3 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|leaf/measure, 
+                                 filter(data, species == 1, individual == 1)), 1)
+  lapply(list("species/individual" = var1,
+              "individual/leaf" = var2, 
+              "leaf/measure" = var3),
+         function(var) 
+           data.frame(level = names(var), variance = as.vector(var))) %>% 
+    bind_rows(.id = "comparison") %>% 
+    mutate(level = factor(level, levels = c("species", "individual", "leaf",
+                                            "measure", "Within"))) %>% 
+    mutate(comparison = factor(comparison, levels = c("species/individual", "individual/leaf",
+                                                      "leaf/measure")))
+}
+lapply(list("full" = data, "sampling" = subdata), fun) %>% 
+  bind_rows(.id = "data") %>% 
+  ggplot(aes(x = data, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~ comparison)
+```

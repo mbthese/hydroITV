@@ -4,3 +4,7 @@
 .Ruserdata
 _book
 _bookdown_*
+
+# protocols
+protocols/*.pdf
+protocols/*.html

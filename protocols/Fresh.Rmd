@@ -1,0 +1,37 @@
+---
+title: "Mesures fraîches HydroITV"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  bookdown::html_document2: default
+---
+
+## Matériel
+
+- [ ] Micromètre
+- [ ] Piles AA
+- [ ] SPAD
+- [ ] Piles plates
+- [ ] Scanner
+- [ ] Microbalance
+- [ ] Sécateur
+- [ ] Ciseaux
+- [ ] Mouchoirs
+- [ ] Envelopes
+- [ ] Journal
+- [ ] Presse
+- [ ] Ordinateur
+- [ ] Protocole
+
+## Protocole
+
+- [ ] Sélectionner et nettoyer 5 feuilles par individu
+- [ ] Étiqueter les feuilles de 1 à 5 avec un marqueur sur la face adaxiale (en haut).
+- [ ] Prendre trois mesures SPAD au milieu du limbe.
+- [ ] Prendre trois mesures d'épaisseur avec un micromètre au milieu du limbe.
+- [ ] Peser les feuilles
+- [ ] Scanner les feuilles avec la face adaxiale (en haut) contre le scan dans l'ordre numérique
+- [ ] Nommez le fichier avec l'ID de l'arbre
+- [ ] Enregistrez le fichier dans un dossier daté (AAAA-MM-JJ).
+- [ ] Placez les 5 feuilles dans une enveloppe étiquetée avec l'identifiant de l'arbre et l'espèce.
+- [ ] Presser les enveloppes dans la presse de l'herbier

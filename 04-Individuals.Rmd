@@ -1,0 +1,11 @@
+# Individuals
+
+**TODO: define individuals, using individuals from Marion and Metradica.**
+
+This chapter define sampled individuals.
+
+## Notes
+
+* beware ontogeny and height
+* Non-random sampling of 10 individuals across the TWI gradient
+* We could select individuals minimizing DBH variation while maximizing TWI variation.

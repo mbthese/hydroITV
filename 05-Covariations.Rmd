@@ -1,0 +1,6 @@
+# Traits covariation
+
+Subsequent analysis aimed to explore co-variations of individual traits. 
+Specifically, we investigated individual traits co-variation at several taxonomic scales: among species, and within species.
+
+**Waiting data, inspiration can be found here: https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/01-PCA.Rmd .**

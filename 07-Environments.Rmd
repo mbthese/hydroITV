@@ -1,0 +1,9 @@
+# Environment & Ontogeny
+
+Subsequent analysis aimed to select functional traits descriptors in order to further model traits variation. 
+
+Phenotypic variation, and therefore functional traits variation, will be shaped (i) by genetic heritage, through genotypes, (ii) by the environment (both abiotic and biotic) with spatial and temporal heterogeneity, and (iii) by random stochastic factors [@Whitlock2007]. Our analysis did not include yet raw genetic data. Consequently, genetic heritage will be both represented by taxonomic levels (species and genera) and ontogenetic factors. Environment will be split between abiotic environment and biotic interactions, here restrained to tree to tree interactions. We will not explore tree interactions with their environment trough herbivory and pathogens, besides their huge impact on tree life history [but see @VanderPutten2001].
+
+We selected functional traits descriptors by studying descriptors co-variation and keeping only little correlated variables with the best ecological meaning to represent (i) ontogeny, (ii) abiotic environment, and (iii) biotic interactions.
+
+**Waiting data, inspiration can be found here: https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/02-Environment.Rmd .**

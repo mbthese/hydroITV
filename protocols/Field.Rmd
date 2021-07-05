@@ -1,0 +1,54 @@
+---
+title: "Échantillonnage HydroITV"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  bookdown::html_document2: default
+---
+
+## Préparation
+
+- [ ] Réservation du véhicule
+- [ ] Charger le téléphone satellite
+- [ ] Charger l’appareil photo GPS
+- [ ] Préparer des ziplocks avec étiquette et mouchoir
+
+## Matériel
+
+- [ ] Télpéhone satellite
+- [ ] Appareil photo GPS
+- [ ] Porte vue
+- [ ] Support terrain
+- [ ] Jumelles
+- [ ] Big Shot
+- [ ] Poids
+- [ ] Fil
+- [ ] Sac de lancer
+- [ ] Casques
+- [ ] Ciseaux
+- [ ] Ziplocks
+- [ ] Étiquettes
+- [ ] Mouchoirs
+- [ ] Sacs poubelles
+- [ ] Boîte plastique
+- [ ] Brumisateur
+- [ ] Crayon à papier
+- [ ] Marqueurs
+- [ ] Protocole
+- [ ] Cartes
+- [ ] Carnet terrain
+
+## Protocole
+
+- [ ] Noter
+    - [ ] date
+    - [ ] heure
+    - [ ] parcelle
+    - [ ] carré
+    - [ ] numéro arbre
+    - [ ] dawkins arbre
+    - [ ] position branche 
+- [ ] Prélever des branches en canopée et en lumière si possible
+- [ ] Sélectionner 10-15 feuilles pour le fonctionn
+- [ ] Placer les feuilles dans un ziplock remplie de CO2 à la bouche avec un mouchoir humidifié au brumisateur étiqueté avec le code de l’arbre (ex “PX-XX-XXXX)
+- [ ] Conserver les échantillons dans un sac poubelle noir doublé

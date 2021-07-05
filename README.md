@@ -1,5 +1,5 @@
-# Hydraulic ITV
+# hydroITV
 
 **Hydraulic trait inter- versus intra-specific local variability.**
 
-In collaboration with Marion, we plan to study variation in hydraulic and foliar traits of 10 species x 10 individuals per species representing 100 individuals to assess inter- and intra-specific variation in covariation of functional traits and to partition variation between and within species. If the results are convincing, perhaps we will study variation within and between species with topography.
+This study aims to evaluate inter- and intra-specific variation in hydraulic and leaf traits in collaboration with Marion Boisseaux. We first plan to assess measurement and leaf variation to better study inter- and intra-specific variation. We plan to use a balanced and robust sampling of 10 species x 10 individuals per species representing 100 individuals. We first want to explore trait variation in covariation within and between species. If the results are convincing, we may want to further investigate variation within and between species, with topography controlling diameter variation. Overall, our study can provide a robust first assessment of variation in hydraulic traits within and between species for tropical tree species, with possible underlying drivers of this variation.
