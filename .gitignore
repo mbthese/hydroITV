@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-_book
 _bookdown_*
 
 # protocols
