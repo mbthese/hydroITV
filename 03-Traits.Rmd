@@ -14,8 +14,8 @@ This chapter define measured and sampled traits with associated protocols.
 
 ## Hydraulic traits
 
-* **RWC**:
-* **$\Psi _{TLP}$**:
+* **RWC**: relative water content (%)
+* **$\Psi _{TLP}$**: Potential at turgor loss point (MPa)
 * **$g_{min}$**:
 * **Stomatal density**:
 * **Nervation density**:
