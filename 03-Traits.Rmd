@@ -14,7 +14,7 @@ This chapter define measured and sampled traits with associated protocols.
 
 ## Hydraulic traits
 
-* **RWC**:
+* **RWC**: relative water content (%)
 * **$\Psi _{TLP}$**:
 * **$g_{min}$**:
 * **Stomatal density**:
