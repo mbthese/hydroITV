@@ -1,11 +1,138 @@
+```{r setupinds, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(kableExtra)
+if(knitr:::is_html_output()) options(knitr.table.format = "html") 
+if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
+library(tidyverse)
+library(V.PhyloMaker)
+library(ggfortify)
+library(ggtree)
+library(sf)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+```
+
 # Individuals
 
-**TODO: define individuals, using individuals from Marion and Metradica.**
+This chapter define sampled species and individuals.
 
-This chapter define sampled individuals.
+**_Protium stevensonii_ is not in my Paracou DB !!** 
 
-## Notes
+## Species
 
-* beware ontogeny and height
-* Non-random sampling of 10 individuals across the TWI gradient
-* We could select individuals minimizing DBH variation while maximizing TWI variation.
+We selected 10 species (Tab. \@ref(tab:speciesTab)) common with the METRADICA project representative of the tree phylogeny in Paracou (Fig. \@ref(fig:speciesPhylo)).
+
+```{r speciesTab}
+species <- data.frame(taxon = c(
+  "Casearia_javitensis", 
+  "Chrysophyllum_prieurii", 
+  "Conceveiba_guianensis",
+  "Gustavia_hexapetala",
+  "Jacaranda_copaia subsp. copaia",
+  "Laetia_procera",
+  "Protium_stevensonii",
+  "Tachigali_melinonii",
+  "Virola_michelii",
+  "Virola_surinamensis"
+)) %>% 
+  separate(taxon, c("Genus", "Species"), remove = F) 
+kable(select(species, Genus, Species), caption = "Studied species.")
+```
+
+```{r speciesPhylo, fig.cap="Selected species phylogeny."}
+paracou <- read_csv2("data/Paracou_P16_2020.csv") %>% 
+  dplyr::select(Family, Genus, Species) %>% 
+  unique() %>% 
+  left_join(species) %>% 
+  mutate(species = paste(Genus, Species), genus = Genus, family = Family) %>% 
+  dplyr::select(species, genus, family, taxon) %>% 
+  mutate(taxon = as.character(taxon))
+paracou <- mutate(paracou, taxon = ifelse(species == "Protium Indet.", "Protium", taxon)) # for the missing Protium
+# tree <- phylo.maker(sp.list = paracou, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
+# save(tree, file = "save/phylogeny.Rdata")
+load("save/phylogeny.Rdata")
+fortify(tree$scenario.3) %>% 
+  mutate(species = gsub("_", " ", label)) %>% 
+  left_join(paracou) %>% 
+  ggtree(aes(col = taxon), layout="circular") + 
+  geom_tiplab2(aes(alpha = !is.na(taxon), size = !is.na(taxon))) +
+  theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
+  scale_alpha_manual("taxon", values = c(0.2, 1)) +
+  scale_size_manual("taxon", values = c(1, 2))
+```
+
+## Individuals from METRADICA
+
+> Exclude Marion's individuals (Tab. \@ref(tab:indMD)) and collected or wrong individuals (Tab. \@ref(tab:indMB)) 
+
+```{r indMD}
+readxl::read_excel("data/202012_SelectionIndividus_V5.4.xlsx", sheet = "IndAMesurer") %>% 
+  filter(TaxonActu %in% species$taxon) %>% 
+  mutate(Statut = recode(Statut,
+                         "AMesurerMD" = "Candidate",
+                         "AMesurerMDPrioDK" = "Candidate",
+                         "MesuréDK" = "Measured",
+                         "MesuréDrought" = "Measured",
+                         "MesuréMD" = "Measured",
+                         "MesuréMD (MauvaiseSp)" = "Wrong",
+                         "MesuréMD+Drought" = "Measured",
+                         "MortMD" = "Wrong",
+                         "MortParacou20" = "Wrong",
+                         "MortParacou20PrioDK" = "Wrong",
+                         "PasFaisable" = "Wrong",
+                         )) %>% 
+  group_by(TaxonActu, Statut) %>% 
+  summarise(N = n()) %>% 
+  reshape2::dcast(TaxonActu ~ Statut, value.var = "N") %>% 
+  mutate(TaxonActu = gsub("_", " ", TaxonActu)) %>% 
+  kable(caption = "Sumary of individuals (from 202012_SelectionIndividus_V5.4.xlsx)")
+```
+
+```{r indMB}
+readxl::read_excel("data/FTH2021_SelectionIndividus_V5.5.xlsx", sheet = "IndAMesurer") %>% 
+  filter(TaxonActu %in% species$taxon) %>% 
+  group_by(TaxonActu, Plot) %>% 
+  summarise(N = n()) %>% 
+  reshape2::dcast(TaxonActu ~ Plot, value.var = "N") %>% 
+  mutate_all(funs(ifelse(is.na(.), " ", .))) %>% 
+  kable(caption = "Sumary of candidates (from FTH2021_SelectionIndividus_V5.5.xlsx)")
+```
+
+## Diameters
+
+> minimizing DBH (Tab. \@ref(fig:dbhdist))
+
+```{r dbhdist, fig.cap="DBH distribution for selected species in the plot 16 of Paracou in 2020."}
+read_csv2("data/Paracou_P16_2020.csv") %>% 
+  left_join(species) %>% 
+  filter(!is.na(taxon)) %>% 
+  mutate(DBH = CircCorr/pi) %>% 
+  ggplot(aes(DBH)) +
+  geom_histogram() +
+  facet_wrap(~ paste(Genus, Species), scales = "free")
+```
+
+## Topography
+
+> maximizing TWI variation (Tab. \@ref(fig:twidist))
+
+```{r twidist, fig.cap="TWI distribution for selected species in the plot 16 of Paracou in 2020."}
+paracou <- read_csv2("data/Paracou_P16_2020.csv") %>% 
+  left_join(species) %>% 
+  filter(!is.na(taxon)) %>% 
+  mutate(DBH = CircCorr/pi) %>% 
+  st_as_sf(coords = c("Xutm", "Yutm"),
+           crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
+paracou$TWI <- raster::extract(raster::raster("data/TWI_1m.tif"), paracou)
+ggplot(paracou, aes(TWI)) +
+  geom_histogram() +
+  facet_wrap(~ paste(Genus, Species), scales = "free")
+```
+
+
+## Candidates
+
+> 15-20 individuals

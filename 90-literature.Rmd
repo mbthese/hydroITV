@@ -28,8 +28,3 @@
 * Intraspecific variability was also relevant
 * Species occupying wetter sites showed higher N, P50 and Ptlp, and lower LMA, d13C and Hv. 
 * Within species water explained Hv and Ptlp
-
-```{r rosas2019, echo=F}
-knitr::include_graphics("data/Rosas2019.png")
-```
-
