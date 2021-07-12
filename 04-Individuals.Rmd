@@ -9,6 +9,7 @@ library(V.PhyloMaker)
 library(ggfortify)
 library(ggtree)
 library(sf)
+library(leaflet)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
@@ -50,7 +51,6 @@ paracou <- read_csv2("data/Paracou_P16_2020.csv") %>%
   mutate(species = paste(Genus, Species), genus = Genus, family = Family) %>% 
   dplyr::select(species, genus, family, taxon) %>% 
   mutate(taxon = as.character(taxon))
-paracou <- mutate(paracou, taxon = ifelse(species == "Protium Indet.", "Protium", taxon)) # for the missing Protium
 # tree <- phylo.maker(sp.list = paracou, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
 # save(tree, file = "save/phylogeny.Rdata")
 load("save/phylogeny.Rdata")
@@ -69,7 +69,7 @@ fortify(tree$scenario.3) %>%
 > Exclude Marion's individuals (Tab. \@ref(tab:indMD)) and collected or wrong individuals (Tab. \@ref(tab:indMB)) 
 
 ```{r indMD}
-readxl::read_excel("data/202012_SelectionIndividus_V5.4.xlsx", sheet = "IndAMesurer") %>% 
+collected <- readxl::read_excel("data/202012_SelectionIndividus_V5.4.xlsx", sheet = "IndAMesurer") %>% 
   filter(TaxonActu %in% species$taxon) %>% 
   mutate(Statut = recode(Statut,
                          "AMesurerMD" = "Candidate",
@@ -83,7 +83,8 @@ readxl::read_excel("data/202012_SelectionIndividus_V5.4.xlsx", sheet = "IndAMesu
                          "MortParacou20" = "Wrong",
                          "MortParacou20PrioDK" = "Wrong",
                          "PasFaisable" = "Wrong",
-                         )) %>% 
+                         ))
+collected %>% 
   group_by(TaxonActu, Statut) %>% 
   summarise(N = n()) %>% 
   reshape2::dcast(TaxonActu ~ Statut, value.var = "N") %>% 
@@ -92,8 +93,9 @@ readxl::read_excel("data/202012_SelectionIndividus_V5.4.xlsx", sheet = "IndAMesu
 ```
 
 ```{r indMB}
-readxl::read_excel("data/FTH2021_SelectionIndividus_V5.5.xlsx", sheet = "IndAMesurer") %>% 
-  filter(TaxonActu %in% species$taxon) %>% 
+tocollect <- readxl::read_excel("data/FTH2021_SelectionIndividus_V5.5.xlsx", sheet = "IndAMesurer") %>% 
+  filter(TaxonActu %in% species$taxon)
+tocollect %>% 
   group_by(TaxonActu, Plot) %>% 
   summarise(N = n()) %>% 
   reshape2::dcast(TaxonActu ~ Plot, value.var = "N") %>% 
@@ -106,11 +108,11 @@ readxl::read_excel("data/FTH2021_SelectionIndividus_V5.5.xlsx", sheet = "IndAMes
 > minimizing DBH (Tab. \@ref(fig:dbhdist))
 
 ```{r dbhdist, fig.cap="DBH distribution for selected species in the plot 16 of Paracou in 2020."}
-read_csv2("data/Paracou_P16_2020.csv") %>% 
+paracou <- read_csv2("data/Paracou_P16_2020.csv") %>% 
   left_join(species) %>% 
   filter(!is.na(taxon)) %>% 
-  mutate(DBH = CircCorr/pi) %>% 
-  ggplot(aes(DBH)) +
+  mutate(DBH = CircCorr/pi)
+ggplot(paracou, aes(DBH)) +
   geom_histogram() +
   facet_wrap(~ paste(Genus, Species), scales = "free")
 ```
@@ -120,10 +122,7 @@ read_csv2("data/Paracou_P16_2020.csv") %>%
 > maximizing TWI variation (Tab. \@ref(fig:twidist))
 
 ```{r twidist, fig.cap="TWI distribution for selected species in the plot 16 of Paracou in 2020."}
-paracou <- read_csv2("data/Paracou_P16_2020.csv") %>% 
-  left_join(species) %>% 
-  filter(!is.na(taxon)) %>% 
-  mutate(DBH = CircCorr/pi) %>% 
+paracou <- paracou %>% 
   st_as_sf(coords = c("Xutm", "Yutm"),
            crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
 paracou$TWI <- raster::extract(raster::raster("data/TWI_1m.tif"), paracou)
@@ -136,3 +135,37 @@ ggplot(paracou, aes(TWI)) +
 ## Candidates
 
 > 15-20 individuals
+
+```{r}
+candidates <- paracou %>% 
+  filter(!(idTree %in% filter(collected, Statut %in% c("Wrong", "Measured"))$idTree)) %>% 
+  mutate(Marion = as.factor(ifelse(idTree %in% tocollect$idTree, 1, 0)))
+```
+
+```{r}
+candidates %>% 
+  dplyr::select(-geometry) %>% 
+  group_by(taxon, Marion) %>% 
+  summarise(N = n()) %>% 
+  mutate(Marion = recode(Marion, "1" = "Marion", "0" = "Other")) %>% 
+  reshape2::dcast(taxon ~ Marion, value.var = "N") %>% 
+  kable(caption = "Candidate in P16.")
+```
+
+```{r}
+crs <- '+proj=longlat +datum=WGS84'
+palSp1 <- colorFactor("Blues", candidates$taxon)
+palSp2 <- colorFactor("Greens", candidates$taxon)
+leaflet(data = st_transform(candidates, crs = crs)) %>%
+  addCircles(data = st_transform(filter(candidates, Marion == 1), crs = crs),
+             color = ~palSp1(taxon),
+             label = ~ paste(taxon, "Marion"), radius = ~ DBH/10, group = "Marion") %>% 
+  addCircles(data = st_transform(filter(candidates, Marion != 1), crs = crs),
+             color = ~palSp2(taxon),
+             label = ~ paste(taxon, "Other"), radius = ~ DBH/10, group = "Other") %>% 
+  addLegend(pal = palSp1, values = ~ taxon) %>% 
+  addLegend(pal = palSp2, values = ~ taxon)
+```
+
+
+

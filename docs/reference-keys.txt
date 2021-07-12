@@ -7,6 +7,7 @@ tab:indMD
 tab:indMB
 fig:dbhdist
 fig:twidist
+tab:unnamed-chunk-2
 todo
 calendar
 a-not-on-balance-sampling
