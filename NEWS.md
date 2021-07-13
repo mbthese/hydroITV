@@ -1,3 +1,7 @@
+hydroITV 1.0.0.9005
+* data: OverallPlots & ContourLinesPlots
+* individuals: maps for candidates to be validated with @mbthese
+
 hydroITV 1.0.0.9004
 * mapping candidates, need to see with @mbthese which individual is she selecting.
 
