@@ -2,7 +2,7 @@
 
 **TODO: define traits and protocols with Marion.**
 
-This chapter define measured and sampled traits with associated protocols.
+This chapter defines measured and sampled traits with associated protocols.
 
 ## Soft traits
 
@@ -14,12 +14,15 @@ This chapter define measured and sampled traits with associated protocols.
 
 ## Hydraulic traits
 
-* **RWC**: relative water content (%)
-* **$\Psi _{TLP}$**: Potential at turgor loss point (MPa)
-* **$g_{min}$**:
-* **Stomatal density**:
-* **Nervation density**:
-* **$\frac{Fv}{Fm}$**: Photosynthesis efficiency
+* **RWC**: relative water content (%) is of special interest as it reflects the amount of water present the leaf relative to the maximum it can hold (*INSERER BIBLIO Barrs & Weatherley 1962*)
+* **$\Psi _{TLP}$**: leaf water potential at which leaf cells lose turgor (MPa), a key drought tolerance trait. 
+* **$g_{min}$**: leaf minimum conductance $mmol.m^{-2}.s^{-1}$ taking into account water losses through the cuticle and incompletely closed stomata.
+* **Stomatal density**: morphological characteristic at the crossroads between water loss and the maximum rate of photosynthesis.(*INSERER BIBLIO Julio V. Schneider 2016*)
+* **Nervation density**: determining the capacity of water supply in leaves. (*INSERER BIBLIO Julio V. Schneider 2016*)
+
+## Photochemical trait
+ 
+* **$\frac{Fv}{Fm}$**: maximum quantum yield of photosystem II, which reflects photosynthesis efficiency ($\mu mol . m^{-2} . s^{-1}/ \mu mol . m^{-2} . s^{-1}$) 
 
 ## Measured traits
 
@@ -31,6 +34,7 @@ This chapter define measured and sampled traits with associated protocols.
         * area (scan)
     * Dry
         * weight
+        
 * Hydraulic traits
 
 ## Protocols
@@ -50,5 +54,6 @@ Marion's:
 * Assess tree and branch height
 * Assess tree and branch Dawkins
 * Collect tree with a DBH in the 10th to 90th quantiles of the species
-* 10 species (6 generalists, 2 terra-firme and 2 bottomlands) remainging with 40 individuals
+* 10 species (6 generalists, 2 terra-firme and 2 bottomlands) including 40 individuals from Marion's METRADICA sampling.
+
 

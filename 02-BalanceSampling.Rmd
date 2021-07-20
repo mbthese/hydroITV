@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
 ```{r setupvarpart, include=FALSE}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
@@ -6,9 +11,15 @@ if(knitr:::is_html_output()) options(knitr.table.format = "html")
 if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
 library(tidyverse)
 theme_set(bayesplot::theme_default())
-opts_chunk$set(
-  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
-  cache = T, cache.lazy = F)
+knitr::opts_chunk$set(
+	echo = F,
+	fig.height = 6,
+	fig.width = 8,
+	message = FALSE,
+	warning = FALSE,
+	cache = TRUE,
+	cache.lazy = F
+)
 ```
 
 ```{r varpartdata1}
@@ -48,11 +59,11 @@ data <- list("full" = data,
 
 **TODO: run back using `stan` models.**
 
-This chapter aim at demonstrating the importance of balanced design in variance partitioning in opposition to numerous papers reporting inter- versus intra-specific variation in unbalanced designs. It also explore the possibilities for evaluating leaf and measurement variations.
+This chapter aims at demonstrating the importance of balanced design in variance partitioning in opposition to numerous papers reporting inter- versus intra-specific variation in unbalanced designs. It also explores the possibilities for evaluating leaf and measurement variations.
 
 ## Species and individual sampling
 
-I simulated 100 species with a species variance of 1 for a given trait with 100 individuals per species with a variance of 1 for the same trait. I tested the effect of four sampling strategy on variance partitioning (Fig. \@ref(fig:traitdist)):
+I simulated 100 species with a species variance of 1 for a given trait with 100 individuals per species with a variance of 1 for the same trait. I tested the effect of four sampling strategies on variance partitioning (Fig. \@ref(fig:traitdist)):
 
 1. Full sampling of the community
 1. Sampling of 100 individuals unbalanced in species (25 species with 4 individuals)
@@ -72,6 +83,7 @@ fun <- function(data){
   var <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
   return(data.frame(level = names(var), variance = as.vector(var)))
 }
+# could you please explain line 82-84? 
 data %>% 
   group_by(sampling) %>% 
   do(var = fun(.)) %>% 
@@ -80,9 +92,9 @@ data %>%
   geom_bar(stat = "identity", position = "stack")
 ```
 
-## Leaf varaitions and measurement errors
+## Leaf variations and measurement errors
 
-Similarly, we looked at a sampling of 10 individuals in 10 species, 10 leaves in 10 individuals, and 10 measures in 10 leaves to evaluate each level of variation independently instead of an unrealistic sampling of 10 species times 10 individuals times 10 leaves times 10 measures resulting in 10 thousand measures! We found a very stable measures across levels using very different variations between levels (Fig. \@ref(fig:varpart2)).
+Similarly, we looked at a sampling of 10 individuals in 10 species, 10 leaves for each individuals, and 10 measures for each leaf. This would allow us to evaluate the level of measurement variation alone to prevent from an unrealistic sampling of 10 species times 10 individuals times 10 leaves times 10 measures resulting in 10 thousand measures! We found a very stable measures across levels using very different variations between levels (Fig. \@ref(fig:varpart2)).
 
 ```{r varpartdata2}
 S <- 10
