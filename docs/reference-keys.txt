@@ -13,10 +13,11 @@ todo
 calendar
 a-not-on-balance-sampling
 species-and-individual-sampling
-leaf-varaitions-and-measurement-errors
+leaf-variations-and-measurement-errors
 traits
 soft-traits
 hydraulic-traits
+photochemical-trait
 measured-traits
 protocols
 individuals
