@@ -1,3 +1,14 @@
+fig:traitdist
+fig:varpart
+fig:varpart2
+tab:speciesTab
+fig:speciesPhylo
+tab:indMD
+tab:indMB
+fig:indMDP16
+fig:candFig
+tab:candTab
+fig:candMap
 todo
 calendar
 a-not-on-balance-sampling
