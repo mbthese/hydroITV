@@ -1,0 +1,138 @@
+---
+title: "Protocole Ptlp"
+author: "Marion Boisseaux"
+date: "18/02/2021"
+output: html_document
+---
+# Introduction 
+
+We assessed the leaf turgor loss point, $\pi_{tlp}$ in MPa, from a previously established relationship with the osmotic potential at full hydration, $\pi_{osm}$ in MPa. $\pi_{osm}$ is linked to the equilibrium solute concentration value $C_0$ (in mmol.kg^{-1}) directly measured with a vapor pressure osmometer (Vapro 5600, Wescor, Logan, UT). This is referred as the *osmometer method* (Bartlett et al. 2012a; Maréchaux et al. 2016).
+
+# Materials
+
+
+* Vapor pressure osmometer (Vapro 5520, Wescor, Logan, UT)
+* Vapro software (Vapro Lab Report)
+* Fridge
+* Liquid Nitrogen
+* Ziplock bag  
+* Paper towel 
+* Distilled water
+* Metal tea ball
+* Tin foil
+* Needle  
+* Liquid nitrogen gloves + goggles
+* Liquid nitrogen contenant
+* 2 Tweezers
+* Cork borer
+
+# Methods
+
+## Installing Vapro for measurements
+
+* Turn on Vapro the day before for the thermocouple's stability
+* Test Water Quality *cf Vapro_cheatsheet*
+* Clean 
+* Calibration *cf Vapro_cheatsheet*
+* Control tests *cf Vapro_cheatsheet*
+* Verify temperature
+* Always have the black diamond at the center of the display
+
+Used daily:
+* clean beforehand
+* select automatic mode (10 runs)
+
+## Sampling on the field
+
+* Collect at least 3 healthy mature leaves on branch
+* Place them in sample ziplock bag with: 
+  + wet paper towel
+  + Exhale in bag to saturate in CO~2~
+  + Annotate bag with sample information
+* Zip bag and stock in cooler
+
+## Lab measurements
+
+### Field day
+* Recut branch under water
+* Replace in ziplock bag with wet paper towel 
+* Put 24h in fridge to hydrate overnight
+
+### N+1 Field day
+
+Vapro: 
+ 
+* check distilled water in vapro reservoir
+* clean
+* select automatic mode (10 runs)
+* make sure vapro software is on 
+
+Sample measurement:
+
+* Sample from a leaf a 5 mm disc with a cork borer: *avoid 1^st^ and 2^nd^ order veins to avoid apoplastic dilution that would lead to less negative osmometer values*
+* Wrap disc in tin foil
+* Immerse in liquid nitrogen for at least 2 min using metal tea ball
+* Puncture 10-15 times with needle 
+* Place in vapro chamber
+
+In total, disc are exposed to air for less than 40 seconds for all the steps. 
+
+* Record value C~0~ when the difference between consecutive 2-min measurements fell below strictly 5 mmol.kg^-1^ after at least three runs.
+
+* If error! or Nr_Run > 10 : 
++ try a 2^nd^ cycle with same leaf
++ try a 3^rd^ cycle with another leaf 
++ otherwise record *NA*
+
+* Beware of the stuck leaf inside the vapro! If so *cf Vapro_cheatsheet*
+
+For METRADICA PROJECT: 
+
+* Place measured leaf in envelop for VIENNA 
+
+### End measurements
+
+Clean Vapro
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

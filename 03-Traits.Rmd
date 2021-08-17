@@ -19,6 +19,7 @@ This chapter defines measured and sampled traits with associated protocols.
 * **$g_{min}$**: leaf minimum conductance $mmol.m^{-2}.s^{-1}$ taking into account water losses through the cuticle and incompletely closed stomata.
 * **Stomatal density**: morphological characteristic at the crossroads between water loss and the maximum rate of photosynthesis.(*INSERER BIBLIO Julio V. Schneider 2016*)
 * **Nervation density**: determining the capacity of water supply in leaves. (*INSERER BIBLIO Julio V. Schneider 2016*)
+* Leaf chemistry? 
 
 ## Photochemical trait
  
@@ -35,7 +36,22 @@ This chapter defines measured and sampled traits with associated protocols.
     * Dry
         * weight
         
-* Hydraulic traits
+* Hydraulic traits  
+    * Day 1  
+        * fresh weight  
+        * **$g_{min}$**  
+        * **Stomatal density**
+        * **$\frac{Fv}{Fm}$**
+        * area (scan)
+    
+    * Day 2
+        * saturated weight
+        * **$g_{min}$**  
+        * **$\Psi _{TLP}$**
+    
+    * Day 4 
+        * Dry weight
+
 
 ## Protocols
 
@@ -55,5 +71,5 @@ Marion's:
 * Assess tree and branch Dawkins
 * Collect tree with a DBH in the 10th to 90th quantiles of the species
 * 10 species (6 generalists, 2 terra-firme and 2 bottomlands) including 40 individuals from Marion's METRADICA sampling.
-
+* [**$\Psi _{TLP}$** protocol](protocols/Protocole_Ptlp.pdf)
 

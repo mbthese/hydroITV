@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 2 Traits | hydroITV</title>
   <meta name="description" content="Hydraulic trait inter- versus intra-specific local variability." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 2 Traits | hydroITV" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2021-07-21" />
+<meta name="date" content="2021-08-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,15 +51,18 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
 <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
 <script async defer src="https://hypothes.is/embed.js"></script>
+
 
 
 
@@ -158,6 +161,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <li><strong><span class="math inline">\(g_{min}\)</span></strong>: leaf minimum conductance <span class="math inline">\(mmol.m^{-2}.s^{-1}\)</span> taking into account water losses through the cuticle and incompletely closed stomata.</li>
 <li><strong>Stomatal density</strong>: morphological characteristic at the crossroads between water loss and the maximum rate of photosynthesis.(<em>INSERER BIBLIO Julio V. Schneider 2016</em>)</li>
 <li><strong>Nervation density</strong>: determining the capacity of water supply in leaves. (<em>INSERER BIBLIO Julio V. Schneider 2016</em>)</li>
+<li>Leaf chemistry?</li>
 </ul>
 </div>
 <div id="photochemical-trait" class="section level2">
@@ -183,7 +187,30 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <li>weight</li>
 </ul></li>
 </ul></li>
-<li>Hydraulic traits</li>
+<li>Hydraulic traits
+<ul>
+<li>Day 1
+<ul>
+<li>fresh weight<br />
+</li>
+<li><strong><span class="math inline">\(g_{min}\)</span></strong><br />
+</li>
+<li><strong>Stomatal density</strong></li>
+<li><strong><span class="math inline">\(\frac{Fv}{Fm}\)</span></strong></li>
+<li>area (scan)</li>
+</ul></li>
+<li>Day 2
+<ul>
+<li>saturated weight</li>
+<li><strong><span class="math inline">\(g_{min}\)</span></strong><br />
+</li>
+<li><strong><span class="math inline">\(\Psi _{TLP}\)</span></strong></li>
+</ul></li>
+<li>Day 4
+<ul>
+<li>Dry weight</li>
+</ul></li>
+</ul></li>
 </ul>
 </div>
 <div id="protocols" class="section level2">
@@ -203,6 +230,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <li>Assess tree and branch Dawkins</li>
 <li>Collect tree with a DBH in the 10th to 90th quantiles of the species</li>
 <li>10 species (6 generalists, 2 terra-firme and 2 bottomlands) including 40 individuals from Marion’s METRADICA sampling.</li>
+<li><a href="protocols/Protocole_Ptlp.pdf"><strong><span class="math inline">\(\Psi _{TLP}\)</span></strong> protocol</a></li>
 </ul>
 
 </div>
@@ -236,6 +264,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
