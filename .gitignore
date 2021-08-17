@@ -7,3 +7,6 @@ _bookdown_*
 # protocols
 protocols/*.pdf
 protocols/*.html
+
+# maps
+maps

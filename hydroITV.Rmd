@@ -1,3 +1,92 @@
+--- 
+title: "hydroITV"
+subtitle: "Hydraulic trait inter- versus intra-specific local variability."
+author: "Sylvain Schmitt"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+csl: biblio/mee.csl
+bibliography: biblio/library.bib
+link-citations: yes
+colorlinks: yes
+description: "Hydraulic trait inter- versus intra-specific local variability."
+---
+--- 
+title: "hydroITV"
+subtitle: "Hydraulic trait inter- versus intra-specific local variability."
+author: "Sylvain Schmitt"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+csl: biblio/mee.csl
+bibliography: biblio/library.bib
+link-citations: yes
+colorlinks: yes
+description: "Hydraulic trait inter- versus intra-specific local variability."
+---
+
+`r if (knitr:::is_html_output()) '# Preface {-}'`
+
+`r if (knitr:::is_html_output()) '![](https://img.shields.io/badge/stability-work_in_progress-lightgrey.svg)'`
+
+`r if (knitr:::is_html_output()) 'This study aims to evaluate inter- and intra-specific variation in hydraulic and leaf traits in collaboration with Marion Boisseaux. We first plan to assess measurement and leaf variation to better study inter- and intra-specific variation. We plan to use a balanced and robust sampling of 10 species x 10 individuals per species representing 100 individuals. We first want to explore trait variation in covariation within and between species. If the results are convincing, we may want to further investigate variation within and between species, with topography controlling diameter variation. Overall, our study can provide a robust first assessment of variation in hydraulic traits within and between species for tropical tree species, with possible underlying drivers of this variation.'`
+
+`r if (knitr:::is_html_output()) 'Have a nice reading.'`
+
+`r if (knitr:::is_html_output()) '<div align="right">  *Sylvain*'`
+
+<!--chapter:end:index.Rmd-->
+
+# Introduction {-}
+
+This study aims to evaluate inter- and intra-specific variation in hydraulic and leaf traits in collaboration with Marion Boisseaux. We first plan to assess measurement and leaf variation to better study inter- and intra-specific variation. We plan to use a balanced and robust sampling of 10 species x 10 individuals per species representing 100 individuals. We first want to explore trait variation in covariation within and between species. If the results are convincing, we may want to further investigate variation within and between species, with topography controlling diameter variation. Overall, our study can provide a robust first assessment of variation in hydraulic traits within and between species for tropical tree species, with possible underlying drivers of this variation. 
+
+## ToDo
+
+- [ ] `stan` models for balance sampling
+- [ ] add protocols
+- [ ] choose traits
+- [ ] define sampling
+- [ ] define calendar
+- [ ] define logistic
+- [ ] supervise
+- [ ] analyze
+- [ ] write
+
+## Calendar
+
+* **16/08**: define equipment needs
+* **?/08**: assess measurement and leaf variation 
+* **13-19/09**: field FTH
+* **20-24/09**: analyses FTH
+
+<!--chapter:end:01-Introduction.Rmd-->
+
+
+# A not on balance sampling 
+
+Placeholder
+
+
+## Species and individual sampling
+## Leaf variations and measurement errors
+
+<!--chapter:end:02-BalanceSampling.Rmd-->
+
+
+# Traits
+
+Placeholder
+
+
+## Soft traits
+## Hydraulic traits
+## Photochemical trait
+## Measured traits
+## Protocols
+
+<!--chapter:end:03-Traits.Rmd-->
+
 ```{r setupinds, include=FALSE}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
@@ -238,4 +327,62 @@ include_graphics("maps/P16NE.png")
 include_graphics("maps/P16SW.png")
 include_graphics("maps/P16SE.png")
 ```
+
+
+<!--chapter:end:04-Individuals.Rmd-->
+
+# Traits covariation
+
+Subsequent analysis aimed to explore co-variations of individual traits. 
+Specifically, we investigated individual traits co-variation at several taxonomic scales: among species, and within species.
+
+**Waiting data, inspiration can be found here: https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/01-PCA.Rmd .**
+
+<!--chapter:end:05-Covariations.Rmd-->
+
+# Traits covariation
+
+Subsequent analysis aimed to assess variance partitioning among and within species.
+
+**Waiting data.**
+
+<!--chapter:end:06-VariancePartitioning.Rmd-->
+
+# Environment & Ontogeny
+
+Subsequent analysis aimed to select functional traits descriptors in order to further model traits variation. 
+
+Phenotypic variation, and therefore functional traits variation, will be shaped (i) by genetic heritage, through genotypes, (ii) by the environment (both abiotic and biotic) with spatial and temporal heterogeneity, and (iii) by random stochastic factors [@Whitlock2007]. Our analysis did not include yet raw genetic data. Consequently, genetic heritage will be both represented by taxonomic levels (species and genera) and ontogenetic factors. Environment will be split between abiotic environment and biotic interactions, here restrained to tree to tree interactions. We will not explore tree interactions with their environment trough herbivory and pathogens, besides their huge impact on tree life history [but see @VanderPutten2001].
+
+We selected functional traits descriptors by studying descriptors co-variation and keeping only little correlated variables with the best ecological meaning to represent (i) ontogeny, (ii) abiotic environment, and (iii) biotic interactions.
+
+**Waiting data, inspiration can be found here: https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/02-Environment.Rmd .**
+
+<!--chapter:end:07-Environments.Rmd-->
+
+# Models
+
+The subsequent analysis aimed to graphically explore variations in leaf traits according to 4 descriptors: (i) tree ontogeny, (ii) biotic interactions and (iii) abiotic environment, and (iv) phylogeny through taxonomic levels. From these observations we developed a generic model linking individual phenotype to its descriptors. The generic model will be inferred later using Bayesian inference.
+
+**Waiting data, inspiration can be found here: https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/03-Models.Rmd .**
+
+<!--chapter:end:08-Models.Rmd-->
+
+
+# Literature
+
+Placeholder
+
+
+## @Hajek2016
+## @Lobo2018
+## @Westerband2021
+## @Martinez-Vilalta2009
+## @Rosas2019
+
+<!--chapter:end:90-literature.Rmd-->
+
+# References {-}
+
+<!--chapter:end:99-References.Rmd-->
 
