@@ -1,4 +1,4 @@
-# Traits covariation
+# Variance partitionning
 
 Subsequent analysis aimed to assess variance partitioning among and within species.
 

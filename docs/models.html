@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 7 Models | hydroITV</title>
+  <title>Chapter 8 Models | hydroITV</title>
   <meta name="description" content="Hydraulic trait inter- versus intra-specific local variability." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 7 Models | hydroITV" />
+  <meta property="og:title" content="Chapter 8 Models | hydroITV" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 7 Models | hydroITV" />
+  <meta name="twitter:title" content="Chapter 8 Models | hydroITV" />
   
   <meta name="twitter:description" content="Hydraulic trait inter- versus intra-specific local variability." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2021-08-17" />
+<meta name="date" content="2021-08-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,18 +51,15 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
-<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
 <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
+<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
 <script async defer src="https://hypothes.is/embed.js"></script>
-
 
 
 
@@ -104,16 +101,22 @@
 <li class="chapter" data-level="3.3" data-path="individuals.html"><a href="individuals.html#candidates"><i class="fa fa-check"></i><b>3.3</b> Candidates</a></li>
 <li class="chapter" data-level="3.4" data-path="individuals.html"><a href="individuals.html#maps"><i class="fa fa-check"></i><b>3.4</b> Maps</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>4</b> Traits covariation</a></li>
-<li class="chapter" data-level="5" data-path="traits-covariation-1.html"><a href="traits-covariation-1.html"><i class="fa fa-check"></i><b>5</b> Traits covariation</a></li>
-<li class="chapter" data-level="6" data-path="environment-ontogeny.html"><a href="environment-ontogeny.html"><i class="fa fa-check"></i><b>6</b> Environment &amp; Ontogeny</a></li>
-<li class="chapter" data-level="7" data-path="models.html"><a href="models.html"><i class="fa fa-check"></i><b>7</b> Models</a></li>
-<li class="chapter" data-level="8" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>8</b> Literature</a><ul>
-<li class="chapter" data-level="8.1" data-path="literature.html"><a href="literature.html#hajek2016"><i class="fa fa-check"></i><b>8.1</b> <span class="citation">Hajek <em>et al.</em> (<span>2016</span>)</span></a></li>
-<li class="chapter" data-level="8.2" data-path="literature.html"><a href="literature.html#lobo2018"><i class="fa fa-check"></i><b>8.2</b> <span class="citation">Lobo <em>et al.</em> (<span>2018</span>)</span></a></li>
-<li class="chapter" data-level="8.3" data-path="literature.html"><a href="literature.html#westerband2021"><i class="fa fa-check"></i><b>8.3</b> <span class="citation">Westerband <em>et al.</em> (<span>2021</span>)</span></a></li>
-<li class="chapter" data-level="8.4" data-path="literature.html"><a href="literature.html#martinez-vilalta2009"><i class="fa fa-check"></i><b>8.4</b> <span class="citation">Martínez-Vilalta <em>et al.</em> (<span>2009</span>)</span></a></li>
-<li class="chapter" data-level="8.5" data-path="literature.html"><a href="literature.html#rosas2019"><i class="fa fa-check"></i><b>8.5</b> <span class="citation">Rosas <em>et al.</em> (<span>2019</span>)</span></a></li>
+<li class="chapter" data-level="4" data-path="measurement-error.html"><a href="measurement-error.html"><i class="fa fa-check"></i><b>4</b> Measurement error</a><ul>
+<li class="chapter" data-level="4.1" data-path="measurement-error.html"><a href="measurement-error.html#psi_tlp"><i class="fa fa-check"></i><b>4.1</b> <span class="math inline">\(\Psi_{TLP}\)</span></a></li>
+<li class="chapter" data-level="4.2" data-path="measurement-error.html"><a href="measurement-error.html#fracfvfm"><i class="fa fa-check"></i><b>4.2</b> <span class="math inline">\(\frac{Fv}{Fm}\)</span></a></li>
+<li class="chapter" data-level="4.3" data-path="measurement-error.html"><a href="measurement-error.html#rwc"><i class="fa fa-check"></i><b>4.3</b> <span class="math inline">\(RWC\)</span></a></li>
+<li class="chapter" data-level="4.4" data-path="measurement-error.html"><a href="measurement-error.html#soft-traits-1"><i class="fa fa-check"></i><b>4.4</b> Soft traits</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>5</b> Traits covariation</a></li>
+<li class="chapter" data-level="6" data-path="variance-partitionning.html"><a href="variance-partitionning.html"><i class="fa fa-check"></i><b>6</b> Variance partitionning</a></li>
+<li class="chapter" data-level="7" data-path="environment-ontogeny.html"><a href="environment-ontogeny.html"><i class="fa fa-check"></i><b>7</b> Environment &amp; Ontogeny</a></li>
+<li class="chapter" data-level="8" data-path="models.html"><a href="models.html"><i class="fa fa-check"></i><b>8</b> Models</a></li>
+<li class="chapter" data-level="9" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>9</b> Literature</a><ul>
+<li class="chapter" data-level="9.1" data-path="literature.html"><a href="literature.html#hajek2016"><i class="fa fa-check"></i><b>9.1</b> <span class="citation">Hajek <em>et al.</em> (<span>2016</span>)</span></a></li>
+<li class="chapter" data-level="9.2" data-path="literature.html"><a href="literature.html#lobo2018"><i class="fa fa-check"></i><b>9.2</b> <span class="citation">Lobo <em>et al.</em> (<span>2018</span>)</span></a></li>
+<li class="chapter" data-level="9.3" data-path="literature.html"><a href="literature.html#westerband2021"><i class="fa fa-check"></i><b>9.3</b> <span class="citation">Westerband <em>et al.</em> (<span>2021</span>)</span></a></li>
+<li class="chapter" data-level="9.4" data-path="literature.html"><a href="literature.html#martinez-vilalta2009"><i class="fa fa-check"></i><b>9.4</b> <span class="citation">Martínez-Vilalta <em>et al.</em> (<span>2009</span>)</span></a></li>
+<li class="chapter" data-level="9.5" data-path="literature.html"><a href="literature.html#rosas2019"><i class="fa fa-check"></i><b>9.5</b> <span class="citation">Rosas <em>et al.</em> (<span>2019</span>)</span></a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -140,7 +143,7 @@
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
 <div id="models" class="section level1">
-<h1><span class="header-section-number">Chapter 7</span> Models</h1>
+<h1><span class="header-section-number">Chapter 8</span> Models</h1>
 <p>The subsequent analysis aimed to graphically explore variations in leaf traits according to 4 descriptors: (i) tree ontogeny, (ii) biotic interactions and (iii) abiotic environment, and (iv) phylogeny through taxonomic levels. From these observations we developed a generic model linking individual phenotype to its descriptors. The generic model will be inferred later using Bayesian inference.</p>
 <p><strong>Waiting data, inspiration can be found here: <a href="https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/03-Models.Rmd" class="uri">https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/03-Models.Rmd</a> .</strong></p>
 
@@ -174,7 +177,6 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

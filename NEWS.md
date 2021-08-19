@@ -1,3 +1,6 @@
+hydroITV 1.0.0.9006
+* measurement errors: begins
+
 hydroITV 1.0.0.9005
 * data: OverallPlots & ContourLinesPlots
 * individuals: maps for candidates to be validated with @mbthese

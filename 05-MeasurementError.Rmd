@@ -1,0 +1,70 @@
+```{r setupmeaserr, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+```
+
+# Measurement error
+
+Subsequent analysis aimed to explore measurement error.
+
+## $\Psi_{TLP}$
+
+```{r measurePtlp, fig.cap="measurement error in $\\Psi_{TLP}$."}
+googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                          "measure_ptlp") %>% 
+  mutate(C0 = as.numeric(C0)) %>% 
+  ggplot(aes(as.factor(Nr_Leaf), Ptlp)) +
+  geom_boxplot(aes(fill = User_initial), alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Nr_Cycle)) +
+  viridis::scale_color_viridis("Repetition") +
+  scale_fill_discrete("Operator") +
+  xlab("Sample") + ylab(expression(Psi[TLP]))
+```
+
+## $\frac{Fv}{Fm}$
+
+```{r measureFvFm, fig.cap="measurement error in $\\frac{Fv}{Fm}$."}
+googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                          "measure_fvfm") %>% 
+  mutate(FvFm = as.numeric(FvFm)) %>% 
+  ggplot(aes(as.factor(Leaf), FvFm)) +
+  geom_boxplot(alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Repetition)) +
+  viridis::scale_color_viridis("Repetition") +
+  xlab("Sample") + ylab(expression(frac(Fv,Fm)))
+```
+
+## $RWC$
+
+```{r measureRWC, fig.cap="measurement error in $RWC$."}
+googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                          "measure_rwc") %>% 
+  mutate(FreshWeight = as.numeric(BagFreshWeight) - as.numeric(BagWeight)) %>% 
+  ggplot(aes(as.factor(Sample), FreshWeight)) +
+  geom_boxplot(alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Repetition)) +
+  viridis::scale_color_viridis("Repetition") +
+  xlab("Sample") + ylab("FreshWeight")
+```
+
+## Soft traits
+
+```{r measureSoft, fig.cap="measurement error in soft traits."}
+googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                          "measure_soft") %>% 
+  select(Sample, Repetition, Leaf, LTmean, FreshWeight) %>% 
+  group_by(Sample, Repetition) %>% 
+  summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight)) %>% 
+  reshape2::melt(c("Sample", "Repetition")) %>% 
+  ggplot(aes(as.factor(Sample), value)) +
+  geom_boxplot(alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Repetition)) +
+  viridis::scale_color_viridis("Repetition") +
+  xlab("Sample") +
+  facet_wrap(~ variable, scales = "free")
+```

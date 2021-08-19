@@ -9,6 +9,10 @@ fig:indMDP16
 fig:candFig
 tab:candTab
 fig:candMap
+fig:measurePtlp
+fig:measureFvFm
+fig:measureRWC
+fig:measureSoft
 todo
 calendar
 a-not-on-balance-sampling
@@ -25,8 +29,13 @@ species
 metradica
 candidates
 maps
+measurement-error
+psi_tlp
+fracfvfm
+rwc
+soft-traits-1
 traits-covariation
-traits-covariation-1
+variance-partitionning
 environment-ontogeny
 models
 literature
