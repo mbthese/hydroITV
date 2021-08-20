@@ -15,56 +15,151 @@ Subsequent analysis aimed to explore measurement error.
 ## $\Psi_{TLP}$
 
 ```{r measurePtlp, fig.cap="measurement error in $\\Psi_{TLP}$."}
-googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                          "measure_ptlp") %>% 
-  mutate(C0 = as.numeric(C0)) %>% 
-  ggplot(aes(as.factor(Nr_Leaf), Ptlp)) +
-  geom_boxplot(aes(fill = User_initial), alpha = 0.5, col = "lightgrey") +
-  geom_point(aes(col = Nr_Cycle)) +
-  viridis::scale_color_viridis("Repetition") +
-  scale_fill_discrete("Operator") +
-  xlab("Sample") + ylab(expression(Psi[TLP])) 
+cowplot::plot_grid(
+  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_ptlp") %>% 
+    mutate(C0 = as.numeric(C0)) %>% 
+    ggplot(aes(as.factor(Nr_Leaf), Ptlp)) +
+    geom_boxplot(aes(fill = as.character(lubridate::date(Date_measure))),
+                 alpha = 0.5, col = "lightgrey") +
+    geom_point(aes(col = Nr_Cycle)) +
+    viridis::scale_color_viridis("Repetition") +
+    scale_fill_discrete("Day") +
+    xlab("Sample") + ylab(expression(Psi[TLP])),
+  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_ptlp") %>% 
+    mutate(day = as.character(lubridate::date(Date_measure))) %>% 
+    select(Nr_Leaf, Nr_Cycle, Ptlp, day) %>% 
+    rename(trait = Ptlp, leaf = Nr_Leaf, measure = Nr_Cycle) %>% 
+    na.omit() %>% 
+    mutate(leaf = as.factor(paste0("L", leaf)), measure = as.factor(paste0("M", measure))) %>% 
+    group_by(leaf) %>% 
+    sample_n(5) %>% 
+    nlme::lme(trait ~ 1, random=~1|day/leaf/measure, data = .) %>% 
+    ape::varcomp(scale = F, cum = F) %>% 
+    as.vector() %>% 
+    data.frame(level = c("day", "leaf", "measure", "residual"), variance = as.vector(.)) %>% 
+    ggplot(aes(x = "Ptlp", y = variance, fill = level)) +
+    geom_bar(stat = "identity", position = "stack") +
+    scale_fill_manual(expression(sigma), values = c("firebrick", "lightgreen", "lightblue", "grey")) +
+    theme(axis.text.y = element_blank()) +
+    xlab(expression(Psi[TLP])) + ylab("") +
+    coord_flip(),
+  nrow = 2, rel_heights = c(2,1)
+)
 ```
 
 ## $\frac{Fv}{Fm}$
 
 ```{r measureFvFm, fig.cap="measurement error in $\\frac{Fv}{Fm}$."}
-googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                          "measure_fvfm") %>% 
-  mutate(FvFm = as.numeric(FvFm)) %>% 
-  ggplot(aes(as.factor(Leaf), FvFm)) +
-  geom_boxplot(alpha = 0.5, col = "lightgrey") +
-  geom_point(aes(col = Repetition)) +
-  viridis::scale_color_viridis("Repetition") +
-  xlab("Sample") + ylab(expression(frac(Fv,Fm)))
+cowplot::plot_grid(
+  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_fvfm") %>% 
+    mutate(FvFm = as.numeric(FvFm)) %>% 
+    ggplot(aes(as.factor(Leaf), FvFm)) +
+    geom_boxplot(alpha = 0.5, col = "lightgrey") +
+    geom_point(aes(col = Repetition)) +
+    viridis::scale_color_viridis("Repetition") +
+    xlab("Sample") + ylab(expression(frac(Fv,Fm))),
+  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_fvfm") %>% 
+    mutate(FvFm = as.numeric(FvFm)) %>% 
+    select(Leaf, Repetition, FvFm) %>% 
+    rename(trait = FvFm, leaf = Leaf, measure = Repetition) %>% 
+    na.omit() %>% 
+    mutate(leaf = as.factor(paste0("L", leaf)), measure = as.factor(paste0("M", measure))) %>% 
+    group_by(leaf) %>% 
+    sample_n(10) %>% 
+    nlme::lme(trait ~ 1, random=~1|leaf/measure, data = .) %>% 
+    ape::varcomp(scale = F, cum = F) %>% 
+    as.vector() %>% 
+    data.frame(level = c("leaf", "measure", "residual"), variance = as.vector(.)) %>% 
+    ggplot(aes(x = "Ptlp", y = variance, fill = level)) +
+    geom_bar(stat = "identity", position = "stack") +
+    scale_fill_manual(expression(sigma), values = c("lightgreen", "lightblue", "grey")) +
+    theme(axis.text.y = element_blank()) +
+    xlab(expression(frac(Fv,Fm))) + ylab("") +
+    coord_flip(),
+  nrow = 2, rel_heights = c(2,1)
+)
 ```
 
 ## $RWC$
 
 ```{r measureRWC, fig.cap="measurement error in $RWC$."}
-googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                          "measure_rwc") %>% 
-  mutate(FreshWeight = as.numeric(BagFreshWeight) - as.numeric(BagWeight)) %>% 
-  ggplot(aes(as.factor(Sample), FreshWeight)) +
-  geom_boxplot(alpha = 0.5, col = "lightgrey") +
-  geom_point(aes(col = Repetition)) +
-  viridis::scale_color_viridis("Repetition") +
-  xlab("Sample") + ylab("FreshWeight")
+cowplot::plot_grid(
+  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_rwc") %>% 
+    mutate(FreshWeight = as.numeric(BagFreshWeight) - as.numeric(BagWeight)) %>% 
+    ggplot(aes(as.factor(Sample), FreshWeight)) +
+    geom_boxplot(alpha = 0.5, col = "lightgrey") +
+    geom_point(aes(col = Repetition)) +
+    viridis::scale_color_viridis("Repetition") +
+    xlab("Sample") + ylab("FreshWeight"),
+  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_rwc") %>% 
+    mutate(FreshWeight = as.numeric(BagFreshWeight) - as.numeric(BagWeight)) %>% 
+    select(Sample, Repetition, FreshWeight) %>% 
+    rename(trait = FreshWeight, leaf = Sample, measure = Repetition) %>% 
+    na.omit() %>% 
+    mutate(leaf = as.factor(paste0("L", leaf)), measure = as.factor(paste0("M", measure))) %>% 
+    group_by(leaf) %>% 
+    sample_n(5) %>% 
+    nlme::lme(trait ~ 1, random=~1|leaf/measure, data = .) %>% 
+    ape::varcomp(scale = F, cum = F) %>% 
+    as.vector() %>% 
+    data.frame(level = c("leaf", "measure", "residual"), variance = as.vector(.)) %>% 
+    ggplot(aes(x = "Ptlp", y = variance, fill = level)) +
+    geom_bar(stat = "identity", position = "stack") +
+    scale_fill_manual(expression(sigma), values = c("lightgreen", "lightblue", "grey")) +
+    theme(axis.text.y = element_blank()) +
+    xlab("Fresh Weight") + ylab("") +
+    coord_flip(),
+  nrow = 2, rel_heights = c(2,1)
+)
 ```
 
 ## Soft traits
 
 ```{r measureSoft, fig.cap="measurement error in soft traits."}
-googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                          "measure_soft") %>% 
-  select(Sample, Repetition, Leaf, LTmean, FreshWeight) %>% 
-  group_by(Sample, Repetition) %>% 
-  summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight)) %>% 
-  reshape2::melt(c("Sample", "Repetition")) %>% 
-  ggplot(aes(as.factor(Sample), value)) +
-  geom_boxplot(alpha = 0.5, col = "lightgrey") +
-  geom_point(aes(col = Repetition)) +
-  viridis::scale_color_viridis("Repetition") +
-  xlab("Sample") +
-  facet_wrap(~ variable, scales = "free")
+cowplot::plot_grid(
+  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_soft") %>% 
+    select(Sample, Repetition, Leaf, LTmean, FreshWeight) %>% 
+    group_by(Sample, Repetition) %>% 
+    summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight)) %>% 
+    reshape2::melt(c("Sample", "Repetition")) %>% 
+    ggplot(aes(as.factor(Sample), value)) +
+    geom_boxplot(alpha = 0.5, col = "lightgrey") +
+    geom_point(aes(col = Repetition)) +
+    viridis::scale_color_viridis("Repetition") +
+    xlab("Sample") +
+    facet_wrap(~ variable, scales = "free"),
+  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_soft") %>% 
+    select(Sample, Repetition, Leaf, LTmean, FreshWeight) %>% 
+    group_by(Sample, Repetition) %>% 
+    summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight)) %>% 
+    reshape2::melt(c("Sample", "Repetition")) %>% 
+    select(variable, Sample, Repetition, value) %>% 
+    rename(trait = value, leaf = Sample, measure = Repetition) %>% 
+    na.omit() %>% 
+    mutate(leaf = as.factor(paste0("L", leaf)), measure = as.factor(paste0("M", measure))) %>% 
+    group_by(variable, leaf) %>% 
+    sample_n(5) %>% 
+    group_by(variable) %>% 
+    do(var = nlme::lme(trait ~ 1, random=~1|leaf/measure, data = .) %>% 
+         ape::varcomp(scale = F, cum = F) %>% 
+         as.vector() %>% 
+         data.frame(level = c("leaf", "measure", "residual"), variance = as.vector(.))) %>% 
+    unnest(var) %>% 
+    ggplot(aes(x = "Ptlp", y = variance, fill = level)) +
+    geom_bar(stat = "identity", position = "stack") +
+    scale_fill_manual(expression(sigma), values = c("lightgreen", "lightblue", "grey")) +
+    theme(axis.text.y = element_blank()) +
+    xlab("") + ylab("") +
+    coord_flip() +
+    facet_wrap(~ variable, scales = "free"),
+  nrow = 2, rel_heights = c(2,1)
+)
 ```
