@@ -91,16 +91,18 @@ cowplot::plot_grid(
   googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
                             "measure_rwc") %>% 
     mutate(FreshWeight = as.numeric(BagFreshWeight) - as.numeric(BagWeight)) %>% 
-    ggplot(aes(as.factor(Sample), FreshWeight)) +
+    mutate(FresSathWeight = FreshWeight/SaturatedWeight) %>% 
+    ggplot(aes(as.factor(Sample), FresSathWeight)) +
     geom_boxplot(alpha = 0.5, col = "lightgrey") +
     geom_point(aes(col = Repetition)) +
     viridis::scale_color_viridis("Repetition") +
-    xlab("Sample") + ylab("FreshWeight"),
+    xlab("Sample") + ylab(expression(frac(FreshWeight,SaturatedWeight))),
   googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
                             "measure_rwc") %>% 
     mutate(FreshWeight = as.numeric(BagFreshWeight) - as.numeric(BagWeight)) %>% 
-    select(Sample, Repetition, FreshWeight) %>% 
-    rename(trait = FreshWeight, leaf = Sample, measure = Repetition) %>% 
+    mutate(FresSathWeight = FreshWeight/SaturatedWeight) %>% 
+    select(Sample, Repetition, FresSathWeight) %>% 
+    rename(trait = FresSathWeight, leaf = Sample, measure = Repetition) %>% 
     na.omit() %>% 
     mutate(leaf = as.factor(paste0("L", leaf)), measure = as.factor(paste0("M", measure))) %>% 
     group_by(leaf) %>% 
@@ -113,7 +115,7 @@ cowplot::plot_grid(
     geom_bar(stat = "identity", position = "stack") +
     scale_fill_manual(expression(sigma), values = c("lightgreen", "lightblue", "grey")) +
     theme(axis.text.y = element_blank()) +
-    xlab("Fresh Weight") + ylab("") +
+    xlab(expression(frac(FreshWeight,SaturatedWeight))) + ylab("") +
     coord_flip(),
   nrow = 2, rel_heights = c(2,1)
 )
@@ -121,13 +123,45 @@ cowplot::plot_grid(
 
 ## Soft traits
 
+I first manually checked that all leaves were from 1 to 3 from top to bottom.
+Then, I used following code in `ImageJ`:
+
+```{bash imageJsoft, eval=F, echo=T}
+run("Image Sequence...", "open=/home/sylvain/Documents/ECOFOG/hydroITV/data/traits/measure/measure_20210818_soft_scans/Soft_C0_S1_R5.jpg sort");
+run("8-bit");
+setAutoThreshold("Default");
+//run("Threshold...");
+setAutoThreshold("Default");
+setOption("BlackBackground", false);
+run("Convert to Mask", "method=Default background=Light calculate");
+run("Close");
+run("Analyze Particles...", "size=10000-Infinity show=[Overlay Masks] display exclude clear in_situ stack");
+saveAs("Results", "/home/sylvain/Documents/ECOFOG/hydroITV/data/traits/measure/measure_20210820_LA_ss.tsv");
+```
+
+Than I checked the number of detected objects and I melt the second leaf for sample 1 in `R` with following code:
+
+```{r imagejRsoft, eval=F, echo=T}
+read_tsv("data/traits/measure/measure_20210820_LA_ss.tsv") %>% 
+  separate(Label, paste0("X", 1:8)) %>% 
+  rename(Plot = X6, Sample = X7, Repetition = X8) %>% 
+  select(Plot, Sample, Repetition, Area) %>% 
+  group_by(Sample, Repetition) %>% 
+  mutate(Leaf = paste0("L", 1:n())) %>% 
+  mutate(Leaf = ifelse(Sample == "S1" & Repetition %in% c("R4", "R5"), c("L1", "L2", "L2", "L2", "L2", "L3"), Leaf)) %>% 
+  group_by(Plot, Sample, Repetition, Leaf) %>% 
+  summarise(Area = sum(Area)) %>% 
+  write_tsv("data/traits/measure/measure_20210820_LAcor_ss.tsv")
+```
+
+
 ```{r measureSoft, fig.cap="measurement error in soft traits."}
 cowplot::plot_grid(
   googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
                             "measure_soft") %>% 
-    select(Sample, Repetition, Leaf, LTmean, FreshWeight) %>% 
+    select(Sample, Repetition, Leaf, LTmean, FreshWeight, LApixel) %>% 
     group_by(Sample, Repetition) %>% 
-    summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight)) %>% 
+    summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight), LApixel = mean(LApixel)) %>% 
     reshape2::melt(c("Sample", "Repetition")) %>% 
     ggplot(aes(as.factor(Sample), value)) +
     geom_boxplot(alpha = 0.5, col = "lightgrey") +
@@ -137,9 +171,9 @@ cowplot::plot_grid(
     facet_wrap(~ variable, scales = "free"),
   googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
                             "measure_soft") %>% 
-    select(Sample, Repetition, Leaf, LTmean, FreshWeight) %>% 
+    select(Sample, Repetition, Leaf, LTmean, FreshWeight, LApixel) %>% 
     group_by(Sample, Repetition) %>% 
-    summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight)) %>% 
+    summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight), LApixel = mean(LApixel)) %>% 
     reshape2::melt(c("Sample", "Repetition")) %>% 
     select(variable, Sample, Repetition, value) %>% 
     rename(trait = value, leaf = Sample, measure = Repetition) %>% 
