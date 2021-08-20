@@ -23,7 +23,7 @@ googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6h
   geom_point(aes(col = Nr_Cycle)) +
   viridis::scale_color_viridis("Repetition") +
   scale_fill_discrete("Operator") +
-  xlab("Sample") + ylab(expression(Psi[TLP]))
+  xlab("Sample") + ylab(expression(Psi[TLP])) 
 ```
 
 ## $\frac{Fv}{Fm}$
