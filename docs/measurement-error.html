@@ -165,12 +165,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="individuals.html"><a href="individuals.html#candidates"><i class="fa fa-check"></i><b>3.3</b> Candidates</a></li>
 <li class="chapter" data-level="3.4" data-path="individuals.html"><a href="individuals.html#maps"><i class="fa fa-check"></i><b>3.4</b> Maps</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="measurement-error.html"><a href="measurement-error.html"><i class="fa fa-check"></i><b>4</b> Measurement error</a><ul>
-<li class="chapter" data-level="4.1" data-path="measurement-error.html"><a href="measurement-error.html#psi_tlp"><i class="fa fa-check"></i><b>4.1</b> <span class="math inline">\(\Psi_{TLP}\)</span></a></li>
-<li class="chapter" data-level="4.2" data-path="measurement-error.html"><a href="measurement-error.html#fracfvfm"><i class="fa fa-check"></i><b>4.2</b> <span class="math inline">\(\frac{Fv}{Fm}\)</span></a></li>
-<li class="chapter" data-level="4.3" data-path="measurement-error.html"><a href="measurement-error.html#rwc"><i class="fa fa-check"></i><b>4.3</b> <span class="math inline">\(RWC\)</span></a></li>
-<li class="chapter" data-level="4.4" data-path="measurement-error.html"><a href="measurement-error.html#soft-traits-1"><i class="fa fa-check"></i><b>4.4</b> Soft traits</a></li>
-</ul></li>
+<li class="chapter" data-level="4" data-path="measurement-error.html"><a href="measurement-error.html"><i class="fa fa-check"></i><b>4</b> Measurement error</a></li>
 <li class="chapter" data-level="5" data-path="leaf-variation.html"><a href="leaf-variation.html"><i class="fa fa-check"></i><b>5</b> Leaf variation</a><ul>
 <li class="chapter" data-level="5.1" data-path="leaf-variation.html"><a href="leaf-variation.html#sampling"><i class="fa fa-check"></i><b>5.1</b> Sampling</a></li>
 </ul></li>
@@ -212,37 +207,24 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <div id="measurement-error" class="section level1">
 <h1><span class="header-section-number">Chapter 4</span> Measurement error</h1>
 <p>Subsequent analysis aimed to explore measurement error.</p>
-<div id="psi_tlp" class="section level2">
-<h2><span class="header-section-number">4.1</span> <span class="math inline">\(\Psi_{TLP}\)</span></h2>
-<div class="figure"><span id="fig:measurePtlp"></span>
-<img src="hydroITV_files/figure-html/measurePtlp-1.png" alt="measurement error in $\Psi_{TLP}$." width="768" />
+<p><span class="math inline">\(\Psi_{TLP}\)</span>, <span class="math inline">\(\frac{Fv}{Fm}\)</span>, and <span class="math inline">\(LT\)</span> were directly measured.
+<span class="math inline">\(RWC\)</span> was calculated as the fresh weight, i.e. empty bag weight minus fresh leave in bag weight, minus the dry weight divided by the saturated weight minus the dry weight.
+<span class="math inline">\(LA\)</span> was determined from scan using <code>ImageJ</code> and <code>R</code> scripts at the end before converting pixels square to centimeters square.
+<span class="math inline">\(LDMC\)</span> was calculated as the dry weight divided by the fresh weight.
+<span class="math inline">\(SLA\)</span> was calculated as the leaf area divided by the dry weight.
+<span class="math inline">\(CC\)</span> was not measured yet.</p>
+<div class="figure"><span id="fig:measureBoxplots"></span>
+<img src="hydroITV_files/figure-html/measureBoxplots-1.png" alt="Traits distributions when testing for measurement error." width="768" />
 <p class="caption">
-Figure 4.1: measurement error in <span class="math inline">\(\Psi_{TLP}\)</span>.
+Figure 4.1: Traits distributions when testing for measurement error.
 </p>
 </div>
-</div>
-<div id="fracfvfm" class="section level2">
-<h2><span class="header-section-number">4.2</span> <span class="math inline">\(\frac{Fv}{Fm}\)</span></h2>
-<div class="figure"><span id="fig:measureFvFm"></span>
-<img src="hydroITV_files/figure-html/measureFvFm-1.png" alt="measurement error in $\frac{Fv}{Fm}$." width="768" />
+<div class="figure"><span id="fig:measureVars"></span>
+<img src="hydroITV_files/figure-html/measureVars-1.png" alt="Traits variances when testing for measurement error." width="768" />
 <p class="caption">
-Figure 4.2: measurement error in <span class="math inline">\(\frac{Fv}{Fm}\)</span>.
+Figure 4.2: Traits variances when testing for measurement error.
 </p>
 </div>
-</div>
-<div id="rwc" class="section level2">
-<h2><span class="header-section-number">4.3</span> <span class="math inline">\(RWC\)</span></h2>
-<div class="figure"><span id="fig:measureRWC"></span>
-<img src="hydroITV_files/figure-html/measureRWC-1.png" alt="measurement error in $RWC$." width="768" />
-<p class="caption">
-Figure 4.3: measurement error in <span class="math inline">\(RWC\)</span>.
-</p>
-</div>
-</div>
-<div id="soft-traits-1" class="section level2">
-<h2><span class="header-section-number">4.4</span> Soft traits</h2>
-<p>I first manually checked that all leaves were from 1 to 3 from top to bottom.
-Then, I used following code in <code>ImageJ</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="measurement-error.html#cb1-1"></a><span class="ex">run</span>(<span class="st">&quot;Image Sequence...&quot;</span>, <span class="st">&quot;open=/home/sylvain/Documents/ECOFOG/hydroITV/data/traits/measure/measure_20210818_soft_scans/Soft_C0_S1_R5.jpg sort&quot;</span>);</span>
 <span id="cb1-2"><a href="measurement-error.html#cb1-2"></a><span class="ex">run</span>(<span class="st">&quot;8-bit&quot;</span>);</span>
 <span id="cb1-3"><a href="measurement-error.html#cb1-3"></a><span class="ex">setAutoThreshold</span>(<span class="st">&quot;Default&quot;</span>);</span>
@@ -253,7 +235,6 @@ Then, I used following code in <code>ImageJ</code>:</p>
 <span id="cb1-8"><a href="measurement-error.html#cb1-8"></a><span class="ex">run</span>(<span class="st">&quot;Close&quot;</span>);</span>
 <span id="cb1-9"><a href="measurement-error.html#cb1-9"></a><span class="ex">run</span>(<span class="st">&quot;Analyze Particles...&quot;</span>, <span class="st">&quot;size=10000-Infinity show=[Overlay Masks] display exclude clear in_situ stack&quot;</span>);</span>
 <span id="cb1-10"><a href="measurement-error.html#cb1-10"></a><span class="ex">saveAs</span>(<span class="st">&quot;Results&quot;</span>, <span class="st">&quot;/home/sylvain/Documents/ECOFOG/hydroITV/data/traits/measure/measure_20210820_LA_ss.tsv&quot;</span>);</span></code></pre></div>
-<p>Than I checked the number of detected objects and I melt the second leaf for sample 1 in <code>R</code> with following code:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="measurement-error.html#cb2-1"></a><span class="kw">read_tsv</span>(<span class="st">&quot;data/traits/measure/measure_20210820_LA_ss.tsv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-2"><a href="measurement-error.html#cb2-2"></a><span class="st">  </span><span class="kw">separate</span>(Label, <span class="kw">paste0</span>(<span class="st">&quot;X&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">8</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-3"><a href="measurement-error.html#cb2-3"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">Plot =</span> X6, <span class="dt">Sample =</span> X7, <span class="dt">Repetition =</span> X8) <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -264,14 +245,7 @@ Then, I used following code in <code>ImageJ</code>:</p>
 <span id="cb2-8"><a href="measurement-error.html#cb2-8"></a><span class="st">  </span><span class="kw">group_by</span>(Plot, Sample, Repetition, Leaf) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-9"><a href="measurement-error.html#cb2-9"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Area =</span> <span class="kw">sum</span>(Area)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-10"><a href="measurement-error.html#cb2-10"></a><span class="st">  </span><span class="kw">write_tsv</span>(<span class="st">&quot;data/traits/measure/measure_20210820_LAcor_ss.tsv&quot;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:measureSoft"></span>
-<img src="hydroITV_files/figure-html/measureSoft-1.png" alt="measurement error in soft traits." width="768" />
-<p class="caption">
-Figure 4.4: measurement error in soft traits.
-</p>
-</div>
 
-</div>
 </div>
             </section>
 

@@ -9,10 +9,8 @@ fig:indMDP16
 fig:candFig
 tab:candTab
 fig:candMap
-fig:measurePtlp
-fig:measureFvFm
-fig:measureRWC
-fig:measureSoft
+fig:measureBoxplots
+fig:measureVars
 fig:samplingleafvar
 todo
 calendar
@@ -31,10 +29,6 @@ metradica
 candidates
 maps
 measurement-error
-psi_tlp
-fracfvfm
-rwc
-soft-traits-1
 leaf-variation
 sampling
 traits-covariation

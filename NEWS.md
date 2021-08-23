@@ -1,3 +1,6 @@
+hydroITV 1.0.0.9008
+* measurement errors: simplified
+
 hydroITV 1.0.0.9007
 * leaf variation: sampling
 

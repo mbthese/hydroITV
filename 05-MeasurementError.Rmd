@@ -12,119 +12,97 @@ opts_chunk$set(
 
 Subsequent analysis aimed to explore measurement error.
 
-## $\Psi_{TLP}$
+$\Psi_{TLP}$, $\frac{Fv}{Fm}$, and $LT$ were directly measured. 
+$RWC$ was calculated as the fresh weight, i.e. empty bag weight minus fresh leave in bag weight, minus the dry weight divided by the saturated weight minus the dry weight.
+$LA$ was determined from scan using `ImageJ` and `R` scripts at the end before converting pixels square to centimeters square.
+$LDMC$ was calculated as the dry weight divided by the fresh weight.
+$SLA$ was calculated as the leaf area divided by the dry weight. 
+$CC$ was not measured yet.
 
-```{r measurePtlp, fig.cap="measurement error in $\\Psi_{TLP}$."}
-cowplot::plot_grid(
-  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                            "measure_ptlp") %>% 
-    mutate(C0 = as.numeric(C0)) %>% 
-    ggplot(aes(as.factor(Nr_Leaf), Ptlp)) +
-    geom_boxplot(aes(fill = as.character(lubridate::date(Date_measure))),
-                 alpha = 0.5, col = "lightgrey") +
-    geom_point(aes(col = Nr_Cycle)) +
-    viridis::scale_color_viridis("Repetition") +
-    scale_fill_discrete("Day") +
-    xlab("Sample") + ylab(expression(Psi[TLP])),
-  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                            "measure_ptlp") %>% 
-    mutate(day = as.character(lubridate::date(Date_measure))) %>% 
-    select(Nr_Leaf, Nr_Cycle, Ptlp, day) %>% 
-    rename(trait = Ptlp, leaf = Nr_Leaf, measure = Nr_Cycle) %>% 
-    na.omit() %>% 
-    mutate(leaf = as.factor(paste0("L", leaf)), measure = as.factor(paste0("M", measure))) %>% 
-    group_by(leaf) %>% 
-    sample_n(5) %>% 
-    nlme::lme(trait ~ 1, random=~1|day/leaf/measure, data = .) %>% 
-    ape::varcomp(scale = F, cum = F) %>% 
-    as.vector() %>% 
-    data.frame(level = c("day", "leaf", "measure", "residual"), variance = as.vector(.)) %>% 
-    ggplot(aes(x = "Ptlp", y = variance, fill = level)) +
-    geom_bar(stat = "identity", position = "stack") +
-    scale_fill_manual(expression(sigma), values = c("firebrick", "lightgreen", "lightblue", "grey")) +
-    theme(axis.text.y = element_blank()) +
-    xlab(expression(Psi[TLP])) + ylab("") +
-    coord_flip(),
-  nrow = 2, rel_heights = c(2,1)
-)
-```
-
-## $\frac{Fv}{Fm}$
-
-```{r measureFvFm, fig.cap="measurement error in $\\frac{Fv}{Fm}$."}
-cowplot::plot_grid(
-  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+```{r measdata}
+ptlp <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "measure_ptlp") %>% 
+  mutate(C0 = as.numeric(C0))
+fvfm <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
                             "measure_fvfm") %>% 
-    mutate(FvFm = as.numeric(FvFm)) %>% 
-    ggplot(aes(as.factor(Leaf), FvFm)) +
-    geom_boxplot(alpha = 0.5, col = "lightgrey") +
-    geom_point(aes(col = Repetition)) +
-    viridis::scale_color_viridis("Repetition") +
-    xlab("Sample") + ylab(expression(frac(Fv,Fm))),
-  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                            "measure_fvfm") %>% 
-    mutate(FvFm = as.numeric(FvFm)) %>% 
-    select(Leaf, Repetition, FvFm) %>% 
-    rename(trait = FvFm, leaf = Leaf, measure = Repetition) %>% 
-    na.omit() %>% 
-    mutate(leaf = as.factor(paste0("L", leaf)), measure = as.factor(paste0("M", measure))) %>% 
-    group_by(leaf) %>% 
-    sample_n(10) %>% 
-    nlme::lme(trait ~ 1, random=~1|leaf/measure, data = .) %>% 
-    ape::varcomp(scale = F, cum = F) %>% 
-    as.vector() %>% 
-    data.frame(level = c("leaf", "measure", "residual"), variance = as.vector(.)) %>% 
-    ggplot(aes(x = "Ptlp", y = variance, fill = level)) +
-    geom_bar(stat = "identity", position = "stack") +
-    scale_fill_manual(expression(sigma), values = c("lightgreen", "lightblue", "grey")) +
-    theme(axis.text.y = element_blank()) +
-    xlab(expression(frac(Fv,Fm))) + ylab("") +
-    coord_flip(),
-  nrow = 2, rel_heights = c(2,1)
+    mutate(FvFm = as.numeric(FvFm)) 
+rwc <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_rwc") %>% 
+    mutate(RWC = ((as.numeric(BagFreshWeight) - as.numeric(BagWeight))-DryWeight)/(SaturatedWeight-DryWeight))
+soft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "measure_soft") %>% 
+  mutate(LA = LApixel / ((300 ^2 ) * (2.54^2)), LDMC = DryWeight/FreshWeight, LT = LTmean) %>% 
+  mutate(SLA = LA/DryWeight)
+traits <- bind_rows(
+  soft %>% 
+    mutate(Date = lubridate::date(Date)) %>% 
+    select(Date, Sample, Repetition, Leaf, LA, LDMC, LT, SLA) %>%
+    reshape2::melt(c("Date", "Sample", "Repetition", "Leaf"), variable.name = "trait"),
+  ptlp %>% 
+    mutate(Date = lubridate::date(Date_measure)) %>% 
+    mutate(Sample  = Nr_Leaf, Repetition = Nr_Cycle, Leaf = 1) %>% 
+    select(Date, Sample, Repetition, Leaf, Ptlp) %>% 
+    mutate(trait = "Ptlp") %>% 
+    rename(value = Ptlp) %>% 
+    na.omit(),
+  fvfm %>% 
+    mutate(Date = lubridate::date(Date)) %>% 
+    mutate(Sample  = Leaf, Leaf = 1) %>% 
+    select(Date, Sample, Repetition, Leaf, FvFm) %>% 
+    mutate(trait = "FvFm") %>% 
+    rename(value = FvFm) %>% 
+    na.omit(),
+  rwc %>% 
+    mutate(Date = lubridate::date(Day)) %>% 
+    mutate(Leaf = 1) %>% 
+    select(Date, Sample, Repetition, Leaf, RWC) %>% 
+    mutate(trait = "RWC") %>% 
+    rename(value = RWC) %>% 
+    na.omit()
 )
+# autoplot(princomp(~ LA + LDMC + LT + SLA + Ptlp + FvFm + RWC, reshape2::dcast(traits, Sample + Repetition + Leaf ~ trait), scale = T),
+#          loadings = T, loadings.label = T)
 ```
 
-## $RWC$
 
-```{r measureRWC, fig.cap="measurement error in $RWC$."}
-cowplot::plot_grid(
-  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                            "measure_rwc") %>% 
-    mutate(FreshWeight = as.numeric(BagFreshWeight) - as.numeric(BagWeight)) %>% 
-    mutate(FresSathWeight = FreshWeight/SaturatedWeight) %>% 
-    ggplot(aes(as.factor(Sample), FresSathWeight)) +
-    geom_boxplot(alpha = 0.5, col = "lightgrey") +
-    geom_point(aes(col = Repetition)) +
-    viridis::scale_color_viridis("Repetition") +
-    xlab("Sample") + ylab(expression(frac(FreshWeight,SaturatedWeight))),
-  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                            "measure_rwc") %>% 
-    mutate(FreshWeight = as.numeric(BagFreshWeight) - as.numeric(BagWeight)) %>% 
-    mutate(FresSathWeight = FreshWeight/SaturatedWeight) %>% 
-    select(Sample, Repetition, FresSathWeight) %>% 
-    rename(trait = FresSathWeight, leaf = Sample, measure = Repetition) %>% 
-    na.omit() %>% 
-    mutate(leaf = as.factor(paste0("L", leaf)), measure = as.factor(paste0("M", measure))) %>% 
-    group_by(leaf) %>% 
-    sample_n(5) %>% 
-    nlme::lme(trait ~ 1, random=~1|leaf/measure, data = .) %>% 
-    ape::varcomp(scale = F, cum = F) %>% 
-    as.vector() %>% 
-    data.frame(level = c("leaf", "measure", "residual"), variance = as.vector(.)) %>% 
-    ggplot(aes(x = "Ptlp", y = variance, fill = level)) +
-    geom_bar(stat = "identity", position = "stack") +
-    scale_fill_manual(expression(sigma), values = c("lightgreen", "lightblue", "grey")) +
-    theme(axis.text.y = element_blank()) +
-    xlab(expression(frac(FreshWeight,SaturatedWeight))) + ylab("") +
-    coord_flip(),
-  nrow = 2, rel_heights = c(2,1)
-)
+```{r measureBoxplots, fig.cap="Traits distributions when testing for measurement error."}
+traits %>% 
+  group_by(Date, Sample, Repetition, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  ggplot(aes(as.factor(Sample), value)) +
+  geom_boxplot(aes(fill = as.character(Date)),
+               alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Repetition)) +
+  viridis::scale_color_viridis("Repetition") +
+  scale_fill_discrete("Day") +
+  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 2) +
+  xlab("Sample") + 
+  theme(axis.title = element_blank(), legend.position = "bottom")
 ```
 
-## Soft traits
-
-I first manually checked that all leaves were from 1 to 3 from top to bottom.
-Then, I used following code in `ImageJ`:
+```{r measureVars, fig.cap="Traits variances when testing for measurement error."}
+traits %>% 
+  group_by(Date, Sample, Repetition, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  group_by(trait, Sample) %>% 
+  sample_n(5) %>% 
+  group_by(trait) %>% 
+  do(var = nlme::lme(value ~ 1, random=~1|Date/Sample/Repetition, data = .) %>% 
+       ape::varcomp(scale = F, cum = F) %>% 
+       as.vector() %>% 
+       data.frame(level = c("Date", "Sample", "Repetition", "Residual"), variance = as.vector(.))) %>% 
+  unnest(var) %>% 
+  select(-`.`) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(level = factor(level, levels = c("Date", "Sample", "Repetition", "Residual"))) %>% 
+  ggplot(aes(x = trait, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  theme(axis.text.y = element_blank(), strip.text.y.left = element_text(angle = 0)) +
+  scale_fill_manual(expression(sigma), values = c("firebrick", "lightgreen", "lightblue", "grey")) +
+  xlab("") + ylab("") + coord_flip() +
+  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 7, strip.position = "left")
+```
 
 ```{bash imageJsoft, eval=F, echo=T}
 run("Image Sequence...", "open=/home/sylvain/Documents/ECOFOG/hydroITV/data/traits/measure/measure_20210818_soft_scans/Soft_C0_S1_R5.jpg sort");
@@ -139,8 +117,6 @@ run("Analyze Particles...", "size=10000-Infinity show=[Overlay Masks] display ex
 saveAs("Results", "/home/sylvain/Documents/ECOFOG/hydroITV/data/traits/measure/measure_20210820_LA_ss.tsv");
 ```
 
-Than I checked the number of detected objects and I melt the second leaf for sample 1 in `R` with following code:
-
 ```{r imagejRsoft, eval=F, echo=T}
 read_tsv("data/traits/measure/measure_20210820_LA_ss.tsv") %>% 
   separate(Label, paste0("X", 1:8)) %>% 
@@ -152,48 +128,4 @@ read_tsv("data/traits/measure/measure_20210820_LA_ss.tsv") %>%
   group_by(Plot, Sample, Repetition, Leaf) %>% 
   summarise(Area = sum(Area)) %>% 
   write_tsv("data/traits/measure/measure_20210820_LAcor_ss.tsv")
-```
-
-
-```{r measureSoft, fig.cap="measurement error in soft traits."}
-cowplot::plot_grid(
-  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                            "measure_soft") %>% 
-    select(Sample, Repetition, Leaf, LTmean, FreshWeight, LApixel) %>% 
-    group_by(Sample, Repetition) %>% 
-    summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight), LApixel = mean(LApixel)) %>% 
-    reshape2::melt(c("Sample", "Repetition")) %>% 
-    ggplot(aes(as.factor(Sample), value)) +
-    geom_boxplot(alpha = 0.5, col = "lightgrey") +
-    geom_point(aes(col = Repetition)) +
-    viridis::scale_color_viridis("Repetition") +
-    xlab("Sample") +
-    facet_wrap(~ variable, scales = "free"),
-  googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                            "measure_soft") %>% 
-    select(Sample, Repetition, Leaf, LTmean, FreshWeight, LApixel) %>% 
-    group_by(Sample, Repetition) %>% 
-    summarise(LT = mean(LTmean), FreshWeight = mean(FreshWeight), LApixel = mean(LApixel)) %>% 
-    reshape2::melt(c("Sample", "Repetition")) %>% 
-    select(variable, Sample, Repetition, value) %>% 
-    rename(trait = value, leaf = Sample, measure = Repetition) %>% 
-    na.omit() %>% 
-    mutate(leaf = as.factor(paste0("L", leaf)), measure = as.factor(paste0("M", measure))) %>% 
-    group_by(variable, leaf) %>% 
-    sample_n(5) %>% 
-    group_by(variable) %>% 
-    do(var = nlme::lme(trait ~ 1, random=~1|leaf/measure, data = .) %>% 
-         ape::varcomp(scale = F, cum = F) %>% 
-         as.vector() %>% 
-         data.frame(level = c("leaf", "measure", "residual"), variance = as.vector(.))) %>% 
-    unnest(var) %>% 
-    ggplot(aes(x = "Ptlp", y = variance, fill = level)) +
-    geom_bar(stat = "identity", position = "stack") +
-    scale_fill_manual(expression(sigma), values = c("lightgreen", "lightblue", "grey")) +
-    theme(axis.text.y = element_blank()) +
-    xlab("") + ylab("") +
-    coord_flip() +
-    facet_wrap(~ variable, scales = "free"),
-  nrow = 2, rel_heights = c(2,1)
-)
 ```
