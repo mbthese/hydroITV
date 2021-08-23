@@ -13,6 +13,7 @@ fig:measurePtlp
 fig:measureFvFm
 fig:measureRWC
 fig:measureSoft
+fig:samplingleafvar
 todo
 calendar
 a-not-on-balance-sampling
