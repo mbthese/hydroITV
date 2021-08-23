@@ -1,0 +1,36 @@
+```{r setupleafvar, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(sf)
+library(leaflet)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+crs <- '+proj=longlat +datum=WGS84' # leaflet CRS
+```
+
+# Leaf variation
+
+Subsequent analysis aimed to explore leaf variation within tree.
+
+## Sampling
+
+For the leaf variation within individual I suggest using the 27 *Virola michelii* from the P16 that follows our requirements (DBH between 30th and 60th quantiles).
+
+```{r}
+candidates <- read_csv2("data/Paracou_P16_2020.csv") %>%
+  filter(Genus == "Virola", Species == "michelii") %>% 
+  mutate(DBH = CircCorr/pi) %>% 
+  filter(DBH >= quantile(DBH, 0.3), DBH <= quantile(DBH, 0.6))  %>% 
+  st_as_sf(coords = c("Xutm", "Yutm"),
+           crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0') %>% 
+  mutate(Ind = paste0("P", Plot, "_", SubPlot, "_", TreeFieldNum))
+limits <- st_read("data/OverallPlots/OverallPlots.shp", quiet = T)
+leaflet(data = st_transform(candidates, crs = crs)) %>%
+  addTiles() %>% 
+  addPolylines(data = st_transform(filter(limits, Plot == 16),
+                                   crs = crs), col = "grey") %>%
+  addCircles(opacity = 1, label = ~ Ind, radius = ~ DBH/2) 
+```
