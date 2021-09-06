@@ -12,6 +12,8 @@ fig:candMap
 fig:measureBoxplots
 fig:measureVars
 fig:samplingleafvar
+fig:leafBoxplots
+fig:leafVars
 todo
 calendar
 a-not-on-balance-sampling
@@ -31,6 +33,7 @@ maps
 measurement-error
 leaf-variation
 sampling
+traits-1
 traits-covariation
 variance-partitionning
 environment-ontogeny
