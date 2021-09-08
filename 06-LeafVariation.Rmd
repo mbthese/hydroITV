@@ -13,11 +13,9 @@ crs <- '+proj=longlat +datum=WGS84' # leaflet CRS
 
 # Leaf variation
 
-Subsequent analysis aimed to explore leaf variation within tree.
-
 ## Sampling
 
-For the leaf variation within individual I suggest using the 27 *Virola michelii* from the P16 that follows our requirements (DBH between 30th and 60th quantiles).
+For the leaf variation within individual we sampled across the 27 *Virola michelii* from the P16 that followed our requirements (DBH between 30th and 60th quantiles):
 
 ```{r samplingleafvar, fig.cap="Candidates in P16."}
 # data

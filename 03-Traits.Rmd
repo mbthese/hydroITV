@@ -1,10 +1,8 @@
 # Traits
 
-**TODO: define traits and protocols with Marion.**
-
 This chapter defines measured and sampled traits with associated protocols.
 
-## Soft traits
+## Leaf traits
 
 * **LA**: leaf area $cm^{2}$
 * **LDMC**: leaf dry matter content $g.g^{-1}$
@@ -14,11 +12,11 @@ This chapter defines measured and sampled traits with associated protocols.
 
 ## Hydraulic traits
 
-* **RWC**: relative water content (%) is of special interest as it reflects the amount of water present the leaf relative to the maximum it can hold (*INSERER BIBLIO Barrs & Weatherley 1962*)
+* **RWC**: relative water content (%) is of special interest as it reflects the amount of water present the leaf relative to the maximum it can hold [@BARRs1962]
 * **$\Psi _{TLP}$**: leaf water potential at which leaf cells lose turgor (MPa), a key drought tolerance trait. 
 * **$g_{min}$**: leaf minimum conductance $mmol.m^{-2}.s^{-1}$ taking into account water losses through the cuticle and incompletely closed stomata.
-* **Stomatal density**: morphological characteristic at the crossroads between water loss and the maximum rate of photosynthesis.(*INSERER BIBLIO Julio V. Schneider 2016*)
-* **Nervation density**: determining the capacity of water supply in leaves. (*INSERER BIBLIO Julio V. Schneider 2016*)
+* **Stomatal density**: morphological characteristic at the crossroads between water loss and the maximum rate of photosynthesis [@Schneider2017].
+* **Nervation density**: determining the capacity of water supply in leaves [@Schneider2017].
 * Leaf chemistry? 
 
 ## Photochemical trait
@@ -27,28 +25,25 @@ This chapter defines measured and sampled traits with associated protocols.
 
 ## Measured traits
 
-* Soft traits
-    * Fresh
-        * thickness (3 points)
+* Leaf traits
+    * Fresh - Day 1
+        * Dry thickness (3 points)
         * SPAD (3 points)
-        * weight
-        * area (scan)
-    * Dry
-        * weight
-        
+        * Fresh weight
+        * Area (scan)
+    * Dry - Day 4
+        * Dry weight
 * Hydraulic traits  
     * Day 1  
-        * fresh weight  
+        * Fresh weight  
         * **$g_{min}$**  
         * **Stomatal density**
         * **$\frac{Fv}{Fm}$**
-        * area (scan)
-    
+        * Area (scan)
     * Day 2
-        * saturated weight
+        * Saturated weight
         * **$g_{min}$**  
         * **$\Psi _{TLP}$**
-    
     * Day 4 
         * Dry weight
 

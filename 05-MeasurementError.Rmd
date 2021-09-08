@@ -10,8 +10,6 @@ opts_chunk$set(
 
 # Measurement error
 
-Subsequent analysis aimed to explore measurement error.
-
 $\Psi_{TLP}$, $\frac{Fv}{Fm}$, and $LT$ were directly measured. 
 $RWC$ was calculated as the fresh weight, i.e. empty bag weight minus fresh leave in bag weight, minus the dry weight divided by the saturated weight minus the dry weight.
 $LA$ was determined from scan using `ImageJ` and `R` scripts at the end before converting pixels square to centimeters square.
