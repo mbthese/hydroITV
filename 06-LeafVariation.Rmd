@@ -132,7 +132,7 @@ traits %>%
   facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 2) +
   coord_flip() +
   theme(axis.title = element_blank(), 
-        legend.position = "bottom", legend.box="vertical", legend.margin=margin())
+        legend.position = "bottom", legend.box="vertical", legend.margin=margin()) 
 ```
 
 ```{r leafVars, fig.cap="Traits variances when testing for leaf variation."}
