@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2021-09-06" />
+<meta name="date" content="2021-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -236,6 +236,18 @@ Figure 5.2: Traits distributions when testing for leaf variation.
 Figure 5.3: Traits variances when testing for leaf variation.
 </p>
 </div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="leaf-variation.html#cb4-1"></a>la &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(<span class="st">&quot;data/traits/leaf/leaf_20210831_LA_ss.tsv&quot;</span>)<span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-2"><a href="leaf-variation.html#cb4-2"></a><span class="st">  </span><span class="kw">separate</span>(Label, <span class="kw">paste0</span>(<span class="st">&quot;X&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>), <span class="dt">convert =</span> T) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-3"><a href="leaf-variation.html#cb4-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">Plot =</span> X5, <span class="dt">SubPlot =</span> X6, <span class="dt">TreeFieldNum =</span> X7, <span class="dt">Sample =</span> X10) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-4"><a href="leaf-variation.html#cb4-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Plot, SubPlot, TreeFieldNum, Sample, Area) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-5"><a href="leaf-variation.html#cb4-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Plot =</span> <span class="kw">as.numeric</span>(<span class="kw">gsub</span>(<span class="st">&quot;P&quot;</span>, <span class="st">&quot;&quot;</span>, Plot)), <span class="dt">SubPlot =</span> <span class="kw">as.numeric</span>(<span class="kw">gsub</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;&quot;</span>, SubPlot))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-6"><a href="leaf-variation.html#cb4-6"></a><span class="st">  </span><span class="kw">group_by</span>(Plot, SubPlot, TreeFieldNum, Sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-7"><a href="leaf-variation.html#cb4-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Leaf =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb4-8"><a href="leaf-variation.html#cb4-8"></a>googlesheets4<span class="op">::</span><span class="kw">read_sheet</span>(<span class="st">&quot;https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing&quot;</span>,</span>
+<span id="cb4-9"><a href="leaf-variation.html#cb4-9"></a>                                  <span class="st">&quot;leaf_soft&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-10"><a href="leaf-variation.html#cb4-10"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Plot, SubPlot, TreeFieldNum, Sample, Leaf) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-11"><a href="leaf-variation.html#cb4-11"></a><span class="st">  </span><span class="kw">left_join</span>(la) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-12"><a href="leaf-variation.html#cb4-12"></a><span class="st">  </span><span class="kw">write_tsv</span>(<span class="st">&quot;data/traits/leaf/leaf_20210831_LAcor_ss.tsv&quot;</span>)</span></code></pre></div>
 
 </div>
 </div>

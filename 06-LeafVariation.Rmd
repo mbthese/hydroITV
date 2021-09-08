@@ -70,6 +70,9 @@ candidates %>%
   st_write(dsn = "maps/P16_virmic.gpx", delete_dsn = T, driver = "GPX", layer = "waypoints")
 ```
 
+
+
+
 ## Traits
 
 ```{r leafdata}
@@ -83,13 +86,17 @@ rwc <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgG
 soft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
                                   "leaf_soft") %>% 
   rowwise() %>% 
-  mutate(LT = mean(c(LT1, LT2, LT3)), SPAD = mean(c(SPAD1, SPAD2, SPAD3)), LDMC =  DryWeight/FreshWeight) %>% 
-  mutate(CC = (117.1 * SPAD)/(148.84 - SPAD))
+  mutate(LT = mean(c(LT1, LT2, LT3)), 
+         SPAD = mean(c(SPAD1, SPAD2, SPAD3)), 
+         LDMC =  DryWeight/FreshWeight,
+         LA = LApixel / ((300 ^2 ) * (2.54^2))) %>% 
+  mutate(CC = (117.1 * SPAD)/(148.84 - SPAD),
+         SLA = LA/DryWeight)
 traits <- bind_rows(
   soft %>% 
     mutate(Date = lubridate::date(Date)) %>% 
     mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
-    select(Date, Ind, Sample, Leaf, LDMC, LT, FvFm, CC) %>% 
+    select(Date, Ind, Sample, Leaf, LDMC, LT, FvFm, CC, LA, SLA) %>% 
     reshape2::melt(c("Date", "Ind", "Sample", "Leaf"), variable.name = "trait"),
   ptlp %>% 
     mutate(Date = lubridate::date(Date_measure)) %>% 
@@ -133,7 +140,7 @@ traits %>%
   group_by(Date, Ind, Sample, trait) %>% 
   summarise(value = mean(value, na.rm = T)) %>% 
   na.omit() %>% 
-  filter(trait %in% c("CC", "FvFm", "LT", "Ptlp")) %>% 
+  filter(trait %in% c("CC", "FvFm", "LT", "Ptlp", "LA")) %>% 
   group_by(trait, Ind) %>% 
   sample_n(4) %>% 
   group_by(trait) %>% 
@@ -153,4 +160,17 @@ traits %>%
   facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 7, strip.position = "left")
 ```
 
-
+```{r, eval=F, echo=T}
+la <- read_tsv("data/traits/leaf/leaf_20210831_LA_ss.tsv")%>% 
+  separate(Label, paste0("X", 1:10), convert = T) %>% 
+  dplyr::rename(Plot = X5, SubPlot = X6, TreeFieldNum = X7, Sample = X10) %>% 
+  dplyr::select(Plot, SubPlot, TreeFieldNum, Sample, Area) %>% 
+  mutate(Plot = as.numeric(gsub("P", "", Plot)), SubPlot = as.numeric(gsub("C", "", SubPlot))) %>% 
+  group_by(Plot, SubPlot, TreeFieldNum, Sample) %>% 
+  mutate(Leaf = c(3,2,1))
+googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "leaf_soft") %>% 
+  dplyr::select(Plot, SubPlot, TreeFieldNum, Sample, Leaf) %>% 
+  left_join(la) %>% 
+  write_tsv("data/traits/leaf/leaf_20210831_LAcor_ss.tsv")
+```
