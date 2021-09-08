@@ -24,14 +24,14 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2021-08-23" />
+<meta name="date" content="2021-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="a-not-on-balance-sampling.html"/>
+<link rel="prev" href="balance-sampling.html"/>
 <link rel="next" href="individuals.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -144,16 +144,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a><ul>
-<li class="chapter" data-level="0.1" data-path="introduction.html"><a href="introduction.html#todo"><i class="fa fa-check"></i><b>0.1</b> ToDo</a></li>
-<li class="chapter" data-level="0.2" data-path="introduction.html"><a href="introduction.html#calendar"><i class="fa fa-check"></i><b>0.2</b> Calendar</a></li>
-</ul></li>
-<li class="chapter" data-level="1" data-path="a-not-on-balance-sampling.html"><a href="a-not-on-balance-sampling.html"><i class="fa fa-check"></i><b>1</b> A not on balance sampling</a><ul>
-<li class="chapter" data-level="1.1" data-path="a-not-on-balance-sampling.html"><a href="a-not-on-balance-sampling.html#species-and-individual-sampling"><i class="fa fa-check"></i><b>1.1</b> Species and individual sampling</a></li>
-<li class="chapter" data-level="1.2" data-path="a-not-on-balance-sampling.html"><a href="a-not-on-balance-sampling.html#leaf-variations-and-measurement-errors"><i class="fa fa-check"></i><b>1.2</b> Leaf variations and measurement errors</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="1" data-path="balance-sampling.html"><a href="balance-sampling.html"><i class="fa fa-check"></i><b>1</b> Balance sampling</a><ul>
+<li class="chapter" data-level="1.1" data-path="balance-sampling.html"><a href="balance-sampling.html#species-and-individual-sampling"><i class="fa fa-check"></i><b>1.1</b> Species and individual sampling</a></li>
+<li class="chapter" data-level="1.2" data-path="balance-sampling.html"><a href="balance-sampling.html#leaf-variations-and-measurement-errors"><i class="fa fa-check"></i><b>1.2</b> Leaf variations and measurement errors</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="traits.html"><a href="traits.html"><i class="fa fa-check"></i><b>2</b> Traits</a><ul>
-<li class="chapter" data-level="2.1" data-path="traits.html"><a href="traits.html#soft-traits"><i class="fa fa-check"></i><b>2.1</b> Soft traits</a></li>
+<li class="chapter" data-level="2.1" data-path="traits.html"><a href="traits.html#leaf-traits"><i class="fa fa-check"></i><b>2.1</b> Leaf traits</a></li>
 <li class="chapter" data-level="2.2" data-path="traits.html"><a href="traits.html#hydraulic-traits"><i class="fa fa-check"></i><b>2.2</b> Hydraulic traits</a></li>
 <li class="chapter" data-level="2.3" data-path="traits.html"><a href="traits.html#photochemical-trait"><i class="fa fa-check"></i><b>2.3</b> Photochemical trait</a></li>
 <li class="chapter" data-level="2.4" data-path="traits.html"><a href="traits.html#measured-traits"><i class="fa fa-check"></i><b>2.4</b> Measured traits</a></li>
@@ -168,6 +165,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4" data-path="measurement-error.html"><a href="measurement-error.html"><i class="fa fa-check"></i><b>4</b> Measurement error</a></li>
 <li class="chapter" data-level="5" data-path="leaf-variation.html"><a href="leaf-variation.html"><i class="fa fa-check"></i><b>5</b> Leaf variation</a><ul>
 <li class="chapter" data-level="5.1" data-path="leaf-variation.html"><a href="leaf-variation.html#sampling"><i class="fa fa-check"></i><b>5.1</b> Sampling</a></li>
+<li class="chapter" data-level="5.2" data-path="leaf-variation.html"><a href="leaf-variation.html#traits-1"><i class="fa fa-check"></i><b>5.2</b> Traits</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>6</b> Traits covariation</a></li>
 <li class="chapter" data-level="7" data-path="variance-partitionning.html"><a href="variance-partitionning.html"><i class="fa fa-check"></i><b>7</b> Variance partitionning</a></li>
@@ -206,10 +204,9 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 </div>
 <div id="traits" class="section level1">
 <h1><span class="header-section-number">Chapter 2</span> Traits</h1>
-<p><strong>TODO: define traits and protocols with Marion.</strong></p>
 <p>This chapter defines measured and sampled traits with associated protocols.</p>
-<div id="soft-traits" class="section level2">
-<h2><span class="header-section-number">2.1</span> Soft traits</h2>
+<div id="leaf-traits" class="section level2">
+<h2><span class="header-section-number">2.1</span> Leaf traits</h2>
 <ul>
 <li><strong>LA</strong>: leaf area <span class="math inline">\(cm^{2}\)</span></li>
 <li><strong>LDMC</strong>: leaf dry matter content <span class="math inline">\(g.g^{-1}\)</span></li>
@@ -221,11 +218,11 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <div id="hydraulic-traits" class="section level2">
 <h2><span class="header-section-number">2.2</span> Hydraulic traits</h2>
 <ul>
-<li><strong>RWC</strong>: relative water content (%) is of special interest as it reflects the amount of water present the leaf relative to the maximum it can hold (<em>INSERER BIBLIO Barrs &amp; Weatherley 1962</em>)</li>
+<li><strong>RWC</strong>: relative water content (%) is of special interest as it reflects the amount of water present the leaf relative to the maximum it can hold <span class="citation">(BARRs &amp; WEATHERLEy <a href="#ref-BARRs1962" role="doc-biblioref">1962</a>)</span></li>
 <li><strong><span class="math inline">\(\Psi _{TLP}\)</span></strong>: leaf water potential at which leaf cells lose turgor (MPa), a key drought tolerance trait.</li>
 <li><strong><span class="math inline">\(g_{min}\)</span></strong>: leaf minimum conductance <span class="math inline">\(mmol.m^{-2}.s^{-1}\)</span> taking into account water losses through the cuticle and incompletely closed stomata.</li>
-<li><strong>Stomatal density</strong>: morphological characteristic at the crossroads between water loss and the maximum rate of photosynthesis.(<em>INSERER BIBLIO Julio V. Schneider 2016</em>)</li>
-<li><strong>Nervation density</strong>: determining the capacity of water supply in leaves. (<em>INSERER BIBLIO Julio V. Schneider 2016</em>)</li>
+<li><strong>Stomatal density</strong>: morphological characteristic at the crossroads between water loss and the maximum rate of photosynthesis <span class="citation">(Schneider <em>et al.</em> <a href="#ref-Schneider2017" role="doc-biblioref">2017</a>)</span>.</li>
+<li><strong>Nervation density</strong>: determining the capacity of water supply in leaves <span class="citation">(Schneider <em>et al.</em> <a href="#ref-Schneider2017" role="doc-biblioref">2017</a>)</span>.</li>
 <li>Leaf chemistry?</li>
 </ul>
 </div>
@@ -238,35 +235,35 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <div id="measured-traits" class="section level2">
 <h2><span class="header-section-number">2.4</span> Measured traits</h2>
 <ul>
-<li>Soft traits
+<li>Leaf traits
 <ul>
-<li>Fresh
+<li>Fresh - Day 1
 <ul>
-<li>thickness (3 points)</li>
+<li>Dry thickness (3 points)</li>
 <li>SPAD (3 points)</li>
-<li>weight</li>
-<li>area (scan)</li>
+<li>Fresh weight</li>
+<li>Area (scan)</li>
 </ul></li>
-<li>Dry
+<li>Dry - Day 4
 <ul>
-<li>weight</li>
+<li>Dry weight</li>
 </ul></li>
 </ul></li>
 <li>Hydraulic traits
 <ul>
 <li>Day 1
 <ul>
-<li>fresh weight<br />
+<li>Fresh weight<br />
 </li>
 <li><strong><span class="math inline">\(g_{min}\)</span></strong><br />
 </li>
 <li><strong>Stomatal density</strong></li>
 <li><strong><span class="math inline">\(\frac{Fv}{Fm}\)</span></strong></li>
-<li>area (scan)</li>
+<li>Area (scan)</li>
 </ul></li>
 <li>Day 2
 <ul>
-<li>saturated weight</li>
+<li>Saturated weight</li>
 <li><strong><span class="math inline">\(g_{min}\)</span></strong><br />
 </li>
 <li><strong><span class="math inline">\(\Psi _{TLP}\)</span></strong></li>
@@ -300,12 +297,21 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 
 </div>
 </div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-BARRs1962">
+<p>BARRs, H.D. &amp; WEATHERLEy, P.E. (1962). A RE-EXAMINATION OF THE RELATIVE TURGIDITY TECHNIQUE FOR ESTIMATING WATER DEFICITS IN LEAVES By H. D. BARRs* and P. E. WEATHERLEyt. <em>Aust.J.Biol.Sci</em>, 413–428.</p>
+</div>
+<div id="ref-Schneider2017">
+<p>Schneider, J.V., Habersetzer, J., Rabenstein, R., Wesenberg, J., Wesche, K. &amp; Zizka, G. (2017). Water supply and demand remain coordinated during breakdown of the global scaling relationship between leaf size and major vein density. <em>New Phytologist</em>, <strong>214</strong>, 473–486.</p>
+</div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="a-not-on-balance-sampling.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="balance-sampling.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="individuals.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

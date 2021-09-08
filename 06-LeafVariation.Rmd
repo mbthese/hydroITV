@@ -13,11 +13,9 @@ crs <- '+proj=longlat +datum=WGS84' # leaflet CRS
 
 # Leaf variation
 
-Subsequent analysis aimed to explore leaf variation within tree.
-
 ## Sampling
 
-For the leaf variation within individual I suggest using the 27 *Virola michelii* from the P16 that follows our requirements (DBH between 30th and 60th quantiles).
+For the leaf variation within individual we sampled across the 27 *Virola michelii* from the P16 that followed our requirements (DBH between 30th and 60th quantiles):
 
 ```{r samplingleafvar, fig.cap="Candidates in P16."}
 # data
@@ -68,4 +66,109 @@ candidates %>%
   mutate(name = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum, "_", substr(Genus, 1, 3), substr(Species, 1, 3), "_", round(DBH))) %>% 
   dplyr::select(name, geometry) %>%
   st_write(dsn = "maps/P16_virmic.gpx", delete_dsn = T, driver = "GPX", layer = "waypoints")
+```
+
+
+
+
+## Traits
+
+```{r leafdata}
+ptlp <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "leaf_ptlp")
+
+rwc <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "leaf_rwc") %>% 
+    mutate(RWC = ((as.numeric(BagFreshWeight) - as.numeric(BagWeight))-DryWeight)/(SaturatedWeight-DryWeight))
+
+soft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "leaf_soft") %>% 
+  rowwise() %>% 
+  mutate(LT = mean(c(LT1, LT2, LT3)), 
+         SPAD = mean(c(SPAD1, SPAD2, SPAD3)), 
+         LDMC =  DryWeight/FreshWeight,
+         LA = LApixel / ((300 ^2 ) * (2.54^2))) %>% 
+  mutate(CC = (117.1 * SPAD)/(148.84 - SPAD),
+         SLA = LA/DryWeight)
+traits <- bind_rows(
+  soft %>% 
+    mutate(Date = lubridate::date(Date)) %>% 
+    mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+    select(Date, Ind, Sample, Leaf, LDMC, LT, FvFm, CC, LA, SLA) %>% 
+    reshape2::melt(c("Date", "Ind", "Sample", "Leaf"), variable.name = "trait"),
+  ptlp %>% 
+    mutate(Date = lubridate::date(Date_measure)) %>% 
+    mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+    mutate(Sample  = Nr_Leaf, Leaf = 1) %>% 
+    select(Date, Ind, Sample, Leaf, Ptlp) %>% 
+    mutate(trait = "Ptlp") %>% 
+    rename(value = Ptlp) %>% 
+    na.omit(),
+  rwc %>% 
+    mutate(Date = lubridate::date(Date_Field)) %>% 
+    mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+    mutate(Leaf = 1) %>% 
+    select(Date, Ind, Sample, Leaf, RWC) %>% 
+    mutate(trait = "RWC") %>% 
+    rename(value = RWC) %>% 
+    na.omit()
+)
+```
+
+```{r leafBoxplots, fig.cap="Traits distributions when testing for leaf variation."}
+traits %>% 
+  group_by(Date, Ind, Sample, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  na.omit() %>% 
+  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  ggplot(aes(as.factor(Ind), value)) +
+  geom_boxplot(aes(fill = as.character(Date)),
+               alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Sample)) +
+  viridis::scale_color_viridis("Leaf") +
+  scale_fill_discrete("Day") +
+  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 2) +
+  coord_flip() +
+  theme(axis.title = element_blank(), 
+        legend.position = "bottom", legend.box="vertical", legend.margin=margin())
+```
+
+```{r leafVars, fig.cap="Traits variances when testing for leaf variation.", fig.height=8}
+traits %>% 
+  group_by(Date, Ind, Sample, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  na.omit() %>% 
+  filter(trait %in% c("CC", "FvFm", "LT", "Ptlp", "LA", "SLA", "LDMC")) %>% 
+  group_by(trait, Ind) %>% 
+  sample_n(4) %>% 
+  group_by(trait) %>% 
+  do(var = nlme::lme(value ~ 1, random=~1|Date/Ind/Sample, data = .) %>% 
+       ape::varcomp(scale = F, cum = F) %>% 
+       as.vector() %>% 
+       data.frame(level = c("Date", "Tree", "Leaf", "Residual"), variance = as.vector(.))) %>% 
+  unnest(var) %>% 
+  select(-`.`) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(level = factor(level, levels = c("Date", "Tree", "Leaf", "Residual"))) %>% 
+  ggplot(aes(x = trait, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  theme(axis.text.y = element_blank(), strip.text.y.left = element_text(angle = 0)) +
+  scale_fill_manual(expression(sigma), values = c("firebrick", "lightgreen", "lightblue", "grey")) +
+  xlab("") + ylab("") + coord_flip() +
+  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 7, strip.position = "left")
+```
+
+```{r, eval=F, echo=T}
+la <- read_tsv("data/traits/leaf/leaf_20210831_LA_ss.tsv")%>% 
+  separate(Label, paste0("X", 1:10), convert = T) %>% 
+  dplyr::rename(Plot = X5, SubPlot = X6, TreeFieldNum = X7, Sample = X10) %>% 
+  dplyr::select(Plot, SubPlot, TreeFieldNum, Sample, Area) %>% 
+  mutate(Plot = as.numeric(gsub("P", "", Plot)), SubPlot = as.numeric(gsub("C", "", SubPlot))) %>% 
+  group_by(Plot, SubPlot, TreeFieldNum, Sample) %>% 
+  mutate(Leaf = c(3,2,1))
+googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "leaf_soft") %>% 
+  dplyr::select(Plot, SubPlot, TreeFieldNum, Sample, Leaf) %>% 
+  left_join(la) %>% 
+  write_tsv("data/traits/leaf/leaf_20210831_LAcor_ss.tsv")
 ```

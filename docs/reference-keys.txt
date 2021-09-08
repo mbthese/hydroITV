@@ -12,13 +12,13 @@ fig:candMap
 fig:measureBoxplots
 fig:measureVars
 fig:samplingleafvar
-todo
-calendar
-a-not-on-balance-sampling
+fig:leafBoxplots
+fig:leafVars
+balance-sampling
 species-and-individual-sampling
 leaf-variations-and-measurement-errors
 traits
-soft-traits
+leaf-traits
 hydraulic-traits
 photochemical-trait
 measured-traits
@@ -31,6 +31,7 @@ maps
 measurement-error
 leaf-variation
 sampling
+traits-1
 traits-covariation
 variance-partitionning
 environment-ontogeny

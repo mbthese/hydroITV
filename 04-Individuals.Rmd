@@ -126,7 +126,7 @@ leaflet(data = st_transform(tocollect, crs = crs)) %>%
 
 ## Candidates
 
-I selected 15 individuals per species in P16 (10 + 5 extras) minimizing DBH variation while maximizing TWI variation (Fig. \@ref(fig:candFig), Tab. \@ref(tab:candTab), Fig. \@ref(fig:candMap)). We are lacking individuals for *Casearia javitensis*, *Protium stevensonii*, and *Virola surinamensis*.
+We selected 15 individuals per species in P16 (10 + 5 extras) minimizing DBH variation while maximizing TWI variation (Fig. \@ref(fig:candFig), Tab. \@ref(tab:candTab), Fig. \@ref(fig:candMap)). We are lacking individuals for *Casearia javitensis*, *Protium stevensonii*, and *Virola surinamensis*.
 
 ```{r candidates}
 candidates <- read_csv2("data/Paracou_P16_2020.csv") %>%
@@ -188,7 +188,7 @@ leaflet(data = st_transform(filter(candidates, candidate == 1),
 
 ## Maps
 
-Maps are automatically built using `sf` and `ggplot2` and save in the folder `maps`:
+Maps were automatically built using `sf` and `ggplot2` and save in the folder `maps`:
 
 * [P16 North-West](maps/P16NW.png)
 * [P16 North-East](maps/P16NE.png)

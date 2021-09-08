@@ -50,30 +50,28 @@ data <- list("full" = data,
                                                 "unbalanced individuals", "balanced")))
 ```
 
-# A not on balance sampling 
+# Balance sampling 
 
-**TODO: run back using `stan` models.**
-
-This chapter aims at demonstrating the importance of balanced design in variance partitioning in opposition to numerous papers reporting inter- versus intra-specific variation in unbalanced designs. It also explores the possibilities for evaluating leaf and measurement variations.
+This chapter demonstrates the importance of a balanced design in the distribution of variance, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs. It also virtually explores the evaluation of leaf and measurement variation.
 
 ## Species and individual sampling
 
-I simulated 100 species with a species variance of 1 for a given trait with 100 individuals per species with a variance of 1 for the same trait. I tested the effect of four sampling strategies on variance partitioning (Fig. \@ref(fig:traitdist)):
+We simulated 100 species with a species variance of 1 for a given trait with 100 individuals per species with a variance of 1 for the same trait. We tested the effect of four sampling strategies on variance partitioning (Fig. \@ref(fig:traitdist)):
 
-1. Full sampling of the community
-1. Sampling of 100 individuals unbalanced in species (25 species with 4 individuals)
-1. Sampling of 100 individuals unbalanced in individuals (4 species with 25 individuals)
-1. Sampling of 100 individuals unbalanced in species and individual (10 species with 10 individuals)
+1. full sampling of the community
+1. sampling of 100 individuals unbalanced in species (25 species with 4 individuals)
+1. sampling of 100 individuals unbalanced in individuals (4 species with 25 individuals)
+1. sampling of 100 individuals unbalanced in species and individual (10 species with 10 individuals)
 
-The results demonstrate the need to use a balance sampling design to correctly assess and compare functional variation among and within species (Fig. \@ref(fig:varpart)).
+The results demonstrate the need to use a balanced sampling design to properly assess and compare functional variation between and within species (Fig. \@ref(fig:varpart)).
 
-```{r traitdist, fig.cap="Trait distribution per species with balanced and unbalanced sampling design. Description..."}
+```{r traitdist, fig.cap="Trait distribution per species with balanced and unbalanced sampling design."}
 ggplot(data, aes(trait, group = species)) +
   geom_density(alpha = 0.3) +
   facet_wrap(~ sampling, scales = "free")
 ```
 
-```{r varpart, fig.cap="Variance partitioning with balanced and unbalanced sampling design. Description..."}
+```{r varpart, fig.cap="Variance partitioning with balanced and unbalanced sampling design."}
 fun <- function(data){
   var <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
   return(data.frame(level = names(var), variance = as.vector(var)))
@@ -89,7 +87,7 @@ data %>%
 
 ## Leaf variations and measurement errors
 
-Similarly, we looked at a sampling of 10 individuals in 10 species, 10 leaves for each individuals, and 10 measures for each leaf. This would allow us to evaluate the level of measurement variation alone to prevent from an unrealistic sampling of 10 species times 10 individuals times 10 leaves times 10 measures resulting in 10 thousand measures! We found a very stable measures across levels using very different variations between levels (Fig. \@ref(fig:varpart2)).
+Similarly, we examined a sampling of 10 individuals in 10 species, 10 leaves for each individual, and 10 measurements for each leaf. This would allow us to assess the level of variation in the measurement alone to avoid an unrealistic sampling of 10 species times 10 individuals times 10 leaves times 10 measurements, which would yield 10,000 measurements! We found very stable measurements across levels using very different variations between levels (Fig. \@ref(fig:varpart2)).
 
 ```{r varpartdata2}
 S <- 10
@@ -125,7 +123,7 @@ subdata <- bind_rows(
 )
 ```
 
-```{r varpart2,  fig.cap="Variance partitioning with balanced sampling design across levels. Description..."}
+```{r varpart2,  fig.cap="Variance partitioning with balanced sampling design across levels."}
 fun <- function(data){
   var1 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
   var2 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|individual/leaf, 
