@@ -132,15 +132,15 @@ traits %>%
   facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 2) +
   coord_flip() +
   theme(axis.title = element_blank(), 
-        legend.position = "bottom", legend.box="vertical", legend.margin=margin()) 
+        legend.position = "bottom", legend.box="vertical", legend.margin=margin())
 ```
 
-```{r leafVars, fig.cap="Traits variances when testing for leaf variation."}
+```{r leafVars, fig.cap="Traits variances when testing for leaf variation.", fig.height=8}
 traits %>% 
   group_by(Date, Ind, Sample, trait) %>% 
   summarise(value = mean(value, na.rm = T)) %>% 
   na.omit() %>% 
-  filter(trait %in% c("CC", "FvFm", "LT", "Ptlp", "LA")) %>% 
+  filter(trait %in% c("CC", "FvFm", "LT", "Ptlp", "LA", "SLA", "LDMC")) %>% 
   group_by(trait, Ind) %>% 
   sample_n(4) %>% 
   group_by(trait) %>% 
