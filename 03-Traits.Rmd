@@ -66,5 +66,10 @@ Marion's:
 * Assess tree and branch Dawkins
 * Collect tree with a DBH in the 10th to 90th quantiles of the species
 * 10 species (6 generalists, 2 terra-firme and 2 bottomlands) including 40 individuals from Marion's METRADICA sampling.
+* [Field worksheet](protocols/Feuille_terrain_releve.xlsx)
+* [RWC](protocols/RWC_Boisseaux.docx)
+* [gmin](protocols/Gmin protocol.docx)
+* [FvFm](protocols/FvFm.docx)
 * [**$\Psi _{TLP}$** protocol](protocols/Protocole_Ptlp.pdf)
+* [Stomatas](protocols/Analyse Stomates_Marion.docx)
 
