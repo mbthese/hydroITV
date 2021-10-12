@@ -58,6 +58,13 @@ traits <- bind_rows(
     rename(value = RWC) %>% 
     na.omit()
 )
+
+# traits %>% 
+#   group_by(trait, Sample, Repetition) %>% 
+#   summarise(value = mean(value)) %>% 
+#   reshape2::dcast(Sample + Repetition ~ trait, value.var = "value") %>% 
+#   write_tsv( "~/Téléchargements/MeasFT.tsv")
+
 # autoplot(princomp(~ LA + LDMC + LT + SLA + Ptlp + FvFm + RWC, reshape2::dcast(traits, Sample + Repetition + Leaf ~ trait), scale = T),
 #          loadings = T, loadings.label = T)
 ```

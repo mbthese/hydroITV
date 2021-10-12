@@ -113,6 +113,12 @@ traits <- bind_rows(
     rename(value = RWC) %>% 
     na.omit()
 )
+
+# traits %>%
+#   group_by(trait, Ind, Sample) %>% 
+#   summarise(value = mean(value, na.rm = T)) %>% 
+#   reshape2::dcast(Ind + Sample ~ trait, value.var = "value") %>% 
+#   write_tsv( "~/Téléchargements/IndFT.tsv")
 ```
 
 ```{r leafBoxplots, fig.cap="Traits distributions when testing for leaf variation."}

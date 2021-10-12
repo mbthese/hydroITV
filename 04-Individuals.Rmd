@@ -10,6 +10,7 @@ library(ggfortify)
 library(ggtree)
 library(sf)
 library(leaflet)
+library(readxl)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
@@ -122,6 +123,14 @@ leaflet(data = st_transform(tocollect, crs = crs)) %>%
   addCircles(color = ~palSp(TaxonActu), opacity = 1,
              label = ~ TaxonActu, radius = ~ DBH/5) %>% 
   addLegend(pal = palSp, values = ~ TaxonActu)
+```
+
+```{r , eval=F, echo=T}
+g <- read_csv2("data/Paracou_P16_2020.csv") %>% 
+  filter(Plot == 16, SubPlot == 10) %>% 
+   mutate(label = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+  ggplot(aes(Xfield, Yfield, label = label)) +
+  geom_point()
 ```
 
 ## Candidates
@@ -239,3 +248,161 @@ include_graphics("maps/P16SW.png")
 include_graphics("maps/P16SE.png")
 ```
 
+## Extra FTH
+
+```{r}
+missings <- data.frame(
+  spcode = c("Casjav", "Congui", "Jaccop", "Proste", "Tacmel", "Virmic", "Virsur"),
+  inds = c(5, 1, 4, 4, 4, 1, 4),
+  Genus = c("Casearia", "Conceveiba", "Jacaranda", "Tetragastris", "Tachigali", "Virola", "Virola"),
+  Species = c("javitensis", "guianensis", "copaia", "panamensis", "melinonii", "michelii", "surinamensis")
+)
+p6 <- src_sqlite(file.path("/home/sylvain//Documents/BIOGECO/PhD/data/Paracou/",
+                     "trees", "Paracou.sqlite")) %>% 
+  tbl("Paracou") %>% 
+  filter(CodeAlive == 1) %>% 
+  filter(Plot == 6) %>%
+  filter(CensusYear == 2017) %>% 
+  collect() %>% 
+  mutate(DBH = CircCorr/pi)
+metradica <- read_excel("data/fth/MetradicaP6_dejafait.xlsx") %>% 
+  rename(TreeFieldNum = FieldNr, SubPlot = Subplot) %>% 
+  select(Plot, SubPlot, TreeFieldNum) %>% 
+  mutate(metradica = 1)
+candidates <- p6 %>% 
+  left_join(metradica) %>% 
+  filter(is.na(metradica)) %>% 
+  mutate(spcode = paste0(substr(Genus, 1, 3), substr(Species, 1, 3))) %>% 
+  mutate(spcode = recode(spcode, "Tetpan" = "Proste")) %>% 
+  left_join(missings %>% 
+  select(spcode) %>% 
+  mutate(tocollect = 1)) %>% 
+  filter(tocollect == 1) %>% 
+  filter(DBH > 10, DBH < 60) %>% 
+  st_as_sf(coords = c("Xutm", "Yutm"),
+           crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
+```
+
+`r sum(missings$inds)` individuals remaining.
+
+```{r}
+contour <- st_read("data/ContourLinesPlots/ContourLinePlots.shp", quiet = T)
+crs_rot = "+proj=omerc +lat_0=36.934 +lonc=-90.849 +alpha=0 +k_0=.7 +datum=WGS84 +units=m +no_defs +gamma=20"
+limits <- st_read("data/OverallPlots/OverallPlots.shp", quiet = T)
+sublimits <- filter(limits, Plot == 6, Subplot %in% 1:4) %>% 
+    st_transform(crs = crs_rot)
+subcontour <- st_transform(contour, crs = crs_rot) %>% 
+  st_crop(sublimits)
+subcandidates <- candidates %>% 
+    st_transform(crs = crs_rot) %>% 
+    mutate(label = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum, "_", substr(Genus, 1, 3), substr(Species, 1, 3), "_", round(DBH)))
+g <- ggplot() +
+  geom_sf(data = subcontour, fill = NA, col = "lightgrey") +
+  geom_sf(data = sublimits, fill = NA, col = "darkgrey", aes(text = Subplot)) +
+  geom_sf_text(data = sublimits, aes(label = Subplot), colour = "darkgrey") +
+  geom_sf(data = subcandidates, col = "black") +
+  ggrepel::geom_text_repel(
+    data = subcandidates,
+    aes(label = label, geometry = geometry),
+    stat = "sf_coordinates",
+    min.segment.length = 0
+  ) +
+  theme(axis.title = element_blank(), axis.text = element_blank(), 
+        axis.ticks = element_blank(), axis.line = element_blank()) +
+  scale_color_discrete(guide = "none")
+ggsave(g, file = "P6.png", path = 'maps', width = 297, height = 420, unit = 'mm', dpi = 300, bg = "white")
+```
+
+## Extra Post - FTH
+
+```{r}
+inds <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+                          "individuals") %>% 
+  rename(Individual = FieldCode) %>%
+  dplyr::select(Genus, Species, Plot, SubPlot, TreeFieldNum) %>% 
+  unique()
+
+# inds %>% 
+#   group_by(Species, Genus) %>% 
+#   summarise(N = n()) %>% 
+#   filter(N < 10)
+
+missings_hydroitv <- data.frame(
+  spcode = c("Casjav", "Proste", "Tacmel"),
+  Nhydroitv = c(6, 6, 1),
+  Genus = c("Casearia", "Protium", "Tachigali"),
+  Species = c("javitensis", "stevensonii", "melinonii")
+)
+
+missings_metradica <- data.frame(
+  spcode = c("Casjav", "Chrpri", "Proste", "Proste", "Virmic", "Virsur"),
+  Nmetradica = c(1, 1, 7, 3, 4, 4),
+  Genus = c("Casearia", "Chrysophyllum", "Protium", "Protium", "Virola", "Virola"),
+  Species = c("javitensis", "prieurii", "stevensonii", "stevensonii", "michelii", "surinamensis"),
+  habitat = c("TF", "BF", "BF", "TF", "BF", "BF")
+)
+
+missings <- full_join(missings_hydroitv, missings_metradica) %>% 
+  mutate(Nhydroitv = ifelse(is.na(Nhydroitv), 0, Nhydroitv)) %>% 
+  mutate(N = Nmetradica) %>% 
+  rowwise() %>% 
+  mutate(N = ifelse(spcode == "Casjav", 6, N))
+
+candidates <- read_csv2("data/Paracou_P16_2020.csv") %>%
+  left_join(species) %>%
+  filter(!is.na(taxon)) %>%
+  mutate(DBH = CircCorr/pi) %>% 
+  left_join(inds %>% 
+              dplyr::select(Plot, SubPlot, TreeFieldNum) %>% 
+              mutate(done = 1)) %>% 
+  mutate(done = ifelse(is.na(done), 0, done)) %>% 
+  left_join(dplyr::select(missings, Genus, Species) %>% 
+              mutate(missing = 1)) %>% 
+  filter(missing == 1) %>% 
+  st_as_sf(coords = c("Xutm", "Yutm"),
+           crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0') %>% 
+  st_intersection(st_read("data/TopographicLevels/TopographicLevels.shp", quiet = T)) %>% 
+  mutate(topo = recode(TypeTopo, "BasFond" = "BF", "Plateau" = "TF", "Pente" = "P")) %>% 
+  group_by(Genus, Species) %>% 
+  mutate(m = median(DBH), l = quantile(DBH, 0.25), u = quantile(DBH, 0.75)) %>% 
+  mutate(l = ifelse(Genus == "Casearia", 0, l)) %>% 
+  filter(DBH >= l, DBH <= u)
+
+g <- ggplot(candidates, aes(col = paste(Genus, Species), shape = TypeTopo)) +
+  geom_sf()
+plotly::ggplotly(g)
+
+candidates %>% 
+  group_by(Species, Genus) %>% 
+  summarise(N = n()) %>% 
+  left_join(select(missings, Genus, Species, Nhydroitv, Nmetradica))
+```
+
+```{r}
+contour <- st_read("data/ContourLinesPlots/ContourLinePlots.shp", quiet = T)
+crs_rot = "+proj=omerc +lat_0=36.934 +lonc=-90.849 +alpha=0 +k_0=.7 +datum=WGS84 +units=m +no_defs +gamma=20"
+limits <- st_read("data/OverallPlots/OverallPlots.shp", quiet = T)
+sublimits <- filter(limits, Plot == 16, Subplot %in% 1:25) %>% 
+    st_transform(crs = crs_rot)
+subcontour <- st_transform(contour, crs = crs_rot) %>% 
+  st_crop(sublimits)
+subcandidates <- candidates %>% 
+    st_transform(crs = crs_rot) %>% 
+    mutate(label = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum, "_", substr(Genus, 1, 3), substr(Species, 1, 3), "_", round(DBH), "_", topo))
+g <- ggplot() +
+  geom_sf(data = subcontour, fill = NA, col = "lightgrey") +
+  geom_sf(data = sublimits, fill = NA, col = "darkgrey", aes(text = Subplot)) +
+  geom_sf_text(data = sublimits, aes(label = Subplot), colour = "darkgrey") +
+  geom_sf(data = subcandidates, col = "black") +
+  ggrepel::geom_text_repel(
+    data = subcandidates,
+    aes(label = label, geometry = geometry),
+    stat = "sf_coordinates",
+    min.segment.length = 0,
+    size = 3
+  ) +
+  theme(axis.title = element_blank(), axis.text = element_blank(), 
+        axis.ticks = element_blank(), axis.line = element_blank()) +
+  scale_color_discrete(guide = "none")
+ggsave(g, file = "P16extra.png", path = 'maps', width = 297, height = 420, unit = 'mm', dpi = 300, bg = "white")
+```
