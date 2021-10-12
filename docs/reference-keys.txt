@@ -42,7 +42,6 @@ leaf-variation
 individual-variation
 traits-covariation
 variance-partitionning
-environment-ontogeny
 models
 literature
 hajek2016

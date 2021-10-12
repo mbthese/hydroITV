@@ -11,6 +11,12 @@ opts_chunk$set(
 crs <- '+proj=longlat +datum=WGS84' # leaflet CRS
 varcols <- c(species = "red", individual = "lightgreen", 
              sample = "lightblue", repetition = "orange", residual = "grey")
+log_abs_trans <- function() {
+    scales::trans_new(
+        name = "log_abs", 
+        transform = function(x) log(abs(x)), 
+        inverse = function(x) exp(x));
+}
 ```
 
 # Leaf variation
@@ -121,7 +127,7 @@ traits %>%
   group_by(Date, Ind, Sample, trait) %>% 
   summarise(value = mean(value, na.rm = T)) %>% 
   na.omit() %>% 
-  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
   ggplot(aes(as.factor(Ind), value)) +
   geom_boxplot(aes(fill = as.character(Date)),
                alpha = 0.5, col = "lightgrey") +
@@ -131,7 +137,8 @@ traits %>%
   facet_wrap(~ trait, scales = "free_y", labeller = label_parsed, nrow = 2) +
   # coord_flip() +
   theme(axis.title = element_blank(), axis.text.x = element_text(angle = 90), 
-        legend.position = "bottom", legend.box="vertical", legend.margin=margin())
+        legend.position = "bottom", legend.box="vertical", legend.margin=margin()) +
+  scale_y_continuous(trans = "log_abs")
 ```
 
 ```{r leafVars, fig.cap="Traits variances when testing for leaf variation."}
@@ -143,7 +150,7 @@ traits %>%
   group_by(trait, Ind) %>% 
   sample_n(4) %>% 
   group_by(trait) %>% 
-  do(var = nlme::lme(value ~ 1, random=~1|Ind/Sample, data = .) %>% 
+  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Ind/Sample, data = .) %>% 
        ape::varcomp(scale = F, cum = F) %>% 
        as.vector() %>% 
        data.frame(level = c("Individual", "Sample", "Residual"), variance = as.vector(.))) %>% 
@@ -151,7 +158,7 @@ traits %>%
   select(-`.`) %>% 
   group_by(trait) %>% 
   mutate(pct = variance / sum(variance)*100) %>%
-  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
   mutate(level = factor(level, levels = c("Individual", "Sample", "Residual"))) %>% 
   ggplot(aes(x = trait, y = pct, fill = level)) +
   geom_bar(stat = "identity", position = "stack") +

@@ -11,6 +11,12 @@ opts_chunk$set(
 crs <- '+proj=longlat +datum=WGS84' # leaflet CRS
 varcols <- c(species = "red", individual = "lightgreen", 
              sample = "lightblue", repetition = "orange", residual = "grey")
+log_abs_trans <- function() {
+    scales::trans_new(
+        name = "log_abs", 
+        transform = function(x) log(abs(x)), 
+        inverse = function(x) exp(x));
+}
 ```
 
 ```{r inddata, eval=F}
@@ -82,6 +88,7 @@ leaflet(data = st_transform(inds, crs = crs)) %>%
              radius = ~ DBH/2) 
 ```
 
+
 ```{r indBoxplots, fig.cap="Traits distributions when testing for individual variation.", fig.height=10, fig.width=10}
 inds %>% 
   mutate(Date = lubridate::date(DateField)) %>% 
@@ -90,7 +97,7 @@ inds %>%
   reshape2::melt(id.vars = c("Genus", "Species", "Date", "Individual"), variable.name = "trait") %>% 
   mutate(SpeciesLong = paste(Genus, Species)) %>% 
   na.omit() %>% 
-  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "Gmin" = "g[min]")) %>% 
   ggplot(aes(SpeciesLong, value)) +
   geom_boxplot(aes(fill = SpeciesLong),
                alpha = 0.5, col = "lightgrey") +
@@ -98,7 +105,8 @@ inds %>%
   viridis::scale_color_viridis("Leaf") +
   scale_fill_discrete("Species") +
   facet_wrap(~ trait, scales = "free_y", labeller = label_parsed) +
-  theme(axis.title = element_blank(), axis.text.x = element_blank())
+  theme(axis.title = element_blank(), axis.text.x = element_blank()) +
+  scale_y_continuous(trans = "log_abs")
 ```
 
 ```{r indVars, fig.cap="Traits variances when testing for individual variation."}
@@ -110,7 +118,7 @@ inds %>%
   mutate(SpeciesLong = paste(Genus, Species)) %>% 
   na.omit() %>% 
   group_by(trait) %>% 
-  do(var = nlme::lme(value ~ 1, random=~1|SpeciesLong/Individual, data = .) %>% 
+  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|SpeciesLong/Individual, data = .) %>% 
        ape::varcomp(scale = F, cum = F) %>% 
        as.vector() %>% 
        data.frame(level = c("Species", "Individual", "Residual"), variance = as.vector(.))) %>% 
@@ -118,7 +126,7 @@ inds %>%
   select(-`.`) %>% 
   group_by(trait) %>% 
   mutate(pct = variance / sum(variance)*100) %>%
-  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "FvFm" = "frac(Fv,Fm)", "Gmin" = "g[min]")) %>% 
   mutate(level = factor(level, levels = c("Species", "Individual", "Residual"))) %>% 
   ggplot(aes(x = trait, y = pct, fill = level)) +
   geom_bar(stat = "identity", position = "stack") +
@@ -137,14 +145,15 @@ inds %>%
   reshape2::melt(id.vars = c("Genus", "Species", "Date", "DateField", "Individual"), variable.name = "trait") %>% 
   mutate(SpeciesLong = paste(Genus, Species)) %>% 
   na.omit() %>% 
-  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "Gmin" = "g[min]")) %>% 
   ggplot(aes(DateField, value, group = Date)) +
   geom_boxplot(alpha = 0.5, col = "lightgrey") +
   geom_point(alpha = 0.5) +
   viridis::scale_color_viridis("Leaf") +
   scale_fill_discrete("Species") +
   facet_wrap(~ trait, scales = "free_y", labeller = label_parsed) +
-  xlab("Field date")
+  xlab("") +
+  scale_y_continuous(trans = "log_abs")
 ```
 
 ```{r indDBH, fig.cap="Traits distributions when testing for individual variation and diameter.", fig.height=10, fig.width=10}
@@ -155,14 +164,15 @@ inds %>%
   reshape2::melt(id.vars = c("Genus", "Species", "DBH", "Individual"), variable.name = "trait") %>% 
   mutate(SpeciesLong = paste(Genus, Species)) %>% 
   na.omit() %>% 
-  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
-  ggplot(aes(DBH, value)) +
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "Gmin" = "g[min]")) %>% 
+  ggplot(aes(log(DBH), value)) +
   geom_point(alpha = 0.5) +
   viridis::scale_color_viridis("Leaf") +
   scale_fill_discrete("Species") +
   facet_wrap(~ trait, scales = "free_y", labeller = label_parsed) +
-  xlab("Diameter at breast height (cm)") +
-  geom_smooth(method = "lm")
+  xlab("Logarithm of diameter at breast height (cm)") +
+  geom_smooth(method = "lm") +
+  scale_y_continuous(trans = "log_abs")
 ```
 
 ```{r indTWI, fig.cap="Traits distributions when testing for individual variation and topography.", fig.height=10, fig.width=10}
@@ -173,14 +183,15 @@ inds %>%
   reshape2::melt(id.vars = c("Genus", "Species", "TWI", "Individual"), variable.name = "trait") %>% 
   mutate(SpeciesLong = paste(Genus, Species)) %>% 
   na.omit() %>% 
-  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
-  ggplot(aes(TWI, value)) +
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "Gmin" = "g[min]")) %>% 
+  ggplot(aes(log(TWI), value)) +
   geom_point(alpha = 0.5) +
   viridis::scale_color_viridis("Leaf") +
   scale_fill_discrete("Species") +
   facet_wrap(~ trait, scales = "free_y", labeller = label_parsed) +
   xlab("Topographic wetness index") +
-  geom_smooth(method = "lm")
+  geom_smooth(method = "lm") +
+  scale_y_continuous(trans = "log_abs")
 ```
 
 ```{r}
@@ -191,12 +202,13 @@ inds %>%
   reshape2::melt(id.vars = c("Genus", "Species", "Date", "DBH", "TWI", "Individual"), variable.name = "trait") %>% 
   mutate(SpeciesLong = paste(Genus, Species)) %>% 
   group_by(trait) %>% 
-  do(m = lm(value ~ log(DBH) + log(TWI), data = .) %>% broom::tidy()) %>% 
+  do(m = lm(log(abs(value)) ~ log(DBH) + log(TWI), data = .) %>% broom::tidy()) %>% 
   unnest(m) %>% 
   filter(term != "(Intercept)") %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "Gmin" = "g[min]")) %>% 
   ggplot(aes(term, estimate)) +
   geom_point(aes(alpha = `p.value` < 0.05)) +
-  facet_wrap(~ trait) +
+  facet_wrap(~ trait, labeller = label_parsed) +
   coord_flip() +
   geom_hline(yintercept = 0, linetype = "dashed", col = "grey") +
   geom_segment(aes(x = term, xend = term, y = estimate - `std.error`, yend = estimate + `std.error`, alpha = `p.value` < 0.05)) +

@@ -9,6 +9,12 @@ opts_chunk$set(
   cache = T, cache.lazy = F)
 varcols <- c(species = "red", individual = "lightgreen", 
              sample = "lightblue", repetition = "orange", residual = "grey")
+log_abs_trans <- function() {
+    scales::trans_new(
+        name = "log_abs", 
+        transform = function(x) log(abs(x)), 
+        inverse = function(x) exp(x));
+}
 ```
 
 # Measurement error
@@ -77,7 +83,7 @@ traits <- bind_rows(
 traits %>% 
   group_by(Date, Sample, Repetition, trait) %>% 
   summarise(value = mean(value, na.rm = T)) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "Gmin" = "g[min]")) %>% 
   ggplot(aes(as.factor(Sample), value)) +
   geom_boxplot(aes(fill = as.character(Date)),
                alpha = 0.5, col = "lightgrey") +
@@ -86,7 +92,8 @@ traits %>%
   scale_fill_discrete("Day") +
   facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 2) +
   xlab("Sample") + 
-  theme(axis.title = element_blank(), legend.position = "bottom")
+  theme(axis.title = element_blank(), legend.position = "bottom") +
+  scale_y_continuous(trans = "log_abs")
 ```
 
 ```{r measureVars, fig.cap="Traits variances when testing for measurement error."}
@@ -96,7 +103,7 @@ traits %>%
   group_by(trait, Sample) %>% 
   sample_n(5) %>% 
   group_by(trait) %>% 
-  do(var = nlme::lme(value ~ 1, random=~1|Sample/Repetition, data = .) %>% 
+  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Sample/Repetition, data = .) %>% 
        ape::varcomp(scale = F, cum = F) %>% 
        as.vector() %>% 
        data.frame(level = c("Sample", "Repetition", "Residual"), variance = as.vector(.))) %>% 
@@ -104,7 +111,7 @@ traits %>%
   select(-`.`) %>% 
   group_by(trait) %>% 
   mutate(pct = variance / sum(variance)*100) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
   mutate(level = factor(level, levels = c("Sample", "Repetition", "Residual"))) %>% 
   ggplot(aes(x = trait, y = pct, fill = level)) +
   geom_bar(stat = "identity", position = "stack") +
