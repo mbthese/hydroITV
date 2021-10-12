@@ -14,6 +14,13 @@ fig:measureVars
 fig:samplingleafvar
 fig:leafBoxplots
 fig:leafVars
+fig:headcountinds
+fig:mapinds
+fig:indBoxplots
+fig:indVars
+fig:indBoxplotsDate
+fig:indDBH
+fig:indTWI
 balance-sampling
 species-and-individual-sampling
 leaf-variations-and-measurement-errors
@@ -32,8 +39,6 @@ extra-fth
 extra-post---fth
 measurement-error
 leaf-variation
-sampling
-traits-1
 individual-variation
 traits-covariation
 variance-partitionning

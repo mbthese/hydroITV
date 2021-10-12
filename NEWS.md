@@ -1,3 +1,9 @@
+hydroITV 1.0.0.9013
+* individuals: cleaning extra and post FTH
+* meas var: cleaning
+* leaf var: cleaning
+* ind var: exploring
+
 hydroITV 1.0.0.9012
 * post FTH cleaning 1
 

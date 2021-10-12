@@ -125,14 +125,6 @@ leaflet(data = st_transform(tocollect, crs = crs)) %>%
   addLegend(pal = palSp, values = ~ TaxonActu)
 ```
 
-```{r , eval=F, echo=T}
-g <- read_csv2("data/Paracou_P16_2020.csv") %>% 
-  filter(Plot == 16, SubPlot == 10) %>% 
-   mutate(label = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
-  ggplot(aes(Xfield, Yfield, label = label)) +
-  geom_point()
-```
-
 ## Candidates
 
 We selected 15 individuals per species in P16 (10 + 5 extras) minimizing DBH variation while maximizing TWI variation (Fig. \@ref(fig:candFig), Tab. \@ref(tab:candTab), Fig. \@ref(fig:candMap)). We are lacking individuals for *Casearia javitensis*, *Protium stevensonii*, and *Virola surinamensis*.
@@ -199,12 +191,7 @@ leaflet(data = st_transform(filter(candidates, candidate == 1),
 
 Maps were automatically built using `sf` and `ggplot2` and save in the folder `maps`:
 
-* [P16 North-West](maps/P16NW.png)
-* [P16 North-East](maps/P16NE.png)
-* [P16 South-West](maps/P16SW.png)
-* [P16 South-East](maps/P16SE.png)
-
-```{r mapsFun}
+```{r mapsFun, echo=T}
 contour <- st_read("data/ContourLinesPlots/ContourLinePlots.shp", quiet = T)
 crs_rot = "+proj=omerc +lat_0=36.934 +lonc=-90.849 +alpha=0 +k_0=.7 +datum=WGS84 +units=m +no_defs +gamma=20"
 make_map <- function(file, title, subplots){
@@ -241,14 +228,10 @@ make_map("P16SW.png", "P16 South-West", c(11:13, 16:18, 21:23))
 make_map("P16SE.png", "P16 South-East", c(13:15, 18:20, 23:25))
 ```
 
-```{r}
-include_graphics("maps/P16NW.png")
-include_graphics("maps/P16NE.png")
-include_graphics("maps/P16SW.png")
-include_graphics("maps/P16SE.png")
-```
-
 ## Extra FTH
+
+Candidate individuals from the P16 were not enough for the FTH field campaign. 
+We added individuals from the P6:
 
 ```{r}
 missings <- data.frame(
@@ -283,8 +266,6 @@ candidates <- p6 %>%
            crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
 ```
 
-`r sum(missings$inds)` individuals remaining.
-
 ```{r}
 contour <- st_read("data/ContourLinesPlots/ContourLinePlots.shp", quiet = T)
 crs_rot = "+proj=omerc +lat_0=36.934 +lonc=-90.849 +alpha=0 +k_0=.7 +datum=WGS84 +units=m +no_defs +gamma=20"
@@ -313,7 +294,14 @@ g <- ggplot() +
 ggsave(g, file = "P6.png", path = 'maps', width = 297, height = 420, unit = 'mm', dpi = 300, bg = "white")
 ```
 
+```{r extrafthmap, fig.height=10, fig.width=10}
+g
+```
+
 ## Extra Post - FTH
+
+Individuals were still missing after the FTH field campaign. 
+We added individuals from the P16:
 
 ```{r}
 inds <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
@@ -321,11 +309,6 @@ inds <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ
   rename(Individual = FieldCode) %>%
   dplyr::select(Genus, Species, Plot, SubPlot, TreeFieldNum) %>% 
   unique()
-
-# inds %>% 
-#   group_by(Species, Genus) %>% 
-#   summarise(N = n()) %>% 
-#   filter(N < 10)
 
 missings_hydroitv <- data.frame(
   spcode = c("Casjav", "Proste", "Tacmel"),
@@ -367,15 +350,10 @@ candidates <- read_csv2("data/Paracou_P16_2020.csv") %>%
   mutate(m = median(DBH), l = quantile(DBH, 0.25), u = quantile(DBH, 0.75)) %>% 
   mutate(l = ifelse(Genus == "Casearia", 0, l)) %>% 
   filter(DBH >= l, DBH <= u)
-
-g <- ggplot(candidates, aes(col = paste(Genus, Species), shape = TypeTopo)) +
-  geom_sf()
-plotly::ggplotly(g)
-
-candidates %>% 
-  group_by(Species, Genus) %>% 
-  summarise(N = n()) %>% 
-  left_join(select(missings, Genus, Species, Nhydroitv, Nmetradica))
+# candidates %>% 
+#   group_by(Species, Genus) %>% 
+#   summarise(N = n()) %>% 
+#   left_join(select(missings, Genus, Species, Nhydroitv, Nmetradica))
 ```
 
 ```{r}
@@ -405,4 +383,8 @@ g <- ggplot() +
         axis.ticks = element_blank(), axis.line = element_blank()) +
   scale_color_discrete(guide = "none")
 ggsave(g, file = "P16extra.png", path = 'maps', width = 297, height = 420, unit = 'mm', dpi = 300, bg = "white")
+```
+
+```{r postfthmap, fig.height=10, fig.width=10}
+g
 ```
