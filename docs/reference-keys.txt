@@ -21,6 +21,15 @@ fig:indVars
 fig:indBoxplotsDate
 fig:indDBH
 fig:indTWI
+fig:indTWIsp
+tab:modelsummary
+fig:modelIntercepts
+fig:modelDBH
+fig:predDBH
+fig:modelTWIs
+fig:modelTWIis
+fig:modelTWI
+fig:predTWI
 balance-sampling
 species-and-individual-sampling
 leaf-variations-and-measurement-errors
@@ -43,6 +52,11 @@ individual-variation
 traits-covariation
 variance-partitionning
 models
+check
+summary
+intercept
+dbh
+twi
 literature
 hajek2016
 lobo2018

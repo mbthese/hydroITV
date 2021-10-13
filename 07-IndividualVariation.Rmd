@@ -194,6 +194,26 @@ inds %>%
   scale_y_continuous(trans = "log_abs")
 ```
 
+```{r indTWIsp, fig.cap="Traits distributions when testing for species and individual variation with topography.", fig.height=10, fig.width=10}
+inds %>% 
+  mutate(Date = lubridate::date(DateField)) %>% 
+  dplyr::select(Genus, Species, TWI, Individual, Gmin, RWC, FvFm, LA, LT, LDMC, CC, Ptlp, SLA) %>% 
+  st_drop_geometry() %>% 
+  reshape2::melt(id.vars = c("Genus", "Species", "TWI", "Individual"), variable.name = "trait") %>% 
+  mutate(SpeciesLong = paste(Genus, Species)) %>% 
+  na.omit() %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "Gmin" = "g[min]")) %>% 
+  ggplot(aes(log(TWI), value)) +
+  geom_point(aes(col = paste(Genus, Species)), alpha = 0.5) +
+  facet_wrap(~ trait, scales = "free_y", labeller = label_parsed) +
+  xlab("Topographic wetness index") +
+  geom_smooth(method = "lm", col = "black") +
+  geom_smooth(method = "lm", aes(col = paste(Genus, Species)), se = F) +
+  scale_y_continuous(trans = "log_abs") +
+  theme(legend.position = "bottom") +
+  scale_color_discrete("")
+```
+
 ```{r}
 inds %>% 
   mutate(Date = lubridate::date(DateField)) %>% 
