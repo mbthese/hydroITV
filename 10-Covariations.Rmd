@@ -75,6 +75,40 @@ colnames(ind)<- c("x", "y")
 ind <- cbind(ind, traits)
 ```
 
+```{r pcaArticle}
+g.among <- autoplot(princomp(~ Gmin + RWC + FvFm + LA + LT + LDMC + CC + Ptlp + SLA, data = traits, cor = T), 
+         data = traits,
+         colour = "SpeciesLong", alpha = 0.5, size = 2,
+         loadings.label.colour = 'black', loadings.label.vjust = 1.1,
+         loadings = T, loadings.label = T, loadings.colour = 'black', loadings.label.repel = T) +
+  geom_hline(aes(yintercept = 0), col = 'black', linetype = "dotted") +
+  geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
+  scale_x_reverse() +
+  xlab(paste0("PCA 1 (25.16%)")) +
+  ylab(paste0("PCA 2 (16.67%)")) +
+  scale_color_discrete("") +
+  ggtitle("A - Among-species") 
+g.legend <- cowplot::get_legend(g.among +
+                                  theme(legend.position = "bottom", legend.text = element_text(size = rel(0.8))) +
+                                  guides(colour = guide_legend(nrow = 3)))
+g.among <- g.among + scale_color_discrete(guide = "none")
+g.within <- ggplot(ind, aes(x, y, colour = SpeciesLong)) +
+  geom_hline(aes(yintercept = 0), col = 'black', linetype = "dotted") +
+  geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
+  geom_point(alpha = 0.5, size = 2) +
+  geom_segment(data = var, aes(x = 0, y = 0, xend = (x*5),
+                               yend = (y*5)), arrow = arrow(length = unit(1/2, "picas")),
+               color = "black") +
+  ggrepel::geom_text_repel(data = var, aes(x = x*5, y = y*5, label = name),
+                           box.padding = 0.8, segment.alpha = 0, color = "black") +
+  xlab(paste0("within PCA 1 (", round(wPCA$eig/sum(wPCA$eig)*100)[1], "%)")) +
+  ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
+  scale_color_discrete(guide = "none") +
+  ggtitle("B - Within-species")
+gridExtra::grid.arrange(g.among, g.within, g.legend, layout_matrix = rbind(c(1,2), c(3,3)), heights = c(3,1))
+```
+
+
 ```{r indpcadbh}
 autoplot(princomp(~ Gmin + RWC + FvFm + LA + LT + LDMC + CC + Ptlp + SLA, data = traits, cor = T), 
          data = traits,
