@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2021-09-08" />
+<meta name="date" content="2021-11-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="measurement-error.html"/>
-<link rel="next" href="traits-covariation.html"/>
+<link rel="next" href="individual-variation.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -161,16 +161,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="individuals.html"><a href="individuals.html#metradica"><i class="fa fa-check"></i><b>3.2</b> METRADICA</a></li>
 <li class="chapter" data-level="3.3" data-path="individuals.html"><a href="individuals.html#candidates"><i class="fa fa-check"></i><b>3.3</b> Candidates</a></li>
 <li class="chapter" data-level="3.4" data-path="individuals.html"><a href="individuals.html#maps"><i class="fa fa-check"></i><b>3.4</b> Maps</a></li>
+<li class="chapter" data-level="3.5" data-path="individuals.html"><a href="individuals.html#extra-fth"><i class="fa fa-check"></i><b>3.5</b> Extra FTH</a></li>
+<li class="chapter" data-level="3.6" data-path="individuals.html"><a href="individuals.html#extra-post---fth"><i class="fa fa-check"></i><b>3.6</b> Extra Post - FTH</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="measurement-error.html"><a href="measurement-error.html"><i class="fa fa-check"></i><b>4</b> Measurement error</a></li>
-<li class="chapter" data-level="5" data-path="leaf-variation.html"><a href="leaf-variation.html"><i class="fa fa-check"></i><b>5</b> Leaf variation</a><ul>
-<li class="chapter" data-level="5.1" data-path="leaf-variation.html"><a href="leaf-variation.html#sampling"><i class="fa fa-check"></i><b>5.1</b> Sampling</a></li>
-<li class="chapter" data-level="5.2" data-path="leaf-variation.html"><a href="leaf-variation.html#traits-1"><i class="fa fa-check"></i><b>5.2</b> Traits</a></li>
+<li class="chapter" data-level="5" data-path="leaf-variation.html"><a href="leaf-variation.html"><i class="fa fa-check"></i><b>5</b> Leaf variation</a></li>
+<li class="chapter" data-level="6" data-path="individual-variation.html"><a href="individual-variation.html"><i class="fa fa-check"></i><b>6</b> Individual variation</a></li>
+<li class="chapter" data-level="7" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>7</b> Traits covariation</a></li>
+<li class="chapter" data-level="8" data-path="variance-partitionning.html"><a href="variance-partitionning.html"><i class="fa fa-check"></i><b>8</b> Variance partitionning</a></li>
+<li class="chapter" data-level="9" data-path="models.html"><a href="models.html"><i class="fa fa-check"></i><b>9</b> Models</a><ul>
+<li class="chapter" data-level="9.1" data-path="models.html"><a href="models.html#check"><i class="fa fa-check"></i><b>9.1</b> Check</a></li>
+<li class="chapter" data-level="9.2" data-path="models.html"><a href="models.html#summary"><i class="fa fa-check"></i><b>9.2</b> Summary</a></li>
+<li class="chapter" data-level="9.3" data-path="models.html"><a href="models.html#intercept"><i class="fa fa-check"></i><b>9.3</b> Intercept</a></li>
+<li class="chapter" data-level="9.4" data-path="models.html"><a href="models.html#dbh"><i class="fa fa-check"></i><b>9.4</b> DBH</a></li>
+<li class="chapter" data-level="9.5" data-path="models.html"><a href="models.html#twi"><i class="fa fa-check"></i><b>9.5</b> TWI</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>6</b> Traits covariation</a></li>
-<li class="chapter" data-level="7" data-path="variance-partitionning.html"><a href="variance-partitionning.html"><i class="fa fa-check"></i><b>7</b> Variance partitionning</a></li>
-<li class="chapter" data-level="8" data-path="environment-ontogeny.html"><a href="environment-ontogeny.html"><i class="fa fa-check"></i><b>8</b> Environment &amp; Ontogeny</a></li>
-<li class="chapter" data-level="9" data-path="models.html"><a href="models.html"><i class="fa fa-check"></i><b>9</b> Models</a></li>
 <li class="chapter" data-level="10" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>10</b> Literature</a><ul>
 <li class="chapter" data-level="10.1" data-path="literature.html"><a href="literature.html#hajek2016"><i class="fa fa-check"></i><b>10.1</b> <span class="citation">Hajek <em>et al.</em> (<span>2016</span>)</span></a></li>
 <li class="chapter" data-level="10.2" data-path="literature.html"><a href="literature.html#lobo2018"><i class="fa fa-check"></i><b>10.2</b> <span class="citation">Lobo <em>et al.</em> (<span>2018</span>)</span></a></li>
@@ -204,8 +209,6 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 </div>
 <div id="leaf-variation" class="section level1">
 <h1><span class="header-section-number">Chapter 5</span> Leaf variation</h1>
-<div id="sampling" class="section level2">
-<h2><span class="header-section-number">5.1</span> Sampling</h2>
 <p>For the leaf variation within individual we sampled across the 27 <em>Virola michelii</em> from the P16 that followed our requirements (DBH between 30th and 60th quantiles):</p>
 <div class="figure"><span id="fig:samplingleafvar"></span>
 <div id="htmlwidget-30e4409849e39179307f" style="width:768px;height:576px;" class="leaflet html-widget"></div>
@@ -214,12 +217,6 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 Figure 5.1: Candidates in P16.
 </p>
 </div>
-<pre><code>## Deleting source `maps/P16_virmic.gpx&#39; using driver `GPX&#39;
-## Writing layer `waypoints&#39; to data source `maps/P16_virmic.gpx&#39; using driver `GPX&#39;
-## Writing 27 features with 1 fields and geometry type Point.</code></pre>
-</div>
-<div id="traits-1" class="section level2">
-<h2><span class="header-section-number">5.2</span> Traits</h2>
 <div class="figure"><span id="fig:leafBoxplots"></span>
 <img src="hydroITV_files/figure-html/leafBoxplots-1.png" alt="Traits distributions when testing for leaf variation." width="768" />
 <p class="caption">
@@ -246,14 +243,13 @@ Figure 5.3: Traits variances when testing for leaf variation.
 <span id="cb4-12"><a href="leaf-variation.html#cb4-12"></a><span class="st">  </span><span class="kw">write_tsv</span>(<span class="st">&quot;data/traits/leaf/leaf_20210831_LAcor_ss.tsv&quot;</span>)</span></code></pre></div>
 
 </div>
-</div>
             </section>
 
           </div>
         </div>
       </div>
 <a href="measurement-error.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="traits-covariation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="individual-variation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -1,5 +1,0 @@
-# Models
-
-The subsequent analysis aimed to graphically explore variations in leaf traits according to 4 descriptors: (i) tree ontogeny, (ii) biotic interactions and (iii) abiotic environment, and (iv) phylogeny through taxonomic levels. From these observations we developed a generic model linking individual phenotype to its descriptors. The generic model will be inferred later using Bayesian inference.
-
-**Waiting data, inspiration can be found here: https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/03-Models.Rmd .**
