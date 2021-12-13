@@ -24,14 +24,14 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2021-09-08" />
+<meta name="date" content="2021-11-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="environment-ontogeny.html"/>
+<link rel="prev" href="variance-partitionning.html"/>
 <link rel="next" href="literature.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -161,16 +161,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="individuals.html"><a href="individuals.html#metradica"><i class="fa fa-check"></i><b>3.2</b> METRADICA</a></li>
 <li class="chapter" data-level="3.3" data-path="individuals.html"><a href="individuals.html#candidates"><i class="fa fa-check"></i><b>3.3</b> Candidates</a></li>
 <li class="chapter" data-level="3.4" data-path="individuals.html"><a href="individuals.html#maps"><i class="fa fa-check"></i><b>3.4</b> Maps</a></li>
+<li class="chapter" data-level="3.5" data-path="individuals.html"><a href="individuals.html#extra-fth"><i class="fa fa-check"></i><b>3.5</b> Extra FTH</a></li>
+<li class="chapter" data-level="3.6" data-path="individuals.html"><a href="individuals.html#extra-post---fth"><i class="fa fa-check"></i><b>3.6</b> Extra Post - FTH</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="measurement-error.html"><a href="measurement-error.html"><i class="fa fa-check"></i><b>4</b> Measurement error</a></li>
-<li class="chapter" data-level="5" data-path="leaf-variation.html"><a href="leaf-variation.html"><i class="fa fa-check"></i><b>5</b> Leaf variation</a><ul>
-<li class="chapter" data-level="5.1" data-path="leaf-variation.html"><a href="leaf-variation.html#sampling"><i class="fa fa-check"></i><b>5.1</b> Sampling</a></li>
-<li class="chapter" data-level="5.2" data-path="leaf-variation.html"><a href="leaf-variation.html#traits-1"><i class="fa fa-check"></i><b>5.2</b> Traits</a></li>
+<li class="chapter" data-level="5" data-path="leaf-variation.html"><a href="leaf-variation.html"><i class="fa fa-check"></i><b>5</b> Leaf variation</a></li>
+<li class="chapter" data-level="6" data-path="individual-variation.html"><a href="individual-variation.html"><i class="fa fa-check"></i><b>6</b> Individual variation</a></li>
+<li class="chapter" data-level="7" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>7</b> Traits covariation</a></li>
+<li class="chapter" data-level="8" data-path="variance-partitionning.html"><a href="variance-partitionning.html"><i class="fa fa-check"></i><b>8</b> Variance partitionning</a></li>
+<li class="chapter" data-level="9" data-path="models.html"><a href="models.html"><i class="fa fa-check"></i><b>9</b> Models</a><ul>
+<li class="chapter" data-level="9.1" data-path="models.html"><a href="models.html#check"><i class="fa fa-check"></i><b>9.1</b> Check</a></li>
+<li class="chapter" data-level="9.2" data-path="models.html"><a href="models.html#summary"><i class="fa fa-check"></i><b>9.2</b> Summary</a></li>
+<li class="chapter" data-level="9.3" data-path="models.html"><a href="models.html#intercept"><i class="fa fa-check"></i><b>9.3</b> Intercept</a></li>
+<li class="chapter" data-level="9.4" data-path="models.html"><a href="models.html#dbh"><i class="fa fa-check"></i><b>9.4</b> DBH</a></li>
+<li class="chapter" data-level="9.5" data-path="models.html"><a href="models.html#twi"><i class="fa fa-check"></i><b>9.5</b> TWI</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>6</b> Traits covariation</a></li>
-<li class="chapter" data-level="7" data-path="variance-partitionning.html"><a href="variance-partitionning.html"><i class="fa fa-check"></i><b>7</b> Variance partitionning</a></li>
-<li class="chapter" data-level="8" data-path="environment-ontogeny.html"><a href="environment-ontogeny.html"><i class="fa fa-check"></i><b>8</b> Environment &amp; Ontogeny</a></li>
-<li class="chapter" data-level="9" data-path="models.html"><a href="models.html"><i class="fa fa-check"></i><b>9</b> Models</a></li>
 <li class="chapter" data-level="10" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>10</b> Literature</a><ul>
 <li class="chapter" data-level="10.1" data-path="literature.html"><a href="literature.html#hajek2016"><i class="fa fa-check"></i><b>10.1</b> <span class="citation">Hajek <em>et al.</em> (<span>2016</span>)</span></a></li>
 <li class="chapter" data-level="10.2" data-path="literature.html"><a href="literature.html#lobo2018"><i class="fa fa-check"></i><b>10.2</b> <span class="citation">Lobo <em>et al.</em> (<span>2018</span>)</span></a></li>
@@ -205,15 +210,980 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <div id="models" class="section level1">
 <h1><span class="header-section-number">Chapter 9</span> Models</h1>
 <p>The subsequent analysis aimed to graphically explore variations in leaf traits according to 4 descriptors: (i) tree ontogeny, (ii) biotic interactions and (iii) abiotic environment, and (iv) phylogeny through taxonomic levels. From these observations we developed a generic model linking individual phenotype to its descriptors. The generic model will be inferred later using Bayesian inference.</p>
-<p><strong>Waiting data, inspiration can be found here: <a href="https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/03-Models.Rmd" class="uri">https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/03-Models.Rmd</a> .</strong></p>
+<div id="check" class="section level2">
+<h2><span class="header-section-number">9.1</span> Check</h2>
+<p><img src="hydroITV_files/figure-html/traces-1.png" width="768" /></p>
+<p><img src="hydroITV_files/figure-html/ppcdens-1.png" width="768" /></p>
+</div>
+<div id="summary" class="section level2">
+<h2><span class="header-section-number">9.2</span> Summary</h2>
+<table>
+<caption><span id="tab:modelsummary">Table 9.1: </span>Model parameters for each species with reduced traits and descriptors.</caption>
+<thead>
+<tr class="header">
+<th align="left">Trait</th>
+<th align="left">Species</th>
+<th align="right"><span class="math inline">\(\alpha_s\)</span></th>
+<th align="right"><span class="math inline">\(\beta_{DBH}\)</span></th>
+<th align="right"><span class="math inline">\(\beta_{TWI}\)</span></th>
+<th align="right"><span class="math inline">\(\gamma_{TWI}\)</span></th>
+<th align="right"><span class="math inline">\(\sigma^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">All</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">0.039</td>
+<td align="right"></td>
+<td align="right">0.959</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Casearia javitensis</td>
+<td align="right">0.202</td>
+<td align="right">0.837</td>
+<td align="right"></td>
+<td align="right">0.070</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Chrysophyllum prieurii</td>
+<td align="right">0.383</td>
+<td align="right">0.809</td>
+<td align="right"></td>
+<td align="right">0.400</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Conceveiba guianensis</td>
+<td align="right">-0.594</td>
+<td align="right">0.904</td>
+<td align="right"></td>
+<td align="right">0.068</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Gustavia hexapetala</td>
+<td align="right">-0.460</td>
+<td align="right">0.966</td>
+<td align="right"></td>
+<td align="right">0.274</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Jacaranda copaia</td>
+<td align="right">-0.329</td>
+<td align="right">0.988</td>
+<td align="right"></td>
+<td align="right">-0.053</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Laetia procera</td>
+<td align="right">0.342</td>
+<td align="right">0.770</td>
+<td align="right"></td>
+<td align="right">0.053</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Protium stevensonii</td>
+<td align="right">0.491</td>
+<td align="right">0.760</td>
+<td align="right"></td>
+<td align="right">-0.027</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Tachigali melinonii</td>
+<td align="right">0.245</td>
+<td align="right">0.819</td>
+<td align="right"></td>
+<td align="right">0.194</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Virola michelii</td>
+<td align="right">-0.862</td>
+<td align="right">0.481</td>
+<td align="right"></td>
+<td align="right">1.273</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LMA\)</span></td>
+<td align="left">Virola surinamensis</td>
+<td align="right">0.354</td>
+<td align="right">0.900</td>
+<td align="right"></td>
+<td align="right">0.120</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">All</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">-0.021</td>
+<td align="right"></td>
+<td align="right">0.918</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Casearia javitensis</td>
+<td align="right">1.168</td>
+<td align="right">0.630</td>
+<td align="right"></td>
+<td align="right">0.443</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Chrysophyllum prieurii</td>
+<td align="right">0.118</td>
+<td align="right">0.800</td>
+<td align="right"></td>
+<td align="right">0.526</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Conceveiba guianensis</td>
+<td align="right">-0.569</td>
+<td align="right">0.994</td>
+<td align="right"></td>
+<td align="right">0.230</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Gustavia hexapetala</td>
+<td align="right">-0.763</td>
+<td align="right">0.882</td>
+<td align="right"></td>
+<td align="right">-0.117</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Jacaranda copaia</td>
+<td align="right">-0.694</td>
+<td align="right">0.817</td>
+<td align="right"></td>
+<td align="right">0.014</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Laetia procera</td>
+<td align="right">0.628</td>
+<td align="right">0.647</td>
+<td align="right"></td>
+<td align="right">0.051</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Protium stevensonii</td>
+<td align="right">0.489</td>
+<td align="right">0.797</td>
+<td align="right"></td>
+<td align="right">-0.036</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Tachigali melinonii</td>
+<td align="right">0.888</td>
+<td align="right">0.774</td>
+<td align="right"></td>
+<td align="right">-0.248</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Virola michelii</td>
+<td align="right">-0.260</td>
+<td align="right">0.905</td>
+<td align="right"></td>
+<td align="right">-0.038</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LDMC\)</span></td>
+<td align="left">Virola surinamensis</td>
+<td align="right">-0.289</td>
+<td align="right">0.917</td>
+<td align="right"></td>
+<td align="right">0.045</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">All</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">0.064</td>
+<td align="right"></td>
+<td align="right">0.819</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Casearia javitensis</td>
+<td align="right">-0.937</td>
+<td align="right">0.758</td>
+<td align="right"></td>
+<td align="right">0.151</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Chrysophyllum prieurii</td>
+<td align="right">0.233</td>
+<td align="right">0.864</td>
+<td align="right"></td>
+<td align="right">-0.386</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Conceveiba guianensis</td>
+<td align="right">-0.607</td>
+<td align="right">0.894</td>
+<td align="right"></td>
+<td align="right">0.156</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Gustavia hexapetala</td>
+<td align="right">0.064</td>
+<td align="right">1.050</td>
+<td align="right"></td>
+<td align="right">0.180</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Jacaranda copaia</td>
+<td align="right">0.481</td>
+<td align="right">1.049</td>
+<td align="right"></td>
+<td align="right">-0.100</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Laetia procera</td>
+<td align="right">0.628</td>
+<td align="right">0.383</td>
+<td align="right"></td>
+<td align="right">-0.052</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Protium stevensonii</td>
+<td align="right">0.015</td>
+<td align="right">0.818</td>
+<td align="right"></td>
+<td align="right">-0.096</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Tachigali melinonii</td>
+<td align="right">-1.290</td>
+<td align="right">0.596</td>
+<td align="right"></td>
+<td align="right">-0.163</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Virola michelii</td>
+<td align="right">-0.974</td>
+<td align="right">0.652</td>
+<td align="right"></td>
+<td align="right">-0.702</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(LT\)</span></td>
+<td align="left">Virola surinamensis</td>
+<td align="right">1.034</td>
+<td align="right">0.656</td>
+<td align="right"></td>
+<td align="right">0.492</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">All</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">0.048</td>
+<td align="right"></td>
+<td align="right">0.650</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Casearia javitensis</td>
+<td align="right">-0.797</td>
+<td align="right">0.848</td>
+<td align="right"></td>
+<td align="right">0.019</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Chrysophyllum prieurii</td>
+<td align="right">-1.006</td>
+<td align="right">0.614</td>
+<td align="right"></td>
+<td align="right">-0.519</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Conceveiba guianensis</td>
+<td align="right">-1.444</td>
+<td align="right">0.615</td>
+<td align="right"></td>
+<td align="right">-0.048</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Gustavia hexapetala</td>
+<td align="right">-0.660</td>
+<td align="right">0.927</td>
+<td align="right"></td>
+<td align="right">-0.485</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Jacaranda copaia</td>
+<td align="right">1.438</td>
+<td align="right">0.720</td>
+<td align="right"></td>
+<td align="right">0.031</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Laetia procera</td>
+<td align="right">-0.599</td>
+<td align="right">0.461</td>
+<td align="right"></td>
+<td align="right">-0.324</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Protium stevensonii</td>
+<td align="right">0.866</td>
+<td align="right">0.790</td>
+<td align="right"></td>
+<td align="right">0.357</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Tachigali melinonii</td>
+<td align="right">1.613</td>
+<td align="right">0.703</td>
+<td align="right"></td>
+<td align="right">-0.082</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Virola michelii</td>
+<td align="right">-0.538</td>
+<td align="right">0.838</td>
+<td align="right"></td>
+<td align="right">0.225</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{1}{LA}\)</span></td>
+<td align="left">Virola surinamensis</td>
+<td align="right">-0.062</td>
+<td align="right">0.902</td>
+<td align="right"></td>
+<td align="right">0.102</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">All</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">-0.022</td>
+<td align="right"></td>
+<td align="right">0.848</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Casearia javitensis</td>
+<td align="right">-0.229</td>
+<td align="right">0.876</td>
+<td align="right"></td>
+<td align="right">0.110</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Chrysophyllum prieurii</td>
+<td align="right">0.855</td>
+<td align="right">0.763</td>
+<td align="right"></td>
+<td align="right">-0.219</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Conceveiba guianensis</td>
+<td align="right">-0.363</td>
+<td align="right">0.963</td>
+<td align="right"></td>
+<td align="right">-0.377</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Gustavia hexapetala</td>
+<td align="right">-0.947</td>
+<td align="right">0.805</td>
+<td align="right"></td>
+<td align="right">-0.226</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Jacaranda copaia</td>
+<td align="right">0.587</td>
+<td align="right">0.988</td>
+<td align="right"></td>
+<td align="right">-0.033</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Laetia procera</td>
+<td align="right">0.870</td>
+<td align="right">0.525</td>
+<td align="right"></td>
+<td align="right">0.728</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Protium stevensonii</td>
+<td align="right">-0.856</td>
+<td align="right">0.615</td>
+<td align="right"></td>
+<td align="right">-1.079</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Tachigali melinonii</td>
+<td align="right">-0.978</td>
+<td align="right">0.713</td>
+<td align="right"></td>
+<td align="right">0.037</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Virola michelii</td>
+<td align="right">0.555</td>
+<td align="right">0.852</td>
+<td align="right"></td>
+<td align="right">-0.009</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(CC\)</span></td>
+<td align="left">Virola surinamensis</td>
+<td align="right">0.429</td>
+<td align="right">0.908</td>
+<td align="right"></td>
+<td align="right">-0.058</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">All</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">-0.014</td>
+<td align="right"></td>
+<td align="right">0.776</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Casearia javitensis</td>
+<td align="right">-0.982</td>
+<td align="right">0.657</td>
+<td align="right"></td>
+<td align="right">-0.121</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Chrysophyllum prieurii</td>
+<td align="right">-1.212</td>
+<td align="right">0.643</td>
+<td align="right"></td>
+<td align="right">-0.383</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Conceveiba guianensis</td>
+<td align="right">-0.694</td>
+<td align="right">0.830</td>
+<td align="right"></td>
+<td align="right">0.079</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Gustavia hexapetala</td>
+<td align="right">-0.457</td>
+<td align="right">0.898</td>
+<td align="right"></td>
+<td align="right">0.564</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Jacaranda copaia</td>
+<td align="right">0.646</td>
+<td align="right">1.010</td>
+<td align="right"></td>
+<td align="right">-0.174</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Laetia procera</td>
+<td align="right">0.525</td>
+<td align="right">0.561</td>
+<td align="right"></td>
+<td align="right">-0.680</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Protium stevensonii</td>
+<td align="right">1.622</td>
+<td align="right">0.585</td>
+<td align="right"></td>
+<td align="right">-0.243</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Tachigali melinonii</td>
+<td align="right">-0.161</td>
+<td align="right">0.856</td>
+<td align="right"></td>
+<td align="right">-0.484</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Virola michelii</td>
+<td align="right">0.813</td>
+<td align="right">0.756</td>
+<td align="right"></td>
+<td align="right">0.297</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(g_{min}\)</span></td>
+<td align="left">Virola surinamensis</td>
+<td align="right">-0.062</td>
+<td align="right">0.885</td>
+<td align="right"></td>
+<td align="right">-0.363</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">All</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">-0.014</td>
+<td align="right"></td>
+<td align="right">0.670</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Casearia javitensis</td>
+<td align="right">0.772</td>
+<td align="right">0.707</td>
+<td align="right"></td>
+<td align="right">0.670</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Chrysophyllum prieurii</td>
+<td align="right">1.587</td>
+<td align="right">0.538</td>
+<td align="right"></td>
+<td align="right">-0.415</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Conceveiba guianensis</td>
+<td align="right">-0.065</td>
+<td align="right">1.058</td>
+<td align="right"></td>
+<td align="right">0.070</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Gustavia hexapetala</td>
+<td align="right">0.713</td>
+<td align="right">0.976</td>
+<td align="right"></td>
+<td align="right">-0.197</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Jacaranda copaia</td>
+<td align="right">-1.507</td>
+<td align="right">0.326</td>
+<td align="right"></td>
+<td align="right">0.109</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Laetia procera</td>
+<td align="right">-0.141</td>
+<td align="right">0.731</td>
+<td align="right"></td>
+<td align="right">-0.883</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Protium stevensonii</td>
+<td align="right">1.306</td>
+<td align="right">0.530</td>
+<td align="right"></td>
+<td align="right">0.158</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Tachigali melinonii</td>
+<td align="right">0.342</td>
+<td align="right">0.870</td>
+<td align="right"></td>
+<td align="right">0.459</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Virola michelii</td>
+<td align="right">-0.668</td>
+<td align="right">0.808</td>
+<td align="right"></td>
+<td align="right">0.205</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\pi_{TLP}\)</span></td>
+<td align="left">Virola surinamensis</td>
+<td align="right">-0.703</td>
+<td align="right">0.844</td>
+<td align="right"></td>
+<td align="right">0.037</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">All</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">0.017</td>
+<td align="right"></td>
+<td align="right">1.013</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Casearia javitensis</td>
+<td align="right">0.002</td>
+<td align="right">0.853</td>
+<td align="right"></td>
+<td align="right">-0.222</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Chrysophyllum prieurii</td>
+<td align="right">-0.634</td>
+<td align="right">0.749</td>
+<td align="right"></td>
+<td align="right">-0.260</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Conceveiba guianensis</td>
+<td align="right">0.293</td>
+<td align="right">1.007</td>
+<td align="right"></td>
+<td align="right">0.433</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Gustavia hexapetala</td>
+<td align="right">0.413</td>
+<td align="right">0.954</td>
+<td align="right"></td>
+<td align="right">0.087</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Jacaranda copaia</td>
+<td align="right">-0.730</td>
+<td align="right">0.939</td>
+<td align="right"></td>
+<td align="right">0.098</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Laetia procera</td>
+<td align="right">0.238</td>
+<td align="right">0.778</td>
+<td align="right"></td>
+<td align="right">-0.123</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Protium stevensonii</td>
+<td align="right">-0.019</td>
+<td align="right">0.799</td>
+<td align="right"></td>
+<td align="right">-0.002</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Tachigali melinonii</td>
+<td align="right">0.414</td>
+<td align="right">0.934</td>
+<td align="right"></td>
+<td align="right">-0.230</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Virola michelii</td>
+<td align="right">-0.039</td>
+<td align="right">0.904</td>
+<td align="right"></td>
+<td align="right">-0.097</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(RWC\)</span></td>
+<td align="left">Virola surinamensis</td>
+<td align="right">0.047</td>
+<td align="right">0.928</td>
+<td align="right"></td>
+<td align="right">0.078</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">All</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">0.039</td>
+<td align="right"></td>
+<td align="right">0.970</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Casearia javitensis</td>
+<td align="right">-0.763</td>
+<td align="right">0.770</td>
+<td align="right"></td>
+<td align="right">0.518</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Chrysophyllum prieurii</td>
+<td align="right">-0.363</td>
+<td align="right">0.801</td>
+<td align="right"></td>
+<td align="right">-0.708</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Conceveiba guianensis</td>
+<td align="right">0.142</td>
+<td align="right">0.971</td>
+<td align="right"></td>
+<td align="right">-0.111</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Gustavia hexapetala</td>
+<td align="right">0.703</td>
+<td align="right">0.820</td>
+<td align="right"></td>
+<td align="right">-0.503</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Jacaranda copaia</td>
+<td align="right">-0.161</td>
+<td align="right">0.981</td>
+<td align="right"></td>
+<td align="right">0.153</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Laetia procera</td>
+<td align="right">0.007</td>
+<td align="right">0.800</td>
+<td align="right"></td>
+<td align="right">-0.378</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Protium stevensonii</td>
+<td align="right">-0.009</td>
+<td align="right">0.818</td>
+<td align="right"></td>
+<td align="right">-0.167</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Tachigali melinonii</td>
+<td align="right">0.013</td>
+<td align="right">0.885</td>
+<td align="right"></td>
+<td align="right">0.188</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Virola michelii</td>
+<td align="right">-0.520</td>
+<td align="right">0.886</td>
+<td align="right"></td>
+<td align="right">0.095</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\frac{Fm}{Fv}\)</span></td>
+<td align="left">Virola surinamensis</td>
+<td align="right">0.285</td>
+<td align="right">0.777</td>
+<td align="right"></td>
+<td align="right">0.621</td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="intercept" class="section level2">
+<h2><span class="header-section-number">9.3</span> Intercept</h2>
+<div class="figure"><span id="fig:modelIntercepts"></span>
+<img src="hydroITV_files/figure-html/modelIntercepts-1.png" alt="Model species effect for Intercept." width="768" />
+<p class="caption">
+Figure 9.1: Model species effect for Intercept.
+</p>
+</div>
+</div>
+<div id="dbh" class="section level2">
+<h2><span class="header-section-number">9.4</span> DBH</h2>
+<div class="figure"><span id="fig:modelDBH"></span>
+<img src="hydroITV_files/figure-html/modelDBH-1.png" alt="Model species effect for DBH slope." width="768" />
+<p class="caption">
+Figure 9.2: Model species effect for DBH slope.
+</p>
+</div>
+<div class="figure"><span id="fig:predDBH"></span>
+<img src="hydroITV_files/figure-html/predDBH-1.png" alt="Model predictions with DBH." width="768" />
+<p class="caption">
+Figure 9.3: Model predictions with DBH.
+</p>
+</div>
+</div>
+<div id="twi" class="section level2">
+<h2><span class="header-section-number">9.5</span> TWI</h2>
+<div class="figure"><span id="fig:modelTWIs"></span>
+<img src="hydroITV_files/figure-html/modelTWIs-1.png" alt="Model species effect for TWIs slope." width="768" />
+<p class="caption">
+Figure 9.4: Model species effect for TWIs slope.
+</p>
+</div>
+<div class="figure"><span id="fig:modelTWIis"></span>
+<img src="hydroITV_files/figure-html/modelTWIis-1.png" alt="Model species effect for TWIis slope." width="768" />
+<p class="caption">
+Figure 9.5: Model species effect for TWIis slope.
+</p>
+</div>
+<div class="figure"><span id="fig:modelTWI"></span>
+<img src="hydroITV_files/figure-html/modelTWI-1.png" alt="Model species effect for TWIs &amp; TWIis slope." width="768" />
+<p class="caption">
+Figure 9.6: Model species effect for TWIs &amp; TWIis slope.
+</p>
+</div>
+<div class="figure"><span id="fig:predTWI"></span>
+<img src="hydroITV_files/figure-html/predTWI-1.png" alt="Model predictions with TWI." width="768" />
+<p class="caption">
+Figure 9.7: Model predictions with TWI.
+</p>
+</div>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="environment-ontogeny.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="variance-partitionning.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="literature.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

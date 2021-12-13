@@ -1,5 +1,186 @@
+```{r setupvarpart, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(dplyr)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+varcols <- c(species = "red", individual = "lightgreen", 
+             sample = "lightblue", repetition = "orange", residual = "grey")
+log_abs_trans <- function() {
+    scales::trans_new(
+        name = "log_abs", 
+        transform = function(x) log(abs(x)), 
+        inverse = function(x) exp(x));
+}
+```
+
 # Variance partitionning
 
 Subsequent analysis aimed to assess variance partitioning among and within species.
 
-**Waiting data.**
+```{r dataVarPart}
+# traits meas
+ptlp <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "measure_ptlp") %>% 
+  mutate(C0 = as.numeric(C0))
+fvfm <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_fvfm") %>% 
+    mutate(FvFm = as.numeric(FvFm)) 
+rwc <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_rwc") %>% 
+    mutate(RWC = ((as.numeric(BagFreshWeight) - as.numeric(BagWeight))-DryWeight)/(SaturatedWeight-DryWeight))
+soft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "measure_soft") %>% 
+  mutate(LA = LApixel / ((300 ^2 ) * (2.54^2)), LDMC = DryWeight/FreshWeight, LT = LTmean) %>% 
+  mutate(SLA = LA/DryWeight)
+traits_meas <- bind_rows(
+  soft %>% 
+    mutate(Date = lubridate::date(Date)) %>% 
+    select(Date, Sample, Repetition, Leaf, LA, LDMC, LT, SLA) %>%
+    reshape2::melt(c("Date", "Sample", "Repetition", "Leaf"), variable.name = "trait"),
+  ptlp %>% 
+    mutate(Date = lubridate::date(Date_measure)) %>% 
+    mutate(Sample  = Nr_Leaf, Repetition = Nr_Cycle, Leaf = 1) %>% 
+    select(Date, Sample, Repetition, Leaf, Ptlp) %>% 
+    mutate(trait = "Ptlp") %>% 
+    rename(value = Ptlp) %>% 
+    na.omit(),
+  fvfm %>% 
+    mutate(Date = lubridate::date(Date)) %>% 
+    mutate(Sample  = Leaf, Leaf = 1) %>% 
+    select(Date, Sample, Repetition, Leaf, FvFm) %>% 
+    mutate(trait = "FvFm") %>% 
+    rename(value = FvFm) %>% 
+    na.omit(),
+  rwc %>% 
+    mutate(Date = lubridate::date(Day)) %>% 
+    mutate(Leaf = 1) %>% 
+    select(Date, Sample, Repetition, Leaf, RWC) %>% 
+    mutate(trait = "RWC") %>% 
+    rename(value = RWC) %>% 
+    na.omit()
+)
+# traits leaf
+ptlp <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "leaf_ptlp")
+
+rwc <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "leaf_rwc") %>% 
+    mutate(RWC = ((as.numeric(BagFreshWeight) - as.numeric(BagWeight))-DryWeight)/(SaturatedWeight-DryWeight))
+
+soft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "leaf_soft") %>% 
+  rowwise() %>% 
+  mutate(LT = mean(c(LT1, LT2, LT3)), 
+         SPAD = mean(c(SPAD1, SPAD2, SPAD3)), 
+         LDMC =  DryWeight/FreshWeight,
+         LA = LApixel / ((300 ^2 ) * (2.54^2))) %>% 
+  mutate(CC = (117.1 * SPAD)/(148.84 - SPAD),
+         SLA = LA/DryWeight)
+traits_leaf <- bind_rows(
+  soft %>% 
+    mutate(Date = lubridate::date(Date)) %>% 
+    mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+    select(Date, Ind, Sample, Leaf, LDMC, LT, FvFm, CC, LA, SLA) %>% 
+    reshape2::melt(c("Date", "Ind", "Sample", "Leaf"), variable.name = "trait"),
+  ptlp %>% 
+    mutate(Date = lubridate::date(Date_measure)) %>% 
+    mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+    mutate(Sample  = Nr_Leaf, Leaf = 1) %>% 
+    select(Date, Ind, Sample, Leaf, Ptlp) %>% 
+    mutate(trait = "Ptlp") %>% 
+    rename(value = Ptlp) %>% 
+    na.omit(),
+  rwc %>% 
+    mutate(Date = lubridate::date(Date_Field)) %>% 
+    mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+    mutate(Leaf = 1) %>% 
+    select(Date, Ind, Sample, Leaf, RWC) %>% 
+    mutate(trait = "RWC") %>% 
+    rename(value = RWC) %>% 
+    na.omit()
+)
+# traits ind
+traits_ind <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+                          "ind_ft") %>% 
+  st_as_sf(coords = c("Xutm", "Yutm"),
+           crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
+# vars meas
+vars_meas <- traits_meas %>% 
+  group_by(Date, Sample, Repetition, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  group_by(trait, Sample) %>% 
+  sample_n(5) %>% 
+  group_by(trait) %>% 
+  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Sample/Repetition, data = .) %>% 
+       ape::varcomp(scale = F, cum = F) %>% 
+       as.vector() %>% 
+       data.frame(level = c("Sample", "Repetition", "Residual"), variance = as.vector(.))) %>% 
+  unnest(var) %>% 
+  select(-`.`) %>% 
+  group_by(trait) %>% 
+  mutate(pct = variance / sum(variance)*100) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(study = "measure/leaf")
+# vars leaf
+vars_leaf <- traits_leaf %>% 
+  group_by(Date, Ind, Sample, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  na.omit() %>% 
+  filter(trait %in% c("CC", "FvFm", "LT", "Ptlp", "LA", "SLA", "LDMC")) %>% 
+  group_by(trait, Ind) %>% 
+  sample_n(4) %>% 
+  group_by(trait) %>% 
+  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Ind/Sample, data = .) %>% 
+       ape::varcomp(scale = F, cum = F) %>% 
+       as.vector() %>% 
+       data.frame(level = c("Individual", "Sample", "Residual"), variance = as.vector(.))) %>% 
+  unnest(var) %>% 
+  select(-`.`) %>% 
+  group_by(trait) %>% 
+  mutate(pct = variance / sum(variance)*100) %>%
+  mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(study = "leaf/individual")
+# vars ind
+vars_ind <- traits_ind %>% 
+  mutate(Date = lubridate::date(DateField)) %>% 
+  dplyr::select(Genus, Species, Date, Individual, Gmin, RWC, FvFm, LA, LT, LDMC, CC, Ptlp, SLA) %>% 
+  st_drop_geometry() %>% 
+  reshape2::melt(id.vars = c("Genus", "Species", "Date", "Individual"), variable.name = "trait") %>% 
+  mutate(SpeciesLong = paste(Genus, Species)) %>% 
+  na.omit() %>% 
+  group_by(trait) %>% 
+  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|SpeciesLong/Individual, data = .) %>% 
+       ape::varcomp(scale = F, cum = F) %>% 
+       as.vector() %>% 
+       data.frame(level = c("Species", "Individual", "Residual"), variance = as.vector(.))) %>% 
+  unnest(var) %>% 
+  select(-`.`) %>% 
+  group_by(trait) %>% 
+  mutate(pct = variance / sum(variance)*100) %>%
+  mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "FvFm" = "frac(Fv,Fm)", "Gmin" = "g[min]")) %>% 
+  mutate(study = "individual/species")
+# vars
+vars <- bind_rows(vars_meas, vars_leaf, vars_ind) %>% 
+  mutate(level = factor(level, levels = c("Species", "Individual", "Sample", "Repetition", "Residual"))) %>% 
+  mutate(study = factor(study, levels = c("measure/leaf", "leaf/individual", "individual/species"))) %>% 
+  mutate(pct_text = paste0(round(pct), "%")) %>% 
+  mutate(pct_text = gsub("^0%", "", pct_text))
+```
+
+```{r figVarPart, fig.width=8, fig.height=8}
+vars %>% 
+  ggplot(aes(x = study, y = pct, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(y = pct, label = pct_text), col = "white", position = position_stack(vjust = .5)) +
+  scale_fill_manual(expression(sigma^2),
+                    values = unname(varcols[c("species", "individual", "sample", "repetition", "residual")])) +
+  xlab("Trait") + ylab("percentage of variance") +
+  scale_x_discrete(labels = scales::parse_format()) +
+  facet_wrap(.~trait, labeller = "label_parsed",  nrow = 2) +
+  theme(legend.position = "bottom", axis.text.x = element_text(angle = 90), axis.title.x = element_blank())
+```
+

@@ -1,3 +1,21 @@
+hydroITV 1.0.0.9016
+* msc preliminary figs
+
+hydroITV 1.0.0.9015
+* regressions
+
+hydroITV 1.0.0.9014
+* all pcas
+
+hydroITV 1.0.0.9013
+* individuals: cleaning extra and post FTH
+* meas var: cleaning
+* leaf var: cleaning
+* ind var: exploring
+
+hydroITV 1.0.0.9012
+* post FTH cleaning 1
+
 hydroITV 1.0.0.9011
 * prep FTH
 
