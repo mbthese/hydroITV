@@ -1,3 +1,6 @@
+hydroITV 1.0.0.9017
+* simplified and updated results
+
 hydroITV 1.0.0.9016
 * msc preliminary figs
 
