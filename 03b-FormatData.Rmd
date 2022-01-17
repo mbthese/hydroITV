@@ -1,0 +1,210 @@
+```{r formatdata, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(dplyr)
+library(googlesheets4)
+library(sf)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+```
+
+```{r formatmeasdata}
+soft_meas <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "meas_soft") %>% 
+     mutate(DateSoft = lubridate::date(DateSoft))
+
+fvfm_meas <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "meas_fvfm") %>% 
+    mutate(FvFm = as.numeric(FvFm))
+
+rwc_meas <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "meas_rwc")
+
+ptlp_meas <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "meas_ptlp")
+
+gmin_meas <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "ind_gmin", col_names = T) %>% 
+    sample_n(0)
+
+meas <- soft_meas %>%
+    full_join(fvfm_meas, 
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>% 
+    full_join(rwc_meas,
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>%
+    full_join(ptlp_meas,
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>%
+    full_join(gmin_meas,
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>%
+    dplyr::select(
+        StudyLevel, Forest, Genus, Species, Plot, SubPlot, TreeFieldNum, Tree, Sample, Leaf, Measure, # sample infos
+        LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin, # traits
+        DateSoft, OperatorSoft, LT1, LT2, LT3, SPAD1, SPAD2, SPAD3, SPAD, FreshWeightSoft, DryWeightSoft, LApixel, CommentSoft, # soft
+        DateBag, OperatorBag, BagID, BagWeight, Balance, DateFieldRWC, DateFresh, OpertorFresh, 
+        BagFreshWeight, FreshWeightRWC, DateSaturated, OperatorSaturated, OperatorSaturated, DateDry, OpertorDry, DryWeightRWC, CommentRWC, # RWC
+        DateCalibration, Contamination, DateFieldPtlp, LeafHealthStatus, LeafPhenoStatus, DensitySectionVeins, DateMeasurePtlp, OperatorPtlp,
+        IdVapro, RunVapro, C0, Posm, CommentPtlp, # Ptlp 
+        DateFieldGmin, OperatorGmin, ResolutionGmin, LApixelGmin, LAcmGmin, CommentGmin # gmin
+                  ) %>% 
+    arrange(StudyLevel, Forest, Genus, Species, Plot, SubPlot, TreeFieldNum, Tree, Sample, Leaf, Measure)
+
+rm(soft_meas, fvfm_meas, rwc_meas, ptlp_meas, gmin_meas)
+```
+
+```{r formatleafdata}
+soft_leaf <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "leaf_soft") %>% 
+     mutate(DateSoft = lubridate::date(DateSoft))
+
+rwc_leaf <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "leaf_rwc") %>% 
+    mutate_at(c("Tree", "BagID"), as.numeric)
+
+ptlp_leaf <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "leaf_ptlp") %>% 
+    mutate_at(c("Tree", "Sample", "Leaf", "Measure"), as.numeric)
+
+gmin_leaf <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "leaf_gmin")
+
+leaf <- soft_leaf %>%
+    full_join(rwc_leaf,
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>%
+    full_join(ptlp_leaf,
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>%
+    full_join(gmin_leaf,
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>%
+    dplyr::select(
+        StudyLevel, Forest, Genus, Species, Plot, SubPlot, TreeFieldNum, Tree, Sample, Leaf, Measure, # sample infos
+        LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin, # traits
+        DateSoft, OperatorSoft, LT1, LT2, LT3, SPAD1, SPAD2, SPAD3, SPAD, FreshWeightSoft, DryWeightSoft, LApixel, CommentSoft, # soft
+        DateBag, OperatorBag, BagID, BagWeight, Balance, DateFieldRWC, DateFresh, OpertorFresh, 
+        BagFreshWeight, FreshWeightRWC, DateSaturated, OperatorSaturated, OperatorSaturated, DateDry, OpertorDry, DryWeightRWC, CommentRWC, # RWC
+        DateCalibration, Contamination, DateFieldPtlp, LeafHealthStatus, LeafPhenoStatus, DensitySectionVeins, DateMeasurePtlp, OperatorPtlp,
+        IdVapro, RunVapro, C0, Posm, CommentPtlp, # Ptlp 
+        DateFieldGmin, OperatorGmin, ResolutionGmin, LApixelGmin, LAcmGmin, CommentGmin # gmin
+                  ) %>% 
+    arrange(StudyLevel, Forest, Genus, Species, Plot, SubPlot, TreeFieldNum, Tree, Sample, Leaf, Measure)
+
+rm(soft_leaf, rwc_leaf, ptlp_leaf, gmin_leaf)
+```
+
+
+```{r formatinddata}
+soft_ind <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "ind_soft")
+
+rwc_ind <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "ind_rwc")
+
+ptlp_ind <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "ind_ptlp")
+
+gmin_ind <- read_sheet("https://docs.google.com/spreadsheets/d/1-INnZ563VkNBH8rnSwfWieuGwPo9x9GRSV6jXNzatmM/edit?usp=sharing",
+           "ind_gmin", col_names = T) 
+
+ind <- soft_ind %>%
+    full_join(rwc_ind,
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>%
+    full_join(ptlp_ind,
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>%
+    full_join(gmin_ind,
+              by = c("Genus", "Species", "StudyLevel", "Forest", "Plot", "SubPlot", "TreeFieldNum", "Tree", "Sample", "Leaf", "Measure")) %>%
+    dplyr::select(
+        StudyLevel, Forest, Genus, Species, Plot, SubPlot, TreeFieldNum, Tree, Sample, Leaf, Measure, # sample infos
+        LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin, # traits
+        DateSoft, OperatorSoft, LT1, LT2, LT3, SPAD1, SPAD2, SPAD3, SPAD, FreshWeightSoft, DryWeightSoft, LApixel, CommentSoft, # soft
+        DateBag, OperatorBag, BagID, BagWeight, Balance, DateFieldRWC, DateFresh, OpertorFresh, 
+        BagFreshWeight, FreshWeightRWC, DateSaturated, OperatorSaturated, OperatorSaturated, DateDry, OpertorDry, DryWeightRWC, CommentRWC, # RWC
+        DateCalibration, Contamination, DateFieldPtlp, LeafHealthStatus, LeafPhenoStatus, DensitySectionVeins, DateMeasurePtlp, OperatorPtlp,
+        IdVapro, RunVapro, C0, Posm, CommentPtlp, # Ptlp 
+        DateFieldGmin, OperatorGmin, ResolutionGmin, LApixelGmin, LAcmGmin, CommentGmin # gmin
+    ) %>% 
+    arrange(StudyLevel, Forest, Genus, Species, Plot, SubPlot, TreeFieldNum, Tree, Sample, Leaf, Measure)
+
+rm(soft_ind, rwc_ind, ptlp_ind, gmin_ind)
+```
+
+```{r formatraw}
+raw <- bind_rows(ind, leaf, meas)
+
+rm(meas, leaf, ind)
+
+# write_tsv(raw, "~/Téléchargements/raw.tsv")
+```
+
+```{r formattraits}
+inds <- read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+           "individuals", col_names = T) 
+
+ft <- raw %>% 
+    dplyr::select(
+        StudyLevel,	Forest,	Genus,	Species, Plot, SubPlot, TreeFieldNum, Tree, Sample, Leaf, Measure, # infos
+        LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin # traits
+    )
+
+ft_meas <- filter(ft, StudyLevel == "measure") %>% 
+    group_by(StudyLevel,	Forest,	Genus,	Species, Plot, SubPlot, TreeFieldNum, Tree, Sample, Measure) %>% 
+    summarise_all(mean, na.rm = T) %>% 
+    mutate_all(funs(ifelse(is.nan(.), NA, .))) %>% 
+    mutate(Leaf = NA)
+
+ft_leaf <- filter(ft, StudyLevel == "leaf") %>% 
+    group_by(StudyLevel,	Forest,	Genus,	Species, Plot, SubPlot, TreeFieldNum, Tree, Sample) %>% 
+    summarise_all(mean, na.rm = T) %>% 
+    mutate_all(funs(ifelse(is.nan(.), NA, .))) %>% 
+    mutate(Leaf = NA)
+
+ft_tree <- filter(ft, StudyLevel == "tree") %>% 
+    group_by(StudyLevel,	Forest,	Genus,	Species, Plot, SubPlot, TreeFieldNum, Tree) %>% 
+    summarise_all(mean, na.rm = T) %>% 
+    mutate_all(funs(ifelse(is.nan(.), NA, .))) %>% 
+    mutate(Leaf = NA)
+
+ft <- bind_rows(ft_tree, ft_leaf, ft_meas)
+
+rm(ft_meas, ft_leaf, ft_tree)
+
+ft <- left_join(ft,
+    select(inds, StudyLevel, Forest, Genus, Species, Plot, SubPlot, TreeFieldNum, Tree,
+           DateField, TreeHeight, TreeDawkins, BranchHeight, BranchDawkins),
+    by = c("StudyLevel", "Forest", "Genus", "Species", "Plot", "SubPlot", "TreeFieldNum", "Tree")
+) %>% 
+    ungroup()
+
+paracou <- bind_rows(
+  src_sqlite(file.path("/home/sylvain//Documents/BIOGECO/PhD/data/Paracou/",
+                       "trees", "Paracou.sqlite")) %>% 
+    tbl("Paracou") %>% 
+    filter(CodeAlive == 1) %>% 
+    filter(Plot == 6) %>%
+    filter(CensusYear == 2017) %>% 
+    collect() %>% 
+    mutate(DBH = CircCorr/pi) %>% 
+    select(Plot, SubPlot, TreeFieldNum, idTree, Xutm, Yutm, DBH),
+  read_csv2("data/Paracou_P16_2020.csv") %>% 
+    mutate(DBH = CircCorr/pi) %>% 
+    select(Plot, SubPlot, TreeFieldNum, idTree, Xutm, Yutm, DBH)
+)
+
+inds <- ft %>% 
+  left_join(paracou, by = c("Plot", "SubPlot", "TreeFieldNum")) %>% 
+  dplyr::select(StudyLevel, Forest, Genus, Species, Plot, SubPlot, TreeFieldNum, Tree, Xutm, Yutm, DBH) %>% 
+  unique()
+
+indsXY <- inds %>% 
+    na.omit() %>% 
+    st_as_sf(coords = c("Xutm", "Yutm"),
+             crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
+
+inds$TWI <- c(NA, raster::extract(raster::raster("data/TWI_1m.tif"), indsXY))
+
+ft <- left_join(ft, inds, by = c("StudyLevel", "Forest", "Genus", "Species", "Plot", "SubPlot", "TreeFieldNum", "Tree"))
+
+rm(inds, indsXY, paracou, raw, traits)
+
+# write_tsv(ft, "~/Téléchargements/traits.tsv")
+```

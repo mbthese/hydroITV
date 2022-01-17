@@ -71,18 +71,32 @@ ggplot(data, aes(trait, group = species)) +
   facet_wrap(~ sampling, scales = "free")
 ```
 
-```{r varpart, fig.cap="Variance partitioning with balanced and unbalanced sampling design."}
+```{r varpart, fig.cap="Effect of the sampling strategy on variance partitioning. Variance partitioning was obtained using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species."}
+varcols <- c(species = "red", individual = "lightgreen", 
+             sample = "lightblue", repetition = "orange", residual = "grey")
 fun <- function(data){
   var <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
   return(data.frame(level = names(var), variance = as.vector(var)))
 }
-# could you please explain line 82-84? 
-data %>% 
+varpart <-  data %>% 
   group_by(sampling) %>% 
   do(var = fun(.)) %>% 
   unnest(var) %>% 
-  ggplot(aes(x = sampling, y = variance, fill = level)) +
-  geom_bar(stat = "identity", position = "stack")
+  mutate(level = recode(level, "Within" = "residual")) %>% 
+  mutate(level = factor(level, levels = c("species", "individual", "residual")))
+
+  
+g <- ggplot(filter(varpart, sampling != "full"),
+       aes(x = sampling, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_hline(aes(yintercept = variance), linetype = "dashed",
+             data = filter(varpart, sampling == "full", level != "species") %>% 
+               summarise(variance = sum(variance))) +
+  scale_fill_manual(expression(sigma^2),
+                    values = unname(varcols[c("species", "individual", "residual")])) +
+  ylab("Percentage of variance") + xlab("Sampling strategy")
+# ggsave(filename = "~/Téléchargements/Fig1.png", plot = g, bg = "white", height = 4, width = 6)
+g
 ```
 
 ## Leaf variations and measurement errors
