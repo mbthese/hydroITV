@@ -388,3 +388,58 @@ ggsave(g, file = "P16extra.png", path = 'maps', width = 297, height = 420, unit 
 ```{r postfthmap, fig.height=10, fig.width=10}
 g
 ```
+
+## Leaf variation
+
+For the leaf variation within individual we sampled across the 27 *Virola michelii* from the P16 that followed our requirements (DBH between 30th and 60th quantiles):
+
+```{r samplingleafvar, fig.cap="Candidates in P16."}
+# data
+candidates <- read_csv2("data/Paracou_P16_2020.csv") %>%
+  filter(Genus == "Virola", Species == "michelii") %>% 
+  mutate(DBH = CircCorr/pi) %>% 
+  filter(DBH >= quantile(DBH, 0.3), DBH <= quantile(DBH, 0.6))  %>% 
+  st_as_sf(coords = c("Xutm", "Yutm"),
+           crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0') %>% 
+  mutate(Ind = paste0("P", Plot, "_", SubPlot, "_", TreeFieldNum))
+
+# html map
+limits <- st_read("data/OverallPlots/OverallPlots.shp", quiet = T)
+leaflet(data = st_transform(candidates, crs = crs)) %>%
+  addTiles() %>% 
+  addPolylines(data = st_transform(filter(limits, Plot == 16),
+                                   crs = crs), col = "grey") %>%
+  addCircles(opacity = 1, label = ~ Ind, radius = ~ DBH/2) 
+
+# paper map 
+contour <- st_read("data/ContourLinesPlots/ContourLinePlots.shp", quiet = T)
+crs_rot = "+proj=omerc +lat_0=36.934 +lonc=-90.849 +alpha=0 +k_0=.7 +datum=WGS84 +units=m +no_defs +gamma=20"
+sublimits <- filter(limits, Plot == 16) %>% 
+    st_transform(crs = crs_rot)
+subcontour <- st_transform(contour, crs = crs_rot) %>% 
+  st_crop(sublimits)
+subcandidates <- st_transform(candidates, crs = crs_rot) %>% 
+    mutate(label = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum, "_", substr(Genus, 1, 3), substr(Species, 1, 3), "_", round(DBH)))
+g <-  ggplot() +
+  geom_sf(data = subcontour, fill = NA, col = "lightgrey") +
+  geom_sf(data = sublimits, fill = NA, col = "darkgrey") +
+  geom_sf_text(data = sublimits, aes(label = Subplot), colour = "darkgrey") +
+  geom_sf(data = subcandidates, col = "black") +
+  ggrepel::geom_text_repel(
+    data = subcandidates,
+    aes(label = label, geometry = geometry),
+    stat = "sf_coordinates",
+    min.segment.length = 0
+  ) +
+  theme(axis.title = element_blank(), axis.text = element_blank(), 
+        axis.ticks = element_blank(), axis.line = element_blank()) +
+  scale_color_discrete(guide = "none") +
+  ggtitle("Plot 16 - Virola michelii")
+ggsave(g, file = "P16_virmic.png", path = 'maps', width = 297, height = 420, unit = 'mm', dpi = 300, bg = "white")
+
+# gps
+# candidates %>%
+#   mutate(name = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum, "_", substr(Genus, 1, 3), substr(Species, 1, 3), "_", round(DBH))) %>% 
+#   dplyr::select(name, geometry) %>%
+#   st_write(dsn = "maps/P16_virmic.gpx", delete_dsn = T, driver = "GPX", layer = "waypoints")
+```
