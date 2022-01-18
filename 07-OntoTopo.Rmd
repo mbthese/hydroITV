@@ -25,13 +25,6 @@ S_sqrt_trans <- function() scales::trans_new("S_sqrt",
 options(knitr.kable.NA = '')
 ```
 
-
-# Ontogeny and topography effects
-
-The subsequent analysis aimed to graphically explore variations in leaf traits according to 4 descriptors: (i) tree ontogeny, (ii) abiotic environment, and (iii) phylogeny through taxonomic levels. We used the following model:
-
-$$Y_{i,s} \sim \mathcal N((\alpha_s + \beta_{TWI,i} \times TWI_{i|s} + \gamma_{TWI} \times TWI_s) \times \frac{DBH_i}{\beta_{DBH,s} + DBH_i}), \sigma)$$
-
 ```{r mdata}
 ft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
                                 "traits") %>% 
@@ -82,70 +75,19 @@ species <- ft %>%
 load("models/m1.Rdata")  
 ```
 
-## Intercept
+# Ontogeny and topography effects
 
-```{r modelIntercepts, fig.cap="Model species effect for Intercept.", fig.height=8, fig.width=8}
-lapply(fits, function(fit) 
-  mcmc_intervals_data(as.array(fit, pars = "alpha_s"))) %>% 
-  bind_rows(.id = "trait") %>% 
-  mutate(SpeciesNum = gsub("([[:alpha:]])", "", parameter)) %>% 
-  mutate(SpeciesNum = gsub("([[:punct:]])", "", SpeciesNum)) %>% 
-  mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
-  left_join(species) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
-  ggplot(aes(x = SpeciesLong, 
-             xend = SpeciesLong,
-             color = SpeciesLong, fill = SpeciesLong)) +
-  geom_point(aes(y = m), shape = 21, size = 3, alpha = 0.5) +
-  geom_segment(aes(y = ll, yend = hh),
-               size = 1, show.legend = F, alpha = 0.5) +
-  geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
-  coord_flip() +
-  datatools::scale_x_reordered() +
-  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x", nrow = 2) +
-  xaxis_title(F) +
-  ylab(expression(alpha)) +
-  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
-  geom_hline(yintercept = 0, linetype = "dashed", col = "grey") +
-  theme(legend.position = "bottom", legend.title = element_blank()) +
-  guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
-  guides(fill = guide_legend(nrow = 4, byrow = TRUE))
-```
+The subsequent analysis aimed to explore variations in leaf traits according to 3 descriptors: (i) tree ontogeny, (ii) abiotic environment, and (iii) phylogeny through taxonomic levels. 
 
-## DBH
+## Methods
 
-```{r modelDBH, fig.cap="Model species effect for DBH slope.", fig.height=8, fig.width=8}
-lapply(fits, function(fit) 
-  mcmc_intervals_data(as.array(fit, pars = "betaDBH"))) %>% 
-  bind_rows(.id = "trait") %>% 
-  mutate(SpeciesNum = gsub("([[:alpha:]])", "", parameter)) %>% 
-  mutate(SpeciesNum = gsub("([[:punct:]])", "", SpeciesNum)) %>% 
-  mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
-  left_join(species) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]",
-                        "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
-  ggplot(aes(x = SpeciesLong, 
-             xend = SpeciesLong,
-             color = SpeciesLong, fill = SpeciesLong)) +
-  geom_point(aes(y = m), shape = 21, size = 3, alpha = 0.5) +
-  geom_segment(aes(y = ll, yend = hh),
-               size = 1, show.legend = F, alpha = 0.5) +
-  geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
-  coord_flip() +
-  datatools::scale_x_reordered() +
-  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x", nrow = 2) +
-  xaxis_title(F) +
-  ylab(expression(beta[DBH])) +
-  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
-  geom_hline(yintercept = 0, linetype = "dashed", col = "grey")   +
-  theme(legend.position = "bottom", legend.title = element_blank()) +
-  guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
-  guides(fill = guide_legend(nrow = 4, byrow = TRUE))
-```
+We used the following model:
 
-## TWI
+$$Y_{i,s} \sim \mathcal N((\alpha_s + \beta_{TWI,i} \times TWI_{i|s} + \gamma_{TWI} \times TWI_s) \times \frac{DBH_i}{\beta_{DBH,s} + DBH_i}), \sigma)$$
 
-```{r modelTWI, fig.cap="Model species effect for TWIs & TWIis slope.", fig.height=8, fig.width=8}
+## Results
+
+```{r modelTWI, fig.cap="Effect of TWI among and within species one leaf traits variation.", fig.height=8, fig.width=8}
 lapply(fits, function(fit) 
   mcmc_intervals_data(as.array(fit, pars = c("betaTWI", "gammaTWI")))) %>% 
   bind_rows(.id = "trait") %>% 
@@ -176,7 +118,72 @@ lapply(fits, function(fit)
   guides(fill = guide_legend(nrow = 4, byrow = TRUE))
 ```
 
-## Summary
+## Discussion
+
+## SIs
+
+### Intercept
+
+```{r modelIntercepts, fig.cap="Model species effect for Intercept.", fig.height=8, fig.width=8}
+lapply(fits, function(fit) 
+  mcmc_intervals_data(as.array(fit, pars = "alpha_s"))) %>% 
+  bind_rows(.id = "trait") %>% 
+  mutate(SpeciesNum = gsub("([[:alpha:]])", "", parameter)) %>% 
+  mutate(SpeciesNum = gsub("([[:punct:]])", "", SpeciesNum)) %>% 
+  mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
+  left_join(species) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
+  ggplot(aes(x = SpeciesLong, 
+             xend = SpeciesLong,
+             color = SpeciesLong, fill = SpeciesLong)) +
+  geom_point(aes(y = m), shape = 21, size = 3, alpha = 0.5) +
+  geom_segment(aes(y = ll, yend = hh),
+               size = 1, show.legend = F, alpha = 0.5) +
+  geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
+  coord_flip() +
+  datatools::scale_x_reordered() +
+  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x", nrow = 2) +
+  xaxis_title(F) +
+  ylab(expression(alpha)) +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
+  geom_hline(yintercept = 0, linetype = "dashed", col = "grey") +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
+  guides(fill = guide_legend(nrow = 4, byrow = TRUE))
+```
+
+### DBH
+
+```{r modelDBH, fig.cap="Model species effect for DBH slope.", fig.height=8, fig.width=8}
+lapply(fits, function(fit) 
+  mcmc_intervals_data(as.array(fit, pars = "betaDBH"))) %>% 
+  bind_rows(.id = "trait") %>% 
+  mutate(SpeciesNum = gsub("([[:alpha:]])", "", parameter)) %>% 
+  mutate(SpeciesNum = gsub("([[:punct:]])", "", SpeciesNum)) %>% 
+  mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
+  left_join(species) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]",
+                        "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
+  ggplot(aes(x = SpeciesLong, 
+             xend = SpeciesLong,
+             color = SpeciesLong, fill = SpeciesLong)) +
+  geom_point(aes(y = m), shape = 21, size = 3, alpha = 0.5) +
+  geom_segment(aes(y = ll, yend = hh),
+               size = 1, show.legend = F, alpha = 0.5) +
+  geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
+  coord_flip() +
+  datatools::scale_x_reordered() +
+  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x", nrow = 2) +
+  xaxis_title(F) +
+  ylab(expression(beta[DBH])) +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
+  geom_hline(yintercept = 0, linetype = "dashed", col = "grey")   +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
+  guides(fill = guide_legend(nrow = 4, byrow = TRUE))
+```
+
+### Summary
 
 ```{r modelsummary}
 lapply(fits, function(fit)
@@ -216,7 +223,7 @@ lapply(fits, function(fit)
         escape = F, digits = 3, format = "pandoc") 
 ```
 
-## Check
+### Check
 
 ```{r traces}
 mcmc_trace(fits$Ptlp, pars = c("alpha_s[1]", "betaDBH[1]", "betaTWI", "gammaTWI[1]", "sigma"))

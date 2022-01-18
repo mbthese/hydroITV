@@ -20,10 +20,6 @@ log_abs_trans <- function() {
 }
 ```
 
-# Traits covariation
-
-Subsequent analysis aimed to explore co-variations of individual traits. 
-Specifically, we investigated individual traits co-variation at several taxonomic scales: among species, and within species.
 
 ```{r inndpcadata}
 # data #
@@ -73,6 +69,17 @@ colnames(ind)<- c("x", "y")
 ind <- cbind(ind, ft)
 ```
 
+# Traits covariation
+
+Subsequent analysis aimed to explore co-variations of individual traits. 
+Specifically, we investigated individual traits co-variation at several taxonomic scales: among species, and within species.
+
+## Methods
+
+*To describe.*
+
+## Results
+
 ```{r pcaArticle, fig.cap="Among (A) and Within-species (B) principal component analysis (A - PCA and B - wPCA) of leaf traits across individuals in 10 Neotropical tree species. Circle colors indicate the species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (Gmin)."}
 g.among <- autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 
          data = ft,
@@ -107,11 +114,15 @@ g <- gridExtra::grid.arrange(g.among, g.within, g.legend, layout_matrix = rbind(
 # ggsave(filename = "~/Téléchargements/Fig3.png", plot = g, bg = "white", height = 4, width = 6)
 ```
 
-```{r corrplotTraits}
+```{r corrplotTraits, fig.cap="ACorrelation of leaf traits across individuals in 10 Neotropical tree species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin)."}
 dplyr::select(ft, -Genus, -Species, -Tree, -SpeciesLong, -DBH, -TWI, -FvFm, -RWC) %>% 
   cor() %>% 
   corrplot::corrplot.mixed()
 ```
+
+## Discussion
+
+## SIs
 
 ```{r indpcadbh}
 autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 

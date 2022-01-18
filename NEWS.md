@@ -1,3 +1,11 @@
+hydroITV 1.0.0.9020
+* results in 3 parts: varaition, covariation, determinant
+* chapters with method, results, & discussion
+
+hydroITV 1.0.0.9019
+* rm RWC and FvFm from main results
+* simplified CVs
+
 hydroITV 1.0.0.9018
 * integrating @mbthese CVs
 
