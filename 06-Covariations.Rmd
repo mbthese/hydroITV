@@ -120,6 +120,13 @@ dplyr::select(ft, -Genus, -Species, -Tree, -SpeciesLong, -DBH, -TWI, -FvFm, -RWC
   corrplot::corrplot.mixed()
 ```
 
+**Sylvain:**
+
+* We seem to have the classical conservative-acquisitive spectrum or slow-fast spectrum among and within species with SLA opposing LT, CC, LT, and LDMC less visible among than within species
+* $g_{min}$ covary with the conservative-acquisitive or slow-fast spectrum with decreased conductance and a better conservation of water and gas for conservative slow species
+* The second axis seems to oppose $\pi_{TLP}$ to LA among and within species but less visible among than within species, congruent with @Marechaux2020a but opposed to the result of @Guillemot2022, and might be related to the stature-recruitment spectrum described in @Guillemot2022
+* *I'm uncertain for the moment on how to interpret LSWC.*
+
 ## Discussion
 
 ## SIs

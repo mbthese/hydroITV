@@ -118,6 +118,11 @@ lapply(fits, function(fit)
   guides(fill = guide_legend(nrow = 4, byrow = TRUE))
 ```
 
+**Sylvain:**
+
+* Our dataset is robust for estimating intra- vs inter-specific variability but lack power among (N=10) and within species (N=10), resulting in no significant effect of topography on leaf trait variation among and within species.
+* Nevertheless, we observed as expected a significant variation of traits with ontogeny and size shown with DBH with no significant differences among species.
+
 ## Discussion
 
 ## SIs

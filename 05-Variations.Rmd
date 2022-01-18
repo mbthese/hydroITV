@@ -191,6 +191,18 @@ cv_long %>%
   ylab(expression(CV[4]))
 ```
 
+**Sylvain:**
+
+* Leaf traits show moderate non-negligible CV within species (8-16%) except high for $g_{min}$ and LDMC (resp. 39% and 33%) and low for LT (4%), with strong variation among species for LDMC (from 4% with *P stevensonii* to 76% with *T. melonii*).
+* Leaf traits show strong interspecific variation (40-63%), except for SLA and LDMC (resp. 9% and 24%), but also strong intraspecific variation for all traits (30-91%)
+* Leaf trait intraspecific variation is mostly due to the individual tree (55-88%) except for a strong variability across samples within tree for LA and CC (resp. 79% and 100%)
+* Leaf trait intra-sample variation is almost only due to sample (82-100%) except for a non-negligible measure error within sample for LT and $\pi_{TLP}$ (resp. 9% and 14%)
+* Coefficient of variation and variance partitioning thus provide complementary information, with for instance high individual variation with SLA (91%) due to species weak variability (9%) more than intraspecific variability (CV=8%) (=>see SI boxplots)
+* Results can drive sampling, e.g. $\pi_{TLP}$ ii a better candidate than $g_{min}$ at the interspecific level with both strong species variability (55%) and a low coefficient of intraspecific variation (16%)
+* All together results indicate non-negligible intraspecific trait variation, including hydraulic traits, questioning sampling methodology and determinants of this variation unexplained by measurement error or within individual variation across samples
+
+**Marion:**
+
 All traits exhibited considerable intraspecific variation, with CVs ranging from approximately 16–85% (Fig. \@ref(fig:cvspfig)).
 LSWC and $-\pi_{TLP}$, exhibited low variation at 22 % and 16%. 
 LT, CC and LDMC had intermediate variation, both 30 % for LT and CC and 41 % for LDMC.
