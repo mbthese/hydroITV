@@ -1,0 +1,239 @@
+---
+title: "Coefficient of variation"
+author: "Marion Boisseaux"
+date: "09/12/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+# Introduction
+
+Coefficient of variation (CV) is defined as the standard deviation divided by the mean and expressed as a percentage. It is the most commonly used estimator of ITV. It does not require any *ad hoc* assumptions. It is unitless and therefore convienient to compare variation of traits among species.
+
+According to Yang 2020, the best ITV estimator is CV1 when N >100.
+
+CV1=sd(traits)/mean(traits)
+
+For non-normal distrubtion of raw data or even after a logarithm transpormation, CV4, or Bao's estimator, is preferred:
+
+  cv4=cv_1-(cv_1^3/N-cv_1/4/N-cv_1^2*gamma_1/2/N-cv_1*gamma_2/8/N)
+  
+Where gamma is Pearson's measure of skewness and kurtosis of the trait sample distribution.
+
+Log-transformation places less weight on the extreme large valus resulting in a more robust estimation of ITV. It also reduced the skewness of the data, which makes it easier to handle. 
+
+We will calculate CV4 using the 'CV' package from https://www.github.com/guochunshen/CV.
+
+# Install cv package
+
+```{r}
+#to install package
+
+if(!require(devtools)){
+  install.packages("devtools")
+  require(devtools)
+}
+install_github("guochunshen/cv")
+
+
+
+cv=function(traits){
+
+  if(any(is.na(traits))){
+    warning("Missing values detected in samples and will be removed in the analysis.")
+    traits=traits[!is.na(traits)]
+  }
+
+  N=length(traits)
+
+
+  #calcualte CV^2
+  y_bar=mean(traits)
+  s2_hat=var(traits)
+  cv_2=s2_hat/y_bar^2
+  cv_1=sqrt(cv_2)
+  gamma_1=sum(((traits-y_bar)/s2_hat^0.5)^3)/N
+  gamma_2=sum(((traits-y_bar)/s2_hat^0.5)^4)/N
+  bias=cv_2^(3/2)/N*(3*cv_2^0.5-2*gamma_1)
+  bias2=cv_1^3/N-cv_1/4/N-cv_1^2*gamma_1/2/N-cv_1*gamma_2/8/N
+  cv1=sd(traits)/mean(traits)
+  cv4=cv_1-bias2
+  re=cv4
+  return(re)
+}
+```
+
+
+# Import data
+```{r}
+Data <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit#gid=0", range = "traits")
+
+```
+
+# Selection of studied level - Individual level
+
+```{r}
+library(dplyr)
+Data_Indv <- filter(Data, Data$StudyLevel == "tree")
+```
+
+# Calculation of CV for each trait of each selected species separately
+
+For each trait, we described the magnitude of intraspecific variation by calculating coefficients of variation (cv) across each species. 
+
+The log-transformation reduces the proportional bias of ITV (Yang, 2020). CV only makes sense only on positive data, so we take the abs(Ptlp).
+ 
+## long initial version
+```{r}
+library(ggplot2)
+library(tidyverse)
+#there is most likely a way to have a simpler code (ex calcultate in a loop)
+Data_Indv <- Data_Indv %>%
+  unite("name", Genus:Species)
+
+sp<- split(Data_Indv, Data_Indv$name)
+res <- list()
+for(n in names(sp)){   
+   dat <- sp[[n]]   #Extract the data from the list
+   res[[n]] <- data.frame(Genus=n,
+                          CV_LA= CV::cv(log(dat$LA))[4],
+                         SLA_cv= CV::cv(log(dat$SLA))[4],
+                         LT_cv = CV::cv(log(dat$LT))[4],
+                         CC_cv = CV::cv(log(dat$CC))[4],
+                         LDMC_cv = CV::cv(log(dat$LDMC))[4],
+                         FvFm_cv = CV::cv(log(dat$FvFm))[4],
+                         RWC_cv = CV::cv(log(dat$RWC))[4],
+                         LSWC_cv = CV::cv(log(dat$LSWC))[4],
+                         #abs_Ptlp_cv = CV::cv(log(abs(dat$Ptlp)))[4], #cv only makes sense only on positive data
+                         #gmin_cv = CV::cv(log(dat$gmin))[4],
+                          n.samples=nrow(dat))
+   
+   
+}
+print(res)
+res.df <- do.call(rbind,res)
+print(res.df)
+
+```
+
+## short version
+Beware: cv was sometimes calculated for n<10 samples for some trait per species! 
+```{r All CV per trait}
+library(dplyr)
+library(tidyverse)
+
+
+CV<- aggregate(cbind(log(LA), log(SLA), log(LT), log(CC), log(LDMC), log(FvFm)) ~ name, 
+          data = Data_Indv,
+          FUN = cv)
+CV <- rename(CV, LA =V1, SLA = V2, LT = V3, CC = V4, LDMC= V5, FvFm = V6)
+
+CV_cont <-aggregate(cbind(log(LSWC), log(abs(Ptlp)), gmin) ~ name, 
+          data = Data_Indv,
+          FUN = cv)
+CV_cont <- rename(CV_cont, LSWC = V1, Ptlp = V2)
+
+
+CV_tot <- left_join(CV, CV_cont, by= "name")
+
+knitr::kable(CV_tot)
+
+```
+
+# Plot the graphs
+```{r}
+
+library(ggplot2)
+
+ggplot(CV_tot) +
+ aes(x = name, y = LA) +
+ geom_boxplot(shape = "circle", fill = "#112446") +
+ theme_minimal()
+
+ggplot(CV_tot) +
+ aes(x = name, y = SLA) +
+ geom_boxplot(shape = "circle", fill = "#112446") +
+ theme_minimal()
+
+ggplot(CV_tot) +
+ aes(x = name, y = LT) +
+ geom_boxplot(shape = "circle", fill = "#112446") +
+ theme_minimal()
+
+
+ggplot(CV_tot) +
+ aes(x = name, y = CC) +
+ geom_boxplot(shape = "circle", fill = "#112446") +
+ theme_minimal()
+
+ggplot(CV_tot) +
+ aes(x = name, y = LDMC) +
+ geom_boxplot(shape = "circle", fill = "#112446") +
+ theme_minimal()
+
+ggplot(CV_tot) +
+ aes(x = name, y = FvFm) +
+ geom_boxplot(shape = "circle", fill = "#112446") +
+ theme_minimal()
+
+ggplot(CV_tot) +
+ aes(x = name, y = LSWC) +
+ geom_boxplot(shape = "circle", fill = "#112446") +
+ theme_minimal()
+
+ggplot(CV_tot) +
+ aes(x = name, y = Ptlp) +
+ geom_boxplot(shape = "circle", fill = "#112446") +
+ theme_minimal()
+
+ggplot(CV_tot) +
+ aes(x = name, y = gmin) +
+ geom_boxplot(shape = "circle", fill = "#112446") +
+ theme_minimal()
+
+```
+
+
+
+# Calculating CV for each traits, globally
+```{r echo=FALSE}
+
+library(gridExtra)
+library(grid)
+require(knitr)
+require(kableExtra)
+require(dplyr)
+
+LA<- cv(log(Data_Indv$LA))
+SLA<- cv(log(Data_Indv$SLA))
+LT <-cv(log(Data_Indv$LT))
+CC <- cv(log(Data_Indv$CC))
+LDMC <- cv(log(Data_Indv$LDMC))
+FvFm<- cv(log(Data_Indv$FvFm))
+RWC <- cv(log(Data_Indv$RWC))
+LSWC <- cv(log(Data_Indv$LSWC))
+abs_Ptlp <- cv(log(abs(Data_Indv$Ptlp))) #cv only makes sense only on positive data
+gmin <- cv(log(Data_Indv$gmin))
+
+logsT <- rbind(LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, abs_Ptlp, gmin)
+
+
+logsT <- round(logsT, digits = 2)
+
+knitr::kable(logsT,  col.names = c('CV'))
+  
+
+```
+
+*Results (looking at cv4)*
+
+All traits exhibited considerable intraspecific variation, with cvs ranging from approximately 16–85% (SummaryTable). LSWC and abs(Ptlp), exhibited low variation at 22 % and 16%. LT, CC and LDMC had intermediate variation, both 30 % for LT and CC and 41 % for LDMC. All other traits ( LA, SLA, FvFm and gmin) varied with cvs ≥ 70%. 
+
+SLA exhibited the highest intraspecific variation (cv = 85%), with SLA values ranging from 11.01008 to 949.3594 m2.kg-1.
+
+(?) RWC exhibited the lowest intraspecific variation (cv = 0.06%).
+
+*Discussion*
+
+CV allows us to compare the distribution of trait values when those are expressed in different units. The higher the cv is, the higher the dispersion of the individual values around the mean. CV offers a way to directly compare variation among species with different abundances (Helsen et al., 2017). Studies have shown a positive relationship between species ITV and niche breadth (Clark, 2010): species with larger ITV tend to have larger geographical ranges than species with smaller ITV (Brown, 1984).
+

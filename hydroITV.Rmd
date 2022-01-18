@@ -1,0 +1,896 @@
+--- 
+title: "hydroITV"
+subtitle: "Hydraulic trait inter- versus intra-specific local variability."
+author: "Sylvain Schmitt"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+csl: biblio/mee.csl
+bibliography: biblio/library.bib
+link-citations: yes
+colorlinks: yes
+description: "Hydraulic trait inter- versus intra-specific local variability."
+---
+
+`r if (knitr:::is_html_output()) '# Preface {-}'`
+
+`r if (knitr:::is_html_output()) '![](https://img.shields.io/badge/stability-work_in_progress-lightgrey.svg)'`
+
+`r if (knitr:::is_html_output()) 'This study aims to evaluate the inter- and intra-specific variation of hydraulic and leaf traits in collaboration with Marion Boisseaux. We evaluated the variation of the traits between measurements within leaves, between leaves within trees, in order to better study the inter- and intra-specific variation.  We used a balanced and robust sampling of 10 species x 10 individuals per species representing 100 individuals. We first want to explore trait variation in covariation within each species and between species. If the results are convincing, we may want to further investigate variation within and between species with topography controlling diameter variation. Overall, our study can provide a first robust assessment of variation in hydraulic traits within and between species for tropical tree species, with possible underlying factors for this variation. '`
+
+`r if (knitr:::is_html_output()) 'Have a nice reading.'`
+
+`r if (knitr:::is_html_output()) '<div align="right">  *Sylvain*'`
+
+<!--chapter:end:index.Rmd-->
+
+# Introduction {-}
+
+This study aims to evaluate the inter- and intra-specific variation of hydraulic and leaf traits in collaboration with Marion Boisseaux. 
+We evaluated the variation of the traits between measurements within leaves, between leaves within trees, in order to better study the inter- and intra-specific variation. 
+We used a balanced and robust sampling of 10 species x 10 individuals per species representing 100 individuals. 
+We first want to explore trait variation in covariation within each species and between species. 
+If the results are convincing, we may want to further investigate variation within and between species with topography controlling diameter variation. 
+Overall, our study can provide a first robust assessment of variation in hydraulic traits within and between species for tropical tree species, 
+with possible underlying factors for this variation. 
+
+<!--chapter:end:01-Introduction.Rmd-->
+
+```{r setupvarpart, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(kableExtra)
+if(knitr:::is_html_output()) options(knitr.table.format = "html") 
+if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
+library(tidyverse)
+theme_set(bayesplot::theme_default())
+knitr::opts_chunk$set(
+	echo = F,
+	fig.height = 6,
+	fig.width = 8,
+	message = FALSE,
+	warning = FALSE,
+	cache = TRUE,
+	cache.lazy = F
+)
+```
+
+```{r varpartdata1}
+S <- 100
+I <- 100
+sigma_sp <- 1
+sigma_ind <- 1
+data <- data.frame(species = 1:S, trait = rnorm(S, 0, sigma_sp)) %>% 
+  group_by(species) %>% 
+  do(data.frame(individual = 1:I, trait = rnorm(I, .$trait, sigma_ind))) %>% 
+  mutate_at(c("species", "individual"), as.factor)
+subdata1 <- data %>% 
+  filter(species %in% unique(data$species)[1:25]) %>% 
+  group_by(species) %>% 
+  sample_n(4) %>% 
+  ungroup()
+subdata2 <- data %>% 
+  filter(species %in% unique(data$species)[1:4]) %>% 
+  group_by(species) %>% 
+  sample_n(25) %>% 
+  ungroup()
+subdata3 <- data %>% 
+  filter(species %in% unique(data$species)[1:10]) %>% 
+  group_by(species) %>% 
+  sample_n(10) %>% 
+  ungroup()
+data <- list("full" = data, 
+             "unbalanced species" = subdata1, 
+             "unbalanced individuals" = subdata2, 
+             "balanced" = subdata3) %>% 
+  bind_rows(.id = "sampling") %>% 
+  mutate(sampling = factor(sampling, levels = c("full", "unbalanced species",
+                                                "unbalanced individuals", "balanced")))
+```
+
+# Balance sampling 
+
+This chapter demonstrates the importance of a balanced design in the distribution of variance, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs. It also virtually explores the evaluation of leaf and measurement variation.
+
+## Species and individual sampling
+
+We simulated 100 species with a species variance of 1 for a given trait with 100 individuals per species with a variance of 1 for the same trait. We tested the effect of four sampling strategies on variance partitioning (Fig. \@ref(fig:traitdist)):
+
+1. full sampling of the community
+1. sampling of 100 individuals unbalanced in species (25 species with 4 individuals)
+1. sampling of 100 individuals unbalanced in individuals (4 species with 25 individuals)
+1. sampling of 100 individuals unbalanced in species and individual (10 species with 10 individuals)
+
+The results demonstrate the need to use a balanced sampling design to properly assess and compare functional variation between and within species (Fig. \@ref(fig:varpart)).
+
+```{r traitdist, fig.cap="Trait distribution per species with balanced and unbalanced sampling design."}
+ggplot(data, aes(trait, group = species)) +
+  geom_density(alpha = 0.3) +
+  facet_wrap(~ sampling, scales = "free")
+```
+
+```{r varpart, fig.cap="Variance partitioning with balanced and unbalanced sampling design."}
+fun <- function(data){
+  var <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
+  return(data.frame(level = names(var), variance = as.vector(var)))
+}
+# could you please explain line 82-84? 
+data %>% 
+  group_by(sampling) %>% 
+  do(var = fun(.)) %>% 
+  unnest(var) %>% 
+  ggplot(aes(x = sampling, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack")
+```
+
+## Leaf variations and measurement errors
+
+Similarly, we examined a sampling of 10 individuals in 10 species, 10 leaves for each individual, and 10 measurements for each leaf. This would allow us to assess the level of variation in the measurement alone to avoid an unrealistic sampling of 10 species times 10 individuals times 10 leaves times 10 measurements, which would yield 10,000 measurements! We found very stable measurements across levels using very different variations between levels (Fig. \@ref(fig:varpart2)).
+
+```{r varpartdata2}
+S <- 10
+I <- 10
+L <- 10
+M <- 10
+sigma_sp <- 6
+sigma_ind <- 4
+sigma_leaf <- 2
+sigma_meas <- 1
+data <- data.frame(species = 1:S, trait = rnorm(S, 0, sigma_sp)) %>% 
+  group_by(species) %>% 
+  do(data.frame(individual = 1:I, trait = rnorm(I, .$trait, sigma_ind))) %>% 
+  group_by(species, individual) %>% 
+  do(data.frame(leaf = 1:L, trait = rnorm(L, .$trait, sigma_leaf))) %>% 
+  group_by(species, individual, leaf) %>% 
+  do(data.frame(measure = 1:M, trait = rnorm(M, .$trait, sigma_meas))) %>% 
+  ungroup() %>% 
+  mutate_at(c("species", "individual", "leaf", "measure"), as.factor)
+subdata <- bind_rows(
+  # 10 sps & 10 inds
+  data %>% 
+    filter(leaf == 1) %>% 
+    filter(measure == 1),
+  # 10 inds & 10 leaves
+  data %>% 
+    filter(species == 1) %>% 
+    filter(measure == 1),
+  # 10 leaves & 10 measures
+  data %>% 
+    filter(species == 1) %>% 
+    filter(individual == 1)
+)
+```
+
+```{r varpart2,  fig.cap="Variance partitioning with balanced sampling design across levels."}
+fun <- function(data){
+  var1 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
+  var2 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|individual/leaf, 
+                                 filter(data, species == 1)), 1)
+  var3 <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|leaf/measure, 
+                                 filter(data, species == 1, individual == 1)), 1)
+  lapply(list("species/individual" = var1,
+              "individual/leaf" = var2, 
+              "leaf/measure" = var3),
+         function(var) 
+           data.frame(level = names(var), variance = as.vector(var))) %>% 
+    bind_rows(.id = "comparison") %>% 
+    mutate(level = factor(level, levels = c("species", "individual", "leaf",
+                                            "measure", "Within"))) %>% 
+    mutate(comparison = factor(comparison, levels = c("species/individual", "individual/leaf",
+                                                      "leaf/measure")))
+}
+lapply(list("full" = data, "sampling" = subdata), fun) %>% 
+  bind_rows(.id = "data") %>% 
+  ggplot(aes(x = data, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~ comparison)
+```
+
+<!--chapter:end:02-BalanceSampling.Rmd-->
+
+# Traits
+
+This chapter defines measured and sampled traits with associated protocols.
+
+## Leaf traits
+
+* **LA**: leaf area $cm^{2}$
+* **LDMC**: leaf dry matter content $g.g^{-1}$
+* **LT**: leaf thickness ($\mu m$)
+* **CC**: chlorophyll content ($\mu g.cm^{-2}$)
+* **SLA**: specific leaf area ($g.cm^{-2}$)
+
+## Hydraulic traits
+
+* **RWC**: relative water content (%) is of special interest as it reflects the amount of water present the leaf relative to the maximum it can hold [@BARRs1962]
+* **$\Psi _{TLP}$**: leaf water potential at which leaf cells lose turgor (MPa), a key drought tolerance trait. 
+* **$g_{min}$**: leaf minimum conductance $mmol.m^{-2}.s^{-1}$ taking into account water losses through the cuticle and incompletely closed stomata.
+* **Stomatal density**: morphological characteristic at the crossroads between water loss and the maximum rate of photosynthesis [@Schneider2017].
+* **Nervation density**: determining the capacity of water supply in leaves [@Schneider2017].
+* Leaf chemistry? 
+
+## Photochemical trait
+ 
+* **$\frac{Fv}{Fm}$**: maximum quantum yield of photosystem II, which reflects photosynthesis efficiency ($\mu mol . m^{-2} . s^{-1}/ \mu mol . m^{-2} . s^{-1}$) 
+
+## Measured traits
+
+* Leaf traits
+    * Fresh - Day 1
+        * Dry thickness (3 points)
+        * SPAD (3 points)
+        * Fresh weight
+        * Area (scan)
+    * Dry - Day 4
+        * Dry weight
+* Hydraulic traits  
+    * Day 1  
+        * Fresh weight  
+        * **$g_{min}$**  
+        * **Stomatal density**
+        * **$\frac{Fv}{Fm}$**
+        * Area (scan)
+    * Day 2
+        * Saturated weight
+        * **$g_{min}$**  
+        * **$\Psi _{TLP}$**
+    * Day 4 
+        * Dry weight
+
+
+## Protocols
+
+**Protocols to be merged between Marion and me.**
+
+Sylvain's:
+
+* [Dawkins index](protocols/Dawkins.pdf)
+* [Sampling protocol](protocols/Field.pdf)
+* [ Fresh measurement protocol](protocols/Fresh.pdf)
+
+Marion's:
+
+* Canopy trees
+* Collect in the upper crown
+* Assess tree and branch height
+* Assess tree and branch Dawkins
+* Collect tree with a DBH in the 10th to 90th quantiles of the species
+* 10 species (6 generalists, 2 terra-firme and 2 bottomlands) including 40 individuals from Marion's METRADICA sampling.
+* [Field worksheet](protocols/Feuille_terrain_releve.xlsx)
+* [RWC](protocols/RWC_Boisseaux.docx)
+* [gmin](protocols/Gmin protocol.docx)
+* [FvFm](protocols/FvFm.docx)
+* [**$\Psi _{TLP}$** protocol](protocols/Protocole_Ptlp.pdf)
+* [Stomatas](protocols/Analyse Stomates_Marion.docx)
+
+
+<!--chapter:end:03-Traits.Rmd-->
+
+```{r setupinds, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(kableExtra)
+if(knitr:::is_html_output()) options(knitr.table.format = "html") 
+if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
+library(tidyverse)
+library(V.PhyloMaker)
+library(ggfortify)
+library(ggtree)
+library(sf)
+library(leaflet)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+crs <- '+proj=longlat +datum=WGS84' # leaflet CRS
+```
+
+# Individuals
+
+This chapter define sampled species and individuals. 
+Specifically, this chapter details:
+
+* Collected species
+* Individuals from the METRADICA project
+* Candidates with varying DBH and TWI
+* Field maps
+
+## Species
+
+We selected 10 species (Tab. \@ref(tab:speciesTab)) common with the METRADICA project representative of the tree phylogeny in Paracou (Fig. \@ref(fig:speciesPhylo)).
+
+```{r speciesTab}
+species <- data.frame(taxon = c(
+  "Casearia_javitensis", 
+  "Chrysophyllum_prieurii", 
+  "Conceveiba_guianensis",
+  "Gustavia_hexapetala",
+  "Jacaranda_copaia subsp. copaia",
+  "Laetia_procera",
+  "Protium_stevensonii",
+  "Tachigali_melinonii",
+  "Virola_michelii",
+  "Virola_surinamensis"
+)) %>% 
+  separate(taxon, c("Genus", "Species"), sep = "_", remove = F)
+kable(select(species, Genus, Species), caption = "Studied species.")
+```
+
+```{r speciesPhylo, fig.cap="Selected species phylogeny."}
+paracou <- read_csv2("data/Paracou_P16_2020.csv") %>% 
+  dplyr::select(Family, Genus, Species) %>% 
+  unique() %>% 
+  full_join(species) %>% 
+  mutate(species = paste(Genus, Species), genus = Genus, family = Family) %>% 
+  dplyr::select(species, genus, family, taxon) %>% 
+  mutate(taxon = as.character(taxon))
+# tree <- phylo.maker(sp.list = paracou, tree = GBOTB.extended, nodes = nodes.info.1, scenarios = "S3")
+# save(tree, file = "save/phylogeny.Rdata")
+load("save/phylogeny.Rdata")
+fortify(tree$scenario.3) %>% 
+  mutate(species = gsub("_", " ", label)) %>% 
+  left_join(paracou) %>% 
+  ggtree(aes(col = taxon), layout="circular") + 
+  geom_tiplab2(aes(alpha = !is.na(taxon), size = !is.na(taxon))) +
+  theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
+  scale_alpha_manual("taxon", values = c(0.2, 1)) +
+  scale_size_manual("taxon", values = c(1, 2))
+```
+
+## METRADICA
+
+This subparagraph details collected or wrong individuals in METRADICA (Tab. \@ref(tab:indMD)) and Marion's candidates (Tab. \@ref(tab:indMD), & Fig. \@ref(fig:indMDP16)),
+but candidates of the project will be focused on P16 independently from her candidates and adjusted in the field. 
+
+```{r indMD}
+collected <- readxl::read_excel("data/202012_SelectionIndividus_V5.4.xlsx", sheet = "IndAMesurer") %>% 
+  filter(TaxonActu %in% species$taxon) %>% 
+  mutate(Statut = recode(Statut,
+                         "AMesurerMD" = "Candidate",
+                         "AMesurerMDPrioDK" = "Candidate",
+                         "MesuréDK" = "Measured",
+                         "MesuréDrought" = "Measured",
+                         "MesuréMD" = "Measured",
+                         "MesuréMD (MauvaiseSp)" = "Wrong",
+                         "MesuréMD+Drought" = "Measured",
+                         "MortMD" = "Wrong",
+                         "MortParacou20" = "Wrong",
+                         "MortParacou20PrioDK" = "Wrong",
+                         "PasFaisable" = "Wrong",
+                         ))
+collected %>% 
+  group_by(TaxonActu, Statut) %>% 
+  summarise(N = n()) %>% 
+  reshape2::dcast(TaxonActu ~ Statut, value.var = "N") %>% 
+  mutate(TaxonActu = gsub("_", " ", TaxonActu)) %>% 
+  kable(caption = "Sumary of individuals (from 202012_SelectionIndividus_V5.4.xlsx)")
+```
+
+```{r indMB}
+tocollect <- readxl::read_excel("data/FTH2021_SelectionIndividus_V5.5.xlsx", sheet = "IndAMesurer") %>% 
+  filter(TaxonActu %in% species$taxon) %>% 
+  st_as_sf(coords = c("Xutm", "Yutm"),
+           crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0') %>% 
+  mutate(DBH = Circ/pi)
+tocollect %>% 
+  group_by(TaxonActu, Plot) %>% 
+  summarise(N = n()) %>% 
+  reshape2::dcast(TaxonActu ~ Plot, value.var = "N") %>% 
+  mutate_all(funs(ifelse(is.na(.), " ", .))) %>% 
+  kable(caption = "Sumary of candidates (from FTH2021_SelectionIndividus_V5.5.xlsx)")
+```
+
+
+```{r indMDP16, fig.cap="Marion's candidates in P16."}
+palSp <- colorFactor("viridis", tocollect$TaxonActu)
+limits <- st_read("data/OverallPlots/OverallPlots.shp", quiet = T)
+leaflet(data = st_transform(tocollect, crs = crs)) %>%
+  addTiles() %>% 
+  addPolylines(data = st_transform(limits, crs = crs), col = "grey") %>% 
+  addCircles(color = ~palSp(TaxonActu), opacity = 1,
+             label = ~ TaxonActu, radius = ~ DBH/5) %>% 
+  addLegend(pal = palSp, values = ~ TaxonActu)
+```
+
+## Candidates
+
+We selected 15 individuals per species in P16 (10 + 5 extras) minimizing DBH variation while maximizing TWI variation (Fig. \@ref(fig:candFig), Tab. \@ref(tab:candTab), Fig. \@ref(fig:candMap)). We are lacking individuals for *Casearia javitensis*, *Protium stevensonii*, and *Virola surinamensis*.
+
+```{r candidates}
+candidates <- read_csv2("data/Paracou_P16_2020.csv") %>%
+  left_join(species) %>%
+  filter(!is.na(taxon)) %>%
+  mutate(DBH = CircCorr/pi) %>% 
+  st_as_sf(coords = c("Xutm", "Yutm"),
+           crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0')
+candidates$TWI <- raster::extract(raster::raster("data/TWI_1m.tif"), candidates)
+candidates <- candidates %>% 
+  group_by(taxon) %>% 
+  mutate(N = n()) %>% 
+  mutate(cand0 = ifelse(N <= 17, 1, 0)) %>% 
+  mutate(m = median(DBH), l = quantile(DBH, 0.3), u = quantile(DBH, 0.6)) %>% 
+  mutate(cand0 = ifelse(cand0 == 0 & DBH >= l & DBH <= u, 1, cand0))
+cand <- as.data.frame(candidates) %>% 
+  group_by(taxon) %>% 
+  filter(cand0 == 1, N > 15) %>% 
+  sample_n(15) %>% 
+  unique()
+candidates <- candidates %>% 
+  mutate(candidate =  ifelse(idTree %in% cand$idTree, 1, 0)) %>% 
+  mutate(candidate =  ifelse(N <= 15, 1, candidate)) %>% 
+  mutate(candidate =  as.factor(candidate)) %>% 
+  select(-cand0)
+```
+
+```{r candFig, fig.cap="DBH and TWI of candidates in P16."}
+ggplot(candidates, aes(DBH, TWI, col = candidate, alpha = candidate)) +
+  geom_point() +
+  facet_wrap(~ taxon, scales = "free_x") +
+  scale_color_manual("Candidate", values = c("red", "grey")) +
+  scale_alpha_manual("Candidate", values = c(1, 0.5)) +
+  theme(legend.position = c(0.8, 0.1)) +
+  xlab("Diameter at breast height (DBH, cm)") +
+  ylab("Topographic wetness index (TWI)")
+```
+
+```{r candTab}
+as.data.frame(candidates) %>% 
+  filter(candidate == 1) %>% 
+  group_by(taxon, N) %>% 
+  summarise(Nsel = n()) %>% 
+  select(taxon, Nsel, N) %>% 
+  kable(caption = "Candidates in P16.")
+```
+
+```{r candMap, fig.cap="Candidates in P16."}
+palSp <- colorFactor("viridis", candidates$taxon)
+leaflet(data = st_transform(filter(candidates, candidate == 1), 
+                            crs = crs)) %>%
+  addTiles() %>% 
+  addPolylines(data = st_transform(filter(limits, Plot == 16), 
+                                   crs = crs), col = "grey") %>% 
+  addCircles(color = ~palSp(taxon), opacity = 1,
+             label = ~ taxon, radius = ~ DBH/5) %>% 
+  addLegend(pal = palSp, values = ~ taxon)
+```
+
+## Maps
+
+Maps were automatically built using `sf` and `ggplot2` and save in the folder `maps`:
+
+* [P16 North-West](maps/P16NW.png)
+* [P16 North-East](maps/P16NE.png)
+* [P16 South-West](maps/P16SW.png)
+* [P16 South-East](maps/P16SE.png)
+
+```{r mapsFun}
+contour <- st_read("data/ContourLinesPlots/ContourLinePlots.shp", quiet = T)
+crs_rot = "+proj=omerc +lat_0=36.934 +lonc=-90.849 +alpha=0 +k_0=.7 +datum=WGS84 +units=m +no_defs +gamma=20"
+make_map <- function(file, title, subplots){
+  sublimits <- filter(limits, Plot == 16, Subplot %in% subplots) %>% 
+    st_transform(crs = crs_rot)
+  subcontour <- st_transform(contour, crs = crs_rot) %>% st_crop(sublimits)
+  subcandidates <- filter(candidates, candidate == 1, SubPlot %in% subplots) %>% 
+    st_transform(crs = crs_rot) %>% 
+    mutate(label = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum, "_", substr(Genus, 1, 3), substr(Species, 1, 3), "_", round(DBH)))
+  
+  g <- ggplot() +
+    geom_sf(data = subcontour, fill = NA, col = "lightgrey") +
+    geom_sf(data = sublimits, fill = NA, col = "darkgrey", aes(text = subplots)) +
+    geom_sf_text(data = sublimits, aes(label = Subplot), colour = "darkgrey") +
+    geom_sf(data = subcandidates, col = "black") +
+    ggrepel::geom_text_repel(
+      data = subcandidates,
+      aes(label = label, geometry = geometry),
+      stat = "sf_coordinates",
+      min.segment.length = 0
+    ) +
+    theme(axis.title = element_blank(), axis.text = element_blank(), 
+          axis.ticks = element_blank(), axis.line = element_blank()) +
+    scale_color_discrete(guide = "none") +
+    ggtitle(title)
+  ggsave(g, file = file, path = 'maps', width = 297, height = 420, unit = 'mm', dpi = 300)
+}
+```
+
+```{r maps, eval=F}
+make_map("P16NW.png", "Plot 16 North-West", c(1:3, 6:8, 11:13))
+make_map("P16NE.png", "Plot 16 North-East", c(3:5, 8:10, 13:15))
+make_map("P16SW.png", "P16 South-West", c(11:13, 16:18, 21:23))
+make_map("P16SE.png", "P16 South-East", c(13:15, 18:20, 23:25))
+```
+
+```{r}
+include_graphics("maps/P16NW.png")
+include_graphics("maps/P16NE.png")
+include_graphics("maps/P16SW.png")
+include_graphics("maps/P16SE.png")
+```
+
+
+<!--chapter:end:04-Individuals.Rmd-->
+
+```{r setupmeaserr, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(dplyr1)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+```
+
+# Measurement error
+
+$\Psi_{TLP}$, $\frac{Fv}{Fm}$, and $LT$ were directly measured. 
+$RWC$ was calculated as the fresh weight, i.e. empty bag weight minus fresh leave in bag weight, minus the dry weight divided by the saturated weight minus the dry weight.
+$LA$ was determined from scan using `ImageJ` and `R` scripts at the end before converting pixels square to centimeters square.
+$LDMC$ was calculated as the dry weight divided by the fresh weight.
+$SLA$ was calculated as the leaf area divided by the dry weight. 
+$CC$ was not measured yet.
+
+```{r measdata}
+ptlp <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "measure_ptlp") %>% 
+  mutate(C0 = as.numeric(C0))
+fvfm <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_fvfm") %>% 
+    mutate(FvFm = as.numeric(FvFm)) 
+rwc <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "measure_rwc") %>% 
+    mutate(RWC = ((as.numeric(BagFreshWeight) - as.numeric(BagWeight))-DryWeight)/(SaturatedWeight-DryWeight))
+soft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "measure_soft") %>% 
+  mutate(LA = LApixel / ((300 ^2 ) * (2.54^2)), LDMC = DryWeight/FreshWeight, LT = LTmean) %>% 
+  mutate(SLA = LA/DryWeight)
+traits <- bind_rows(
+  soft %>% 
+    mutate(Date = lubridate::date(Date)) %>% 
+    select(Date, Sample, Repetition, Leaf, LA, LDMC, LT, SLA) %>%
+    reshape2::melt(c("Date", "Sample", "Repetition", "Leaf"), variable.name = "trait"),
+  ptlp %>% 
+    mutate(Date = lubridate::date(Date_measure)) %>% 
+    mutate(Sample  = Nr_Leaf, Repetition = Nr_Cycle, Leaf = 1) %>% 
+    select(Date, Sample, Repetition, Leaf, Ptlp) %>% 
+    mutate(trait = "Ptlp") %>% 
+    rename(value = Ptlp) %>% 
+    na.omit(),
+  fvfm %>% 
+    mutate(Date = lubridate::date(Date)) %>% 
+    mutate(Sample  = Leaf, Leaf = 1) %>% 
+    select(Date, Sample, Repetition, Leaf, FvFm) %>% 
+    mutate(trait = "FvFm") %>% 
+    rename(value = FvFm) %>% 
+    na.omit(),
+  rwc %>% 
+    mutate(Date = lubridate::date(Day)) %>% 
+    mutate(Leaf = 1) %>% 
+    select(Date, Sample, Repetition, Leaf, RWC) %>% 
+    mutate(trait = "RWC") %>% 
+    rename(value = RWC) %>% 
+    na.omit()
+)
+# autoplot(princomp(~ LA + LDMC + LT + SLA + Ptlp + FvFm + RWC, reshape2::dcast(traits, Sample + Repetition + Leaf ~ trait), scale = T),
+#          loadings = T, loadings.label = T)
+```
+
+
+```{r measureBoxplots, fig.cap="Traits distributions when testing for measurement error."}
+traits %>% 
+  group_by(Date, Sample, Repetition, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  ggplot(aes(as.factor(Sample), value)) +
+  geom_boxplot(aes(fill = as.character(Date)),
+               alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Repetition)) +
+  viridis::scale_color_viridis("Repetition") +
+  scale_fill_discrete("Day") +
+  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 2) +
+  xlab("Sample") + 
+  theme(axis.title = element_blank(), legend.position = "bottom")
+```
+
+```{r measureVars, fig.cap="Traits variances when testing for measurement error."}
+traits %>% 
+  group_by(Date, Sample, Repetition, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  group_by(trait, Sample) %>% 
+  sample_n(5) %>% 
+  group_by(trait) %>% 
+  do(var = nlme::lme(value ~ 1, random=~1|Date/Sample/Repetition, data = .) %>% 
+       ape::varcomp(scale = F, cum = F) %>% 
+       as.vector() %>% 
+       data.frame(level = c("Date", "Sample", "Repetition", "Residual"), variance = as.vector(.))) %>% 
+  unnest(var) %>% 
+  select(-`.`) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(level = factor(level, levels = c("Date", "Sample", "Repetition", "Residual"))) %>% 
+  ggplot(aes(x = trait, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  theme(axis.text.y = element_blank(), strip.text.y.left = element_text(angle = 0)) +
+  scale_fill_manual(expression(sigma), values = c("firebrick", "lightgreen", "lightblue", "grey")) +
+  xlab("") + ylab("") + coord_flip() +
+  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 7, strip.position = "left")
+```
+
+```{bash imageJsoft, eval=F, echo=T}
+run("Image Sequence...", "open=/home/sylvain/Documents/ECOFOG/hydroITV/data/traits/measure/measure_20210818_soft_scans/Soft_C0_S1_R5.jpg sort");
+run("8-bit");
+setAutoThreshold("Default");
+//run("Threshold...");
+setAutoThreshold("Default");
+setOption("BlackBackground", false);
+run("Convert to Mask", "method=Default background=Light calculate");
+run("Close");
+run("Analyze Particles...", "size=10000-Infinity show=[Overlay Masks] display exclude clear in_situ stack");
+saveAs("Results", "/home/sylvain/Documents/ECOFOG/hydroITV/data/traits/measure/measure_20210820_LA_ss.tsv");
+```
+
+```{r imagejRsoft, eval=F, echo=T}
+read_tsv("data/traits/measure/measure_20210820_LA_ss.tsv") %>% 
+  separate(Label, paste0("X", 1:8)) %>% 
+  rename(Plot = X6, Sample = X7, Repetition = X8) %>% 
+  select(Plot, Sample, Repetition, Area) %>% 
+  group_by(Sample, Repetition) %>% 
+  mutate(Leaf = paste0("L", 1:n())) %>% 
+  mutate(Leaf = ifelse(Sample == "S1" & Repetition %in% c("R4", "R5"), c("L1", "L2", "L2", "L2", "L2", "L3"), Leaf)) %>% 
+  group_by(Plot, Sample, Repetition, Leaf) %>% 
+  summarise(Area = sum(Area)) %>% 
+  write_tsv("data/traits/measure/measure_20210820_LAcor_ss.tsv")
+```
+
+<!--chapter:end:05-MeasurementError.Rmd-->
+
+```{r setupleafvar, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(tidyverse)
+library(sf)
+library(leaflet)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(
+  echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+  cache = T, cache.lazy = F)
+crs <- '+proj=longlat +datum=WGS84' # leaflet CRS
+```
+
+# Leaf variation
+
+## Sampling
+
+For the leaf variation within individual we sampled across the 27 *Virola michelii* from the P16 that followed our requirements (DBH between 30th and 60th quantiles):
+
+```{r samplingleafvar, fig.cap="Candidates in P16."}
+# data
+candidates <- read_csv2("data/Paracou_P16_2020.csv") %>%
+  filter(Genus == "Virola", Species == "michelii") %>% 
+  mutate(DBH = CircCorr/pi) %>% 
+  filter(DBH >= quantile(DBH, 0.3), DBH <= quantile(DBH, 0.6))  %>% 
+  st_as_sf(coords = c("Xutm", "Yutm"),
+           crs = '+proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0') %>% 
+  mutate(Ind = paste0("P", Plot, "_", SubPlot, "_", TreeFieldNum))
+
+# html map
+limits <- st_read("data/OverallPlots/OverallPlots.shp", quiet = T)
+leaflet(data = st_transform(candidates, crs = crs)) %>%
+  addTiles() %>% 
+  addPolylines(data = st_transform(filter(limits, Plot == 16),
+                                   crs = crs), col = "grey") %>%
+  addCircles(opacity = 1, label = ~ Ind, radius = ~ DBH/2) 
+
+# paper map 
+contour <- st_read("data/ContourLinesPlots/ContourLinePlots.shp", quiet = T)
+crs_rot = "+proj=omerc +lat_0=36.934 +lonc=-90.849 +alpha=0 +k_0=.7 +datum=WGS84 +units=m +no_defs +gamma=20"
+sublimits <- filter(limits, Plot == 16) %>% 
+    st_transform(crs = crs_rot)
+subcontour <- st_transform(contour, crs = crs_rot) %>% 
+  st_crop(sublimits)
+subcandidates <- st_transform(candidates, crs = crs_rot) %>% 
+    mutate(label = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum, "_", substr(Genus, 1, 3), substr(Species, 1, 3), "_", round(DBH)))
+g <-  ggplot() +
+  geom_sf(data = subcontour, fill = NA, col = "lightgrey") +
+  geom_sf(data = sublimits, fill = NA, col = "darkgrey") +
+  geom_sf_text(data = sublimits, aes(label = Subplot), colour = "darkgrey") +
+  geom_sf(data = subcandidates, col = "black") +
+  ggrepel::geom_text_repel(
+    data = subcandidates,
+    aes(label = label, geometry = geometry),
+    stat = "sf_coordinates",
+    min.segment.length = 0
+  ) +
+  theme(axis.title = element_blank(), axis.text = element_blank(), 
+        axis.ticks = element_blank(), axis.line = element_blank()) +
+  scale_color_discrete(guide = "none") +
+  ggtitle("Plot 16 - Virola michelii")
+ggsave(g, file = "P16_virmic.png", path = 'maps', width = 297, height = 420, unit = 'mm', dpi = 300, bg = "white")
+
+# gps
+candidates %>%
+  mutate(name = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum, "_", substr(Genus, 1, 3), substr(Species, 1, 3), "_", round(DBH))) %>% 
+  dplyr::select(name, geometry) %>%
+  st_write(dsn = "maps/P16_virmic.gpx", delete_dsn = T, driver = "GPX", layer = "waypoints")
+```
+
+
+
+
+## Traits
+
+```{r leafdata}
+ptlp <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "leaf_ptlp")
+
+rwc <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                            "leaf_rwc") %>% 
+    mutate(RWC = ((as.numeric(BagFreshWeight) - as.numeric(BagWeight))-DryWeight)/(SaturatedWeight-DryWeight))
+
+soft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "leaf_soft") %>% 
+  rowwise() %>% 
+  mutate(LT = mean(c(LT1, LT2, LT3)), 
+         SPAD = mean(c(SPAD1, SPAD2, SPAD3)), 
+         LDMC =  DryWeight/FreshWeight,
+         LA = LApixel / ((300 ^2 ) * (2.54^2))) %>% 
+  mutate(CC = (117.1 * SPAD)/(148.84 - SPAD),
+         SLA = LA/DryWeight)
+traits <- bind_rows(
+  soft %>% 
+    mutate(Date = lubridate::date(Date)) %>% 
+    mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+    select(Date, Ind, Sample, Leaf, LDMC, LT, FvFm, CC, LA, SLA) %>% 
+    reshape2::melt(c("Date", "Ind", "Sample", "Leaf"), variable.name = "trait"),
+  ptlp %>% 
+    mutate(Date = lubridate::date(Date_measure)) %>% 
+    mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+    mutate(Sample  = Nr_Leaf, Leaf = 1) %>% 
+    select(Date, Ind, Sample, Leaf, Ptlp) %>% 
+    mutate(trait = "Ptlp") %>% 
+    rename(value = Ptlp) %>% 
+    na.omit(),
+  rwc %>% 
+    mutate(Date = lubridate::date(Date_Field)) %>% 
+    mutate(Ind = paste0("P", Plot, "-", SubPlot, "-", TreeFieldNum)) %>% 
+    mutate(Leaf = 1) %>% 
+    select(Date, Ind, Sample, Leaf, RWC) %>% 
+    mutate(trait = "RWC") %>% 
+    rename(value = RWC) %>% 
+    na.omit()
+)
+```
+
+```{r leafBoxplots, fig.cap="Traits distributions when testing for leaf variation."}
+traits %>% 
+  group_by(Date, Ind, Sample, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  na.omit() %>% 
+  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  ggplot(aes(as.factor(Ind), value)) +
+  geom_boxplot(aes(fill = as.character(Date)),
+               alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Sample)) +
+  viridis::scale_color_viridis("Leaf") +
+  scale_fill_discrete("Day") +
+  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 2) +
+  coord_flip() +
+  theme(axis.title = element_blank(), 
+        legend.position = "bottom", legend.box="vertical", legend.margin=margin())
+```
+
+```{r leafVars, fig.cap="Traits variances when testing for leaf variation.", fig.height=8}
+traits %>% 
+  group_by(Date, Ind, Sample, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  na.omit() %>% 
+  filter(trait %in% c("CC", "FvFm", "LT", "Ptlp", "LA", "SLA", "LDMC")) %>% 
+  group_by(trait, Ind) %>% 
+  sample_n(4) %>% 
+  group_by(trait) %>% 
+  do(var = nlme::lme(value ~ 1, random=~1|Date/Ind/Sample, data = .) %>% 
+       ape::varcomp(scale = F, cum = F) %>% 
+       as.vector() %>% 
+       data.frame(level = c("Date", "Tree", "Leaf", "Residual"), variance = as.vector(.))) %>% 
+  unnest(var) %>% 
+  select(-`.`) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "Psi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  mutate(level = factor(level, levels = c("Date", "Tree", "Leaf", "Residual"))) %>% 
+  ggplot(aes(x = trait, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  theme(axis.text.y = element_blank(), strip.text.y.left = element_text(angle = 0)) +
+  scale_fill_manual(expression(sigma), values = c("firebrick", "lightgreen", "lightblue", "grey")) +
+  xlab("") + ylab("") + coord_flip() +
+  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 7, strip.position = "left")
+```
+
+```{r, eval=F, echo=T}
+la <- read_tsv("data/traits/leaf/leaf_20210831_LA_ss.tsv")%>% 
+  separate(Label, paste0("X", 1:10), convert = T) %>% 
+  dplyr::rename(Plot = X5, SubPlot = X6, TreeFieldNum = X7, Sample = X10) %>% 
+  dplyr::select(Plot, SubPlot, TreeFieldNum, Sample, Area) %>% 
+  mutate(Plot = as.numeric(gsub("P", "", Plot)), SubPlot = as.numeric(gsub("C", "", SubPlot))) %>% 
+  group_by(Plot, SubPlot, TreeFieldNum, Sample) %>% 
+  mutate(Leaf = c(3,2,1))
+googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+                                  "leaf_soft") %>% 
+  dplyr::select(Plot, SubPlot, TreeFieldNum, Sample, Leaf) %>% 
+  left_join(la) %>% 
+  write_tsv("data/traits/leaf/leaf_20210831_LAcor_ss.tsv")
+```
+
+<!--chapter:end:06-LeafVariation.Rmd-->
+
+# Traits covariation
+
+Subsequent analysis aimed to explore co-variations of individual traits. 
+Specifically, we investigated individual traits co-variation at several taxonomic scales: among species, and within species.
+
+**Waiting data, inspiration can be found here: https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/01-PCA.Rmd .**
+
+<!--chapter:end:10-Covariations.Rmd-->
+
+# Variance partitionning
+
+Subsequent analysis aimed to assess variance partitioning among and within species.
+
+**Waiting data.**
+
+<!--chapter:end:11-VariancePartitioning.Rmd-->
+
+# Environment & Ontogeny
+
+Subsequent analysis aimed to select functional traits descriptors in order to further model traits variation. 
+
+Phenotypic variation, and therefore functional traits variation, will be shaped (i) by genetic heritage, through genotypes, (ii) by the environment (both abiotic and biotic) with spatial and temporal heterogeneity, and (iii) by random stochastic factors [@Whitlock2007]. Our analysis did not include yet raw genetic data. Consequently, genetic heritage will be both represented by taxonomic levels (species and genera) and ontogenetic factors. Environment will be split between abiotic environment and biotic interactions, here restrained to tree to tree interactions. We will not explore tree interactions with their environment trough herbivory and pathogens, besides their huge impact on tree life history [but see @VanderPutten2001].
+
+We selected functional traits descriptors by studying descriptors co-variation and keeping only little correlated variables with the best ecological meaning to represent (i) ontogeny, (ii) abiotic environment, and (iii) biotic interactions.
+
+**Waiting data, inspiration can be found here: https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/02-Environment.Rmd .**
+
+<!--chapter:end:12-Environments.Rmd-->
+
+# Models
+
+The subsequent analysis aimed to graphically explore variations in leaf traits according to 4 descriptors: (i) tree ontogeny, (ii) biotic interactions and (iii) abiotic environment, and (iv) phylogeny through taxonomic levels. From these observations we developed a generic model linking individual phenotype to its descriptors. The generic model will be inferred later using Bayesian inference.
+
+**Waiting data, inspiration can be found here: https://github.com/sylvainschmitt/PhD/blob/master/documents/functional/03-Models.Rmd .**
+
+<!--chapter:end:13-Models.Rmd-->
+
+# Literature
+
+## @Hajek2016
+
+* ITV hydraulics unknown (even temperate)
+* high intra-site but low inter-site/provenance variation of hydraulic traits
+* P88 show significant genetic differentiation with provenance
+
+## @Lobo2018
+
+* Non-significant variation of P50 in Quercus petraea
+
+## @Westerband2021
+
+* Huge review on ITV
+* Hydraulic ITV is understudied
+* 6 to 42 % for hydraulic properties depending on the trait (Rosas et al., 2019)
+
+## @Martinez-Vilalta2009
+
+* leaf-specific hydraulic conductivity (KS and KL), vulnerability to embolism
+* between-population variability was high for most of the hydraulic traits studied, but it was directly associated with climate dryness
+
+## @Rosas2019
+
+* inter- and intraspecific variability of LMA, N, d13C, WD, Hv, Hydraulic conductivity, P50
+* Family explained the largest amount of variability 
+* Intraspecific variability was also relevant
+* Species occupying wetter sites showed higher N, P50 and Ptlp, and lower LMA, d13C and Hv. 
+* Within species water explained Hv and Ptlp
+
+<!--chapter:end:90-literature.Rmd-->
+
+# References {-}
+
+<!--chapter:end:99-References.Rmd-->
+
