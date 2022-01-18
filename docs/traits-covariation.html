@@ -167,13 +167,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html"><i class="fa fa-check"></i><b>4</b> Traits variation: variance partitionning</a><ul>
 <li class="chapter" data-level="4.1" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#all"><i class="fa fa-check"></i><b>4.1</b> All</a></li>
-<li class="chapter" data-level="4.2" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#measurement-error"><i class="fa fa-check"></i><b>4.2</b> Measurement error</a></li>
+<li class="chapter" data-level="4.2" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#individual-variation"><i class="fa fa-check"></i><b>4.2</b> Individual variation</a></li>
 <li class="chapter" data-level="4.3" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#leaf-variation-1"><i class="fa fa-check"></i><b>4.3</b> Leaf variation</a></li>
-<li class="chapter" data-level="4.4" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#individual-variation"><i class="fa fa-check"></i><b>4.4</b> Individual variation</a></li>
+<li class="chapter" data-level="4.4" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#measurement-error"><i class="fa fa-check"></i><b>4.4</b> Measurement error</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="traits-variation-coefficient-of-variation.html"><a href="traits-variation-coefficient-of-variation.html"><i class="fa fa-check"></i><b>5</b> Traits variation: coefficient of variation</a><ul>
 <li class="chapter" data-level="5.1" data-path="traits-variation-coefficient-of-variation.html"><a href="traits-variation-coefficient-of-variation.html#cv-per-species"><i class="fa fa-check"></i><b>5.1</b> CV per species</a></li>
 <li class="chapter" data-level="5.2" data-path="traits-variation-coefficient-of-variation.html"><a href="traits-variation-coefficient-of-variation.html#global-cv"><i class="fa fa-check"></i><b>5.2</b> Global CV</a></li>
+<li class="chapter" data-level="5.3" data-path="traits-variation-coefficient-of-variation.html"><a href="traits-variation-coefficient-of-variation.html#results"><i class="fa fa-check"></i><b>5.3</b> Results</a></li>
+<li class="chapter" data-level="5.4" data-path="traits-variation-coefficient-of-variation.html"><a href="traits-variation-coefficient-of-variation.html#discussion"><i class="fa fa-check"></i><b>5.4</b> Discussion</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>6</b> Traits covariation</a></li>
 <li class="chapter" data-level="7" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html"><i class="fa fa-check"></i><b>7</b> Ontogeny and topography effects</a><ul>
@@ -189,6 +191,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.3" data-path="literature.html"><a href="literature.html#westerband2021"><i class="fa fa-check"></i><b>8.3</b> <span class="citation">Westerband <em>et al.</em> (<span>2021</span>)</span></a></li>
 <li class="chapter" data-level="8.4" data-path="literature.html"><a href="literature.html#martinez-vilalta2009"><i class="fa fa-check"></i><b>8.4</b> <span class="citation">Martínez-Vilalta <em>et al.</em> (<span>2009</span>)</span></a></li>
 <li class="chapter" data-level="8.5" data-path="literature.html"><a href="literature.html#rosas2019"><i class="fa fa-check"></i><b>8.5</b> <span class="citation">Rosas <em>et al.</em> (<span>2019</span>)</span></a></li>
+<li class="chapter" data-level="8.6" data-path="literature.html"><a href="literature.html#kannenberg2021"><i class="fa fa-check"></i><b>8.6</b> <span class="citation">Kannenberg <em>et al.</em> (<span>2021</span>)</span></a></li>
+<li class="chapter" data-level="8.7" data-path="literature.html"><a href="literature.html#guillemot2022"><i class="fa fa-check"></i><b>8.7</b> <span class="citation">Guillemot <em>et al.</em> (<span>2022</span>)</span></a></li>
+<li class="chapter" data-level="8.8" data-path="literature.html"><a href="literature.html#marechaux2020a"><i class="fa fa-check"></i><b>8.8</b> <span class="citation">Maréchaux <em>et al.</em> (<span>2020</span>)</span></a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -218,13 +223,18 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <h1><span class="header-section-number">Chapter 6</span> Traits covariation</h1>
 <p>Subsequent analysis aimed to explore co-variations of individual traits.
 Specifically, we investigated individual traits co-variation at several taxonomic scales: among species, and within species.</p>
-<p><img src="hydroITV_files/figure-html/pcaArticle-1.png" width="768" /></p>
+<div class="figure"><span id="fig:pcaArticle"></span>
+<img src="hydroITV_files/figure-html/pcaArticle-1.png" alt="Among (A) and Within-species (B) principal component analysis (A - PCA and B - wPCA) of leaf traits across individuals in 10 Neotropical tree species. Circle colors indicate the species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (Gmin)." width="768" />
+<p class="caption">
+Figure 6.1: Among (A) and Within-species (B) principal component analysis (A - PCA and B - wPCA) of leaf traits across individuals in 10 Neotropical tree species. Circle colors indicate the species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (Gmin).
+</p>
+</div>
+<p><img src="hydroITV_files/figure-html/corrplotTraits-1.png" width="768" /></p>
 <p><img src="hydroITV_files/figure-html/indpcadbh-1.png" width="768" /></p>
 <p><img src="hydroITV_files/figure-html/indpcatwi-1.png" width="768" /></p>
 <p><img src="hydroITV_files/figure-html/indpcasp-1.png" width="768" /></p>
 <p><img src="hydroITV_files/figure-html/indwpcadbh-1.png" width="768" /></p>
 <p><img src="hydroITV_files/figure-html/indwpcatwi-1.png" width="768" /></p>
-<p><img src="hydroITV_files/figure-html/indwpcadbhtwi-1.png" width="768" /></p>
 
 </div>
             </section>

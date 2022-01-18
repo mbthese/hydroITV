@@ -28,3 +28,25 @@
 * Intraspecific variability was also relevant
 * Species occupying wetter sites showed higher N, P50 and Ptlp, and lower LMA, d13C and Hv. 
 * Within species water explained Hv and Ptlp
+
+## @Kannenberg2021
+
+## @Guillemot2022
+
+* @Marechaux2020a $\pi_{TLP}$ is weakly correlated to LMA, LA, Nmass, Pmass, Kmass, Camass, Mgmass, delta13C, Cmass, Amass, gw
+* $\pi_{TLP}$, branch P50, LMA, LA, N, P, WD, Hmax, seed mass.
+* **Thus, predicted values replaced 31% of the PCA dataset that was missing.**
+* "we performed a linear mixed model with genus, family and order, treated as nested random effects on the intercept (Chave et al., 2006)" beware sampling effect
+* LA, seed mass and max height in the stature recruitment spectrum
+* LMA, N, P, WD in fast slow spectrum
+* $\pi_{TLP}$ correlated with fast slow spectrum P, LMA, WD as opposed to us with no correlation of SLA and $\pi_{TLP}$ while $\pi_{TLP}$ is correlated to LA.
+* Inter-species variation in xylem resistance to embolism (P50), and not leaf turgor loss point (TLP), determines the hydraulic safety margin (HSM) of tropical woody species
+* P50 and TLP exhibit a weak phylogenetic signal and substantial variation within genera
+* TLP is strongly associated with the fast-slow trait axis (more negative in slow species), while P50 is associated with both the fast-slow and stature- recruitment trait axes (more negative in slow and small stature species). **In total contradiction with our results!**
+* **BUT our results are in agreement with @Marechaux2020a**
+* relevance of TLP as an indicator of drought tolerance and species preference for dryer habitats in the tropics (Bartlett et al., 2012; Kunert et al., 2021)
+* They also suggest that TLP and P50 are the result of repeated evolutionary adaptations of closely related taxa, which radiate to different habitats (Fig. 3, Oliveira et al., 2019) => **Topographic adaptations**
+* safety-efficiency trade-off in stomatal control (Henry et al., 2019) is integral to the fast-slow axis in tropical woody species
+
+
+## @Marechaux2020a

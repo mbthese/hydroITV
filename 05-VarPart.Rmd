@@ -1,5 +1,5 @@
 ```{r setupvar, include=FALSE}
-rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+rm(list = ls()) ; invisible(gc()) ; set.seed(43) 
 library(knitr)
 library(tidyverse)
 library(dplyr)
@@ -88,11 +88,12 @@ vars <- bind_rows(vars_meas, vars_leaf, vars_tree) %>%
   mutate(pct_text = paste0(round(pct), "%")) %>% 
   mutate(pct_text = gsub("^0%", "", pct_text))
 
-rm(vars_meas, vars_leaf, vars_tree)
+rm(vars_meas, vars_leaf, vars_tree) 
 ```
 
-```{r figVarPart, fig.width=8, fig.height=8, fig.cap=" Variance partitioning of leaf traits across study levels. Variance partitioning was obtained using linear mixed models for every trait and each pairs of levels studied:  measurement error, i.e. measurement repetitions among leave samples, within-tree leaf variation, i.e. leaf sample repetitions among trees, and intra- and inter-specific variation, i.e. individual repetitions among species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf maximum photochemical quantum yield (FvFm), leaf relative water content (RWC),  leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (Gmin)."}
+```{r figVarPart, fig.width=8, fig.height=8, fig.cap=" Variance partitioning of leaf traits across study levels. Variance partitioning was obtained using linear mixed models for every trait and each pairs of levels studied:  measurement error, i.e. measurement repetitions among leave samples, within-tree leaf variation, i.e. leaf sample repetitions among trees, and intra- and inter-specific variation, i.e. individual repetitions among species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (Gmin)."}
 vars %>% 
+  filter(!(trait %in% c("frac(Fv,Fm)", "RWC"))) %>% 
   ggplot(aes(x = study, y = pct, fill = level)) +
   geom_bar(stat = "identity", position = "stack") +
   geom_text(aes(y = pct, label = pct_text), col = "white", position = position_stack(vjust = .5)) +
@@ -101,50 +102,24 @@ vars %>%
   xlab("Trait") + ylab("percentage of variance") +
   scale_x_discrete(labels = scales::parse_format()) +
   facet_wrap(.~trait, labeller = "label_parsed",  nrow = 2) +
+  theme(legend.position = "bottom", axis.text.x = element_text(angle = 90), axis.title.x = element_blank()) 
+```
+
+```{r figVarPartRWCFvFm, fig.cap=" Variance partitioning of leaf traits across study levels. Variance partitioning was obtained using linear mixed models for every trait and each pairs of levels studied:  measurement error, i.e. measurement repetitions among leave samples, within-tree leaf variation, i.e. leaf sample repetitions among trees, and intra- and inter-specific variation, i.e. individual repetitions among species. Leaf traits include leaf maximum photochemical quantum yield (FvFm), and leaf relative water content (RWC)."}
+vars %>% 
+  filter(trait %in% c("frac(Fv,Fm)", "RWC")) %>% 
+  ggplot(aes(x = study, y = pct, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(y = pct, label = pct_text), col = "white", position = position_stack(vjust = .5)) +
+  scale_fill_manual(expression(sigma^2),
+                    values = unname(varcols[c("species", "tree", "sample", "measure", "residual")])) +
+  xlab("Trait") + ylab("percentage of variance") +
+  scale_x_discrete(labels = scales::parse_format()) +
+  facet_wrap(.~trait, labeller = "label_parsed") +
   theme(legend.position = "bottom", axis.text.x = element_text(angle = 90), axis.title.x = element_blank())
 ```
 
-## Measurement error
-
-```{r measureBoxplots, fig.cap="Traits distributions when testing for measurement error.", fig.height=10, fig.width=10}
-filter(ft, StudyLevel == "measure") %>% 
-  dplyr::select(Sample, Measure, LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin) %>% 
-  reshape2::melt(c("Sample", "Measure"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  group_by(Sample, Measure, trait) %>% 
-  summarise(value = mean(value, na.rm = T)) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
-  ggplot(aes(as.factor(Sample), value)) +
-  geom_boxplot(alpha = 0.5, col = "lightgrey") +
-  geom_point(aes(col = Measure)) +
-  viridis::scale_color_viridis("Measure") +
-  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 2) +
-  xlab("Sample") + 
-  theme(axis.title = element_blank(), legend.position = "bottom") +
-  scale_y_continuous(trans = "log_abs")
-```
-
-## Leaf variation
-
-```{r leafBoxplots, fig.cap="Traits distributions when testing for leaf variation.", fig.height=10, fig.width=10}
-filter(ft, StudyLevel == "leaf") %>% 
-  dplyr::select( Tree, Sample, LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin) %>% 
-  reshape2::melt(c("Tree", "Sample"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "gmin" = "g[min]")) %>% 
-  ggplot(aes(as.factor(Tree), value)) +
-  geom_boxplot(alpha = 0.5, col = "lightgrey") +
-  geom_point(aes(col = Sample)) +
-  viridis::scale_color_viridis("Sample") +
-  facet_wrap(~ trait, scales = "free_y", labeller = label_parsed, nrow = 2) +
-  theme(axis.title = element_blank(), axis.text.x = element_text(angle = 90), 
-        legend.position = "bottom", legend.box="vertical", legend.margin=margin()) +
-  scale_y_continuous(trans = "log_abs")
-```
-
 ## Individual variation
-
-
 
 ```{r indBoxplots, fig.cap="Traits distributions when testing for individual variation.", fig.height=10, fig.width=10}
 filter(ft, StudyLevel == "tree") %>% 
@@ -201,23 +176,6 @@ filter(ft, StudyLevel == "tree") %>%
   scale_y_continuous(trans = "log_abs")
 ```
 
-```{r indTWI, fig.cap="Traits distributions when testing for individual variation and topography.", fig.height=10, fig.width=10}
-filter(ft, StudyLevel == "tree") %>% 
-  dplyr::select(Genus, Species, Tree, LA, SLA, LT, CC, LDMC, RWC, LSWC, Ptlp, gmin, TWI) %>% 
-  reshape2::melt(c("Genus", "Species", "Tree", "TWI"), variable.name = "trait") %>% 
-  na.omit() %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "gmin" = "g[min]")) %>% 
-  mutate(SpeciesLong = paste(Genus, Species)) %>% 
-  ggplot(aes(log(TWI), value)) +
-  geom_point(alpha = 0.5) +
-  viridis::scale_color_viridis("Leaf") +
-  scale_fill_discrete("Species") +
-  facet_wrap(~ trait, scales = "free_y", labeller = label_parsed) +
-  xlab("Topographic wetness index") +
-  geom_smooth(method = "lm") +
-  scale_y_continuous(trans = "log_abs")
-```
-
 ```{r indTWIsp, fig.cap="Traits distributions when testing for species and individual variation with topography.", fig.height=10, fig.width=10}
 filter(ft, StudyLevel == "tree") %>% 
   dplyr::select(Genus, Species, Tree, LA, SLA, LT, CC, LDMC, RWC, LSWC, Ptlp, gmin, TWI) %>% 
@@ -235,3 +193,43 @@ filter(ft, StudyLevel == "tree") %>%
   theme(legend.position = "bottom") +
   scale_color_discrete("")
 ```
+
+## Leaf variation
+
+```{r leafBoxplots, fig.cap="Traits distributions when testing for leaf variation.", fig.height=10, fig.width=10}
+filter(ft, StudyLevel == "leaf") %>% 
+  dplyr::select( Tree, Sample, LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin) %>% 
+  reshape2::melt(c("Tree", "Sample"), variable.name = "trait") %>% 
+  na.omit() %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)", "gmin" = "g[min]")) %>% 
+  ggplot(aes(as.factor(Tree), value)) +
+  geom_boxplot(alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Sample)) +
+  viridis::scale_color_viridis("Sample") +
+  facet_wrap(~ trait, scales = "free_y", labeller = label_parsed, nrow = 2) +
+  theme(axis.title = element_blank(), axis.text.x = element_text(angle = 90), 
+        legend.position = "bottom", legend.box="vertical", legend.margin=margin()) +
+  scale_y_continuous(trans = "log_abs")
+```
+
+## Measurement error
+
+```{r measureBoxplots, fig.cap="Traits distributions when testing for measurement error.", fig.height=10, fig.width=10}
+filter(ft, StudyLevel == "measure") %>% 
+  dplyr::select(Sample, Measure, LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin) %>% 
+  reshape2::melt(c("Sample", "Measure"), variable.name = "trait") %>% 
+  na.omit() %>% 
+  group_by(Sample, Measure, trait) %>% 
+  summarise(value = mean(value, na.rm = T)) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FvFm" = "frac(Fv,Fm)")) %>% 
+  ggplot(aes(as.factor(Sample), value)) +
+  geom_boxplot(alpha = 0.5, col = "lightgrey") +
+  geom_point(aes(col = Measure)) +
+  viridis::scale_color_viridis("Measure") +
+  facet_wrap(~ trait, scales = "free", labeller = label_parsed, nrow = 2) +
+  xlab("Sample") + 
+  theme(axis.title = element_blank(), legend.position = "bottom") +
+  scale_y_continuous(trans = "log_abs")
+```
+
+

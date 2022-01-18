@@ -51,7 +51,7 @@ ft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa
             funs(./sd(., na.rm = T))) %>%
   ungroup()
 
-traits <- c("gmin", "RWC", "FmFv", "invLA", "LT", "LDMC", "CC", "Ptlp", "LMA", "invLSWC")
+traits <- c("gmin", "invLA", "LT", "LDMC", "CC", "Ptlp", "LMA", "invLSWC")
 mdata <- lapply(traits, function(t){
   data_ind <- filter(ft, trait == t)
   data_sp <- data_ind %>% 
@@ -79,12 +79,12 @@ species <- ft %>%
 #   sampling(model, chains = 2, data = x, save_warmup = F))
 # names(fits) <- traits
 # save(mdata, fits, file = "models/m1.Rdata")
-load("models/m1.Rdata") 
+load("models/m1.Rdata")  
 ```
 
 ## Intercept
 
-```{r modelIntercepts, fig.cap="Model species effect for Intercept.", fig.height=10, fig.width=10}
+```{r modelIntercepts, fig.cap="Model species effect for Intercept.", fig.height=8, fig.width=8}
 lapply(fits, function(fit) 
   mcmc_intervals_data(as.array(fit, pars = "alpha_s"))) %>% 
   bind_rows(.id = "trait") %>% 
@@ -92,7 +92,7 @@ lapply(fits, function(fit)
   mutate(SpeciesNum = gsub("([[:punct:]])", "", SpeciesNum)) %>% 
   mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
   left_join(species) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FmFv" = "frac(Fm,Fv)", "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
   ggplot(aes(x = SpeciesLong, 
              xend = SpeciesLong,
              color = SpeciesLong, fill = SpeciesLong)) +
@@ -102,16 +102,19 @@ lapply(fits, function(fit)
   geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
   coord_flip() +
   datatools::scale_x_reordered() +
-  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x") +
+  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x", nrow = 2) +
   xaxis_title(F) +
   ylab(expression(alpha)) +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
-  geom_hline(yintercept = 0, linetype = "dashed", col = "grey")   
+  geom_hline(yintercept = 0, linetype = "dashed", col = "grey") +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
+  guides(fill = guide_legend(nrow = 4, byrow = TRUE))
 ```
 
 ## DBH
 
-```{r modelDBH, fig.cap="Model species effect for DBH slope.", fig.height=10, fig.width=10}
+```{r modelDBH, fig.cap="Model species effect for DBH slope.", fig.height=8, fig.width=8}
 lapply(fits, function(fit) 
   mcmc_intervals_data(as.array(fit, pars = "betaDBH"))) %>% 
   bind_rows(.id = "trait") %>% 
@@ -119,7 +122,7 @@ lapply(fits, function(fit)
   mutate(SpeciesNum = gsub("([[:punct:]])", "", SpeciesNum)) %>% 
   mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
   left_join(species) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FmFv" = "frac(Fm,Fv)",
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]",
                         "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
   ggplot(aes(x = SpeciesLong, 
              xend = SpeciesLong,
@@ -130,16 +133,19 @@ lapply(fits, function(fit)
   geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
   coord_flip() +
   datatools::scale_x_reordered() +
-  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x") +
+  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x", nrow = 2) +
   xaxis_title(F) +
   ylab(expression(beta[DBH])) +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
-  geom_hline(yintercept = 0, linetype = "dashed", col = "grey")  
+  geom_hline(yintercept = 0, linetype = "dashed", col = "grey")   +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
+  guides(fill = guide_legend(nrow = 4, byrow = TRUE))
 ```
 
 ## TWI
 
-```{r modelTWI, fig.cap="Model species effect for TWIs & TWIis slope.", fig.height=10, fig.width=10}
+```{r modelTWI, fig.cap="Model species effect for TWIs & TWIis slope.", fig.height=8, fig.width=8}
 lapply(fits, function(fit) 
   mcmc_intervals_data(as.array(fit, pars = c("betaTWI", "gammaTWI")))) %>% 
   bind_rows(.id = "trait") %>% 
@@ -148,7 +154,7 @@ lapply(fits, function(fit)
   mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
   left_join(species) %>% 
   mutate(SpeciesLong = ifelse(is.na(SpeciesLong), "All", SpeciesLong)) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "FmFv" = "frac(Fm,Fv)", 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]",
                         "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
   ggplot(aes(x = SpeciesLong, 
              xend = SpeciesLong,
@@ -159,12 +165,15 @@ lapply(fits, function(fit)
   geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
   coord_flip() +
   datatools::scale_x_reordered() +
-  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x") +
+  facet_wrap(~ trait, labeller = label_parsed, scales = "free_x", nrow = 2) +
   xaxis_title(F) +
   ylab(expression(TWI)) +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
   geom_hline(yintercept = 0, linetype = "dashed", col = "grey") +
-  scale_color_manual(values = c("black", scales::hue_pal()(10)))   
+  scale_color_manual(values = c("black", scales::hue_pal()(10))) +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
+  guides(fill = guide_legend(nrow = 4, byrow = TRUE))
 ```
 
 ## Summary
@@ -199,8 +208,6 @@ lapply(fits, function(fit)
                               CC = "$CC$",
                               Gmin = "$g_{min}$",
                               Ptlp = "$\\pi_{TLP}$",
-                              RWC = "$RWC$",
-                              FmFv = "$\\frac{Fm}{Fv}$",
                               invLSWC = "$\\frac{1}{LSWC}$")) %>% 
   mutate(SpeciesLong = ifelse(is.na(SpeciesLong), "All", SpeciesLong)) %>% 
   reshape2::dcast(trait + SpeciesLong ~ term, value.var = "estimate") %>%
@@ -212,7 +219,7 @@ lapply(fits, function(fit)
 ## Check
 
 ```{r traces}
-mcmc_trace(fits$Ptlp, pars = c("alpha_s[1]", "betaDBH[1]", "betaTWI", "gammaTWI[1]", "sigma"))  
+mcmc_trace(fits$Ptlp, pars = c("alpha_s[1]", "betaDBH[1]", "betaTWI", "gammaTWI[1]", "sigma"))
 ```
 
 ```{r ppcdens}
@@ -220,5 +227,5 @@ cowplot::plot_grid(
   plotlist = lapply(names(fits), function(t)
     ppc_dens_overlay(y = mdata[[t]]$Y, as.matrix(fits[[t]], pars = "Yp")[1:100, ])),
   labels = names(fits)
-)  
+)   
 ```
