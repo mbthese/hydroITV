@@ -18,6 +18,10 @@ fig:indBoxplotsDate
 fig:indDBH
 fig:indTWI
 fig:indTWIsp
+tab:cvsptab
+fig:cvspfig
+tab:cvglobaltab
+fig:cvglobalfig
 fig:modelIntercepts
 fig:modelDBH
 fig:modelTWI
@@ -39,11 +43,14 @@ maps
 extra-fth
 extra-post---fth
 leaf-variation
-variance-partitionning
+traits-variation-variance-partitionning
 all
 measurement-error
 leaf-variation-1
 individual-variation
+traits-variation-coefficient-of-variation
+cv-per-species
+global-cv
 traits-covariation
 ontogeny-and-topography-effects
 intercept
@@ -57,3 +64,5 @@ lobo2018
 westerband2021
 martinez-vilalta2009
 rosas2019
+results
+discussion
