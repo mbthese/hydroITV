@@ -17,7 +17,7 @@ log_abs_trans <- function() {
 }
 ```
 
-# Variance partitionning
+# Traits variation: variance partitionning
 
 Subsequent analysis aimed to assess variations in leaf traits among species, individuals, leaves and measurements.
 
