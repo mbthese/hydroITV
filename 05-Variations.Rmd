@@ -212,13 +212,12 @@ cv_long %>%
 
 **Marion:**
 
-All traits exhibited considerable intraspecific variation, with CVs ranging from approximately 16–85% (Fig. \@ref(fig:cvspfig)).
-LSWC and $-\pi_{TLP}$, exhibited low variation at 22 % and 16%. 
-LT, CC and LDMC had intermediate variation, both 30 % for LT and CC and 41 % for LDMC.
-All other traits (LA, SLA, $\frac{Fv}{Fm}$ and $g_{min}$) varied with CVs ≥ 70%. 
+* All traits exhibited considerable intraspecific variation, with CVs ranging from approximately 4–39% (Fig. \@ref(fig:cvspfig)). LT, CC and SLA exhibited low variation at 4 %, 5% and 8 % respectively. LA, $P_{tlp}$, LSWC had intermediate variation, from 13-16 %. LDMC and $g_{min}$) varied with the highest CVs ≥ 30 %. 
 
-SLA exhibited the highest intraspecific variation (CV = 85%), 
-with SLA values ranging from 11.01008 to 949.3594 $m^2.kg^{-1}$.
+* We have two species with composed leaves: Tachgali melinonii and Jacarando copaia. Throughout all the traits, these two species expressed high (sometimes the highest) CV, meaning the highest dispersion of individuals, highest ITV for these species. We must be careful with this interpretation as we measured the leaflets and not the leaves. But leaflets may be more plastic than leaves. 
+
+* we must be aware of estimation biais: CV4 may overestimate ITV when the distribution of raw or log-transformed trait data is close to the normal distribution [@Yang 2020].
+
 
 ## Discussion
 
