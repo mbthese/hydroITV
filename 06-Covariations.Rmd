@@ -76,7 +76,13 @@ Specifically, we investigated individual traits co-variation at several taxonomi
 
 ## Methods
 
-*To describe.*
+We performed a Principal Component Analysis to investigate the multivariate trait covariation. 
+
+Using the among PCA, a "classic" PCA, we aim to evaluate trait syndroms characterizing species strategies. 
+
+For the within PCA, all the gravity centers are placed back at the origin and the individuals are being represented with a maximal variance. We eliminate the species effect to study the individual strategies. 
+
+The among-PCA searches the axes at the center of gravity and emphasizes on the differences between groups (here, species) whereas the within-PCA searches for the shared-axes in each group. 
 
 ## Results
 
