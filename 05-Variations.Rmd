@@ -127,7 +127,16 @@ Subsequent analysis aimed to assess variations in leaf traits among species, ind
 
 ### Variance partitionning
 
-*To describe.*
+Variance partitioning was obtained using linear mixed models for every trait and each pairs of levels studied. We aim to understand how much of the leaf trait variation is due to :   
+- measurement error, 
+- within-tree leaf variation, 
+- leaf sample repetitions among trees, 
+- intra- and inter-specific variation.
+
+*example for intra- and inter-specific variation*: We estimated the among-species variance in our trait of interest from the comparison of the observed variance within and between species. In this case, *Tree* is chosen to be a fixed effect and *Species* as random. 
+
+model <- lme(trait~1, random = ~1|Species, data)
+
 
 ### Coefficient of variation (CV)
 
