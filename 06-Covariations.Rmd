@@ -133,6 +133,21 @@ dplyr::select(ft, -Genus, -Species, -Tree, -SpeciesLong, -DBH, -TWI, -FvFm, -RWC
 * The second axis seems to oppose $\pi_{TLP}$ to LA among and within species but less visible among than within species, congruent with @Marechaux2020a but opposed to the result of @Guillemot2022, and might be related to the stature-recruitment spectrum described in @Guillemot2022
 * *I'm uncertain for the moment on how to interpret LSWC.*
 
+
+**Marion** 
+* Among-PCA: We recognize the classic LES opposing SLA with LDMC in the first axis while Ptlp drives the second axis with LSWC. 
+
+* gmin contributes to both axis. A low gmin can help maintain leaf hydration status (reduced leaks). Higher gmin were observed in fast-growing species which were associated with the investment in small and numerous stomata, which allowed higher carbon assimilation rates but also increased water leaks, with negative impacts on leaf survival under
+drought (Machado et al 2021)
+
+* Ptlp is linked with LA: smaller leaves have a more negative πtlp (higher drought tolerance). 
+
+* LSWC: According to our analysis, high LSWC is linked to more negative Ptlp. The absolute amount of stored water would contribute to greater drought tolerance, more backed-up water? A lower gmin would be easier to maintain with less stored water.
+
+* we must be careful when interpreting trait co-variation using the among-pca as a general rule of behavior for all individuals within each species when we clearly see another use of the traits for each individual (within PCA). *ex: Protium stevensonii species tend to be more conservative-type species (higer LDMC in the among-PCA) but some individuals of the P. stevensonii explore a different strategy (within-PCA).
+
+ 
+
 ## Discussion
 
 ## SIs
