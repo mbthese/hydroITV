@@ -133,9 +133,9 @@ Variance partitioning was obtained using linear mixed models for every trait and
 - leaf sample repetitions among trees, 
 - intra- and inter-specific variation.
 
-*example for intra- and inter-specific variation*: We estimated the among-species variance in our trait of interest from the comparison of the observed variance within and between species. In this case, *Tree* is chosen to be a fixed effect and *Species* as random. 
+*example for intra- and inter-specific variation*: We estimated the among-species variance in our trait of interest from the comparison of the observed variance within and between species. In this case, *Tree* and *Species* are considered random effects but tree is nested in species. 
 
-model <- lme(trait~1, random = ~1|Species, data)
+model <- lme(trait~1, random = ~1|Species/Tree, data)
 
 
 ### Coefficient of variation (CV)
