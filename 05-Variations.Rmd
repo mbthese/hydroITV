@@ -1,3 +1,4 @@
+
 ```{r setupvar, include=FALSE}
 rm(list = ls()) ; invisible(gc()) ; set.seed(43) 
 library(knitr)
@@ -118,6 +119,8 @@ vars <- bind_rows(vars_meas, vars_leaf, vars_tree) %>%
 
 rm(vars_meas, vars_leaf, vars_tree) 
 ```
+
+# (PART) Methodology {-}
 
 # Traits variation
 

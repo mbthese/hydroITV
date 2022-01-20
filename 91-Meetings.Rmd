@@ -1,0 +1,22 @@
+# Meetings
+
+## 20/01/22 - Ecophysio+
+
+**Sylvain's notes**:
+
+* Gmax in PCA? (to be discussed in a future meeting with Daniela, Marion, Géraldine, and Sylvain)
+* Hydraulic orthogonal to LES for Daniela's interspecifc results too
+* Explore virtually and with data the methodology for the PCA too with bootstrap to make a paper focused on methodology
+* Traits are hydric but not hydraulic (compared to wood structure for isntance)
+* We do not overlap Camille and Sebastien's work
+* Ecological interpretations of the results, especially regarding PCAs, could be excluded from a first methodological paper but included in the paper of Daneila on covariations at the community level to give insights into the within species variation
+* The Ptlp-LSWC link is related to an avoidance strategy
+* *followings are post-meeting*
+* We should take time to think about the split of results across two papers (not feel forced by the meeting)
+* In case reviewers ask for more data (especially at the sample or measurement level) we can always justify the impossibility because of the seasonality and climate standardization referring to Schmitt *et al.* (2022)
+<!-- * Clarified that we wanted the papers to be written by the two of us alone -->
+* Need to do a meeting with Daniela, Marion, Géraldine, and Sylvain
+* Regarding PCAs with field data in the potential methodology manuscript:
+    * include in methodology paper
+    * describe the result as potential spectrum without details in the results section
+    * avoid to discuss it in discussion an keep it for Dani's "ecology" paper

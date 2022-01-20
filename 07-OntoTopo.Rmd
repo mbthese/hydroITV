@@ -75,6 +75,8 @@ species <- ft %>%
 load("models/m1.Rdata")  
 ```
 
+# (PART) Ecology {-}
+
 # Ontogeny and topography effects
 
 The subsequent analysis aimed to explore variations in leaf traits according to 3 descriptors: (i) tree ontogeny, (ii) abiotic environment, and (iii) phylogeny through taxonomic levels. 

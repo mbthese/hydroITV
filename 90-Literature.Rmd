@@ -1,3 +1,5 @@
+# (PART) Appendix {-}
+
 # Literature
 
 ## @Hajek2016
@@ -30,6 +32,15 @@
 * Within species water explained Hv and Ptlp
 
 ## @Kannenberg2021
+
+* popular but controversial concept of a continuum from isohydry to anisohydry.
+* The ‘isohydry– anisohydry’ framework, which classifies plant species based on the sensitivity of water potential as water availability declines, is an especially popular approach for describing a water-use strategy
+* there may be intraspecific variability in water- use strategies due to macro- scale couplings between soil moisture and atmospheric drivers, or as a function of site- to- site differences in rooting depth caused by subsurface variability
+* research on plant water- use strategies should differentiate between water flow and water status regulation
+* Trait means from a database likely inadequately represent the complex realities of plant water use, especially when such means obscure important spatio- temporal and intraspecific variability
+* The idea that there is significant plasticity in plant water-use strategy metrics is gaining empirical support.
+* low intraspecific variability are necessary to apply these metrics at broad scales
+*
 
 ## @Guillemot2022
 

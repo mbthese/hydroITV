@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>hydroITV</title>
+  <title>Chapter 1 Virtual data | hydroITV</title>
   <meta name="description" content="Hydraulic trait inter- versus intra-specific local variability." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="hydroITV" />
+  <meta property="og:title" content="Chapter 1 Virtual data | hydroITV" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="hydroITV" />
+  <meta name="twitter:title" content="Chapter 1 Virtual data | hydroITV" />
   
   <meta name="twitter:description" content="Hydraulic trait inter- versus intra-specific local variability." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="introduction.html"/>
+<link rel="prev" href="introduction.html"/>
+<link rel="next" href="traits.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -246,27 +246,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="header">
-<h1 class="title">hydroITV</h1>
-<h2 class="subtitle"><em>Hydraulic trait inter- versus intra-specific local variability.</em></h2>
-<p class="author"><em>Sylvain Schmitt</em></p>
-<p class="date"><em>2022-01-20</em></p>
+<div id="virtual-data" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Virtual data</h1>
+<p>This chapter demonstrates the importance of a balanced design in the distribution of variance, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs. It also virtually explores the evaluation of leaf and measurement variation.</p>
+<div id="simulation" class="section level2">
+<h2><span class="header-section-number">1.1</span> Simulation</h2>
+<p>We simulated <span class="math inline">\(T=1\)</span> trait
+for <span class="math inline">\(S=1000\)</span> species with an among-species trait variance <span class="math inline">\(\sigma_{S}=1\)</span>
+including each <span class="math inline">\(S=1000\)</span> individuals per species with an within-species trait variance <span class="math inline">\(\sigma_{I}=1\)</span>.</p>
 </div>
-<div id="preface" class="section level1 unnumbered">
-<h1>Preface</h1>
-<p>This study aims to evaluate the inter- and intra-specific variation of hydraulic and leaf traits in collaboration with Marion Boisseaux. We evaluated the variation of the traits between measurements within leaves, between leaves within trees, in order to better study the inter- and intra-specific variation. We used a balanced and robust sampling of 10 species x 10 individuals per species representing 100 individuals. We first want to explore trait variation in covariation within each species and between species. If the results are convincing, we may want to further investigate variation within and between species with topography controlling diameter variation. Overall, our study can provide a first robust assessment of variation in hydraulic traits within and between species for tropical tree species, with possible underlying factors for this variation.</p>
-<p>Have a nice reading.</p>
-<div align="right">
-<p><em>Sylvain</em></p>
+<div id="species-and-individual-sampling" class="section level2">
+<h2><span class="header-section-number">1.2</span> Species and individual sampling</h2>
+<p>We tested the effect of 3 sampling strategies on variance partitioning (Fig. <a href="#fig:traitdist"><strong>??</strong></a>):</p>
+<ol style="list-style-type: decimal">
+<li>sampling of 100 individuals unbalanced in species (25 species with 4 individuals)</li>
+<li>sampling of 100 individuals unbalanced in individuals (4 species with 25 individuals)</li>
+<li>sampling of 100 individuals unbalanced in species and individual (10 species with 10 individuals)</li>
+</ol>
+</div>
+<div id="trait-variation" class="section level2">
+<h2><span class="header-section-number">1.3</span> Trait variation</h2>
+<div id="coefficients-of-variation-cv" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Coefficients of variation (CV)</h3>
+</div>
+<div id="variance-partitionning-lmm" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> Variance partitionning (LMM)</h3>
+<!-- The results demonstrate the need to use a balanced sampling design to properly assess and compare functional variation between and within species (Fig. \@ref(fig:varpart)). -->
+</div>
+</div>
+<div id="trait-co-variation" class="section level2">
+<h2><span class="header-section-number">1.4</span> Trait co-variation</h2>
+<div id="among-species-pca" class="section level3">
+<h3><span class="header-section-number">1.4.1</span> Among species (PCA)</h3>
+</div>
+<div id="within-species-wpca" class="section level3">
+<h3><span class="header-section-number">1.4.2</span> Within species (wPCA)</h3>
 
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="introduction.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="traits.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

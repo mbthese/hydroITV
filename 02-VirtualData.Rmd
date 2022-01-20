@@ -1,0 +1,113 @@
+```{r setupvirtualdata, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(kableExtra)
+if(knitr:::is_html_output()) options(knitr.table.format = "html") 
+if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
+library(tidyverse)
+theme_set(bayesplot::theme_default())
+knitr::opts_chunk$set(
+	echo = F,
+	fig.height = 6,
+	fig.width = 8,
+	message = FALSE,
+	warning = FALSE,
+	cache = TRUE,
+	cache.lazy = F
+)
+```
+
+# (PART) Material {-}
+
+# Virtual data
+
+This chapter demonstrates the importance of a balanced design in the distribution of variance, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs. It also virtually explores the evaluation of leaf and measurement variation.
+
+## Simulation
+
+We simulated $T=1$ trait 
+for $S=1000$ species with an among-species trait variance $\sigma_{S}=1$
+including each $S=1000$ individuals per species with an within-species trait variance $\sigma_{I}=1$.
+
+```{r virtualdata}
+S <- 1000
+I <- 1000
+sigma_s <- 1
+sigma_i <- 1
+ft <- data.frame(species = 1:S, trait = rnorm(S, 0, sigma_s)) %>% 
+  mutate(trait = list(data.frame(individual = 1:I, trait = rnorm(I, trait, sigma_i)))) %>% 
+  unnest(trait) %>% 
+  mutate_at(c("species", "individual"), as.factor)
+```
+
+## Species and individual sampling
+
+```{r virtualsampling}
+sampling <- function(data, species, individuals)
+  data %>% 
+  filter(species %in% sample(1:max(as.numeric(data$species)), 5)) %>% 
+  group_by(species) %>% 
+  sample_n(individuals) %>% 
+  ungroup()
+```
+
+We tested the effect of 3 sampling strategies on variance partitioning (Fig. \@ref(fig:traitdist)):
+
+1. sampling of 100 individuals unbalanced in species (25 species with 4 individuals)
+1. sampling of 100 individuals unbalanced in individuals (4 species with 25 individuals)
+1. sampling of 100 individuals unbalanced in species and individual (10 species with 10 individuals)
+
+```{r virtualtraitdist, fig.cap="Trait distribution per species with balanced and unbalanced sampling design.", eval=F}
+list("full" = ft, 
+     "unbalanced species" = sampling(ft, 25, 4), 
+     "unbalanced individuals" = sampling(ft, 4, 25), 
+     "balanced"  = sampling(ft, 10, 10)) %>% 
+  bind_rows(.id = "sampling") %>% 
+  mutate(sampling = factor(sampling, levels = c("full", "unbalanced species",
+                                                "unbalanced individuals", "balanced"))) %>% 
+  ggplot(aes(trait, group = as.factor(species))) +
+  geom_density(alpha = 0.3) +
+  facet_wrap(~ sampling, scales = "free")
+```
+
+## Trait variation
+
+### Coefficients of variation (CV)
+
+### Variance partitionning (LMM)
+
+```{r varpart, fig.cap="Effect of the sampling strategy on variance partitioning. Variance partitioning was obtained using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.", eval=FALSE}
+varcols <- c(species = "red", individual = "lightgreen", 
+             sample = "lightblue", repetition = "orange", residual = "grey")
+fun <- function(data){
+  var <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species/individual, data), 1)
+  return(data.frame(level = names(var), variance = as.vector(var)))
+}
+varpart <-  data %>% 
+  filter(sampling != "full") %>% 
+  group_by(sampling) %>% 
+  do(var = fun(.)) %>% 
+  unnest(var) %>% 
+  mutate(level = recode(level, "Within" = "residual")) %>% 
+  mutate(level = factor(level, levels = c("species", "individual", "residual")))
+
+  
+g <- ggplot(filter(varpart, sampling != "full"),
+       aes(x = sampling, y = variance, fill = level)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_hline(aes(yintercept = 0.5), linetype = "dashed") +
+  scale_fill_manual(expression(sigma^2),
+                    values = unname(varcols[c("species", "individual", "residual")])) +
+  ylab("Percentage of variance") + xlab("Sampling strategy")
+# ggsave(filename = "~/Téléchargements/Fig1.png", plot = g, bg = "white", height = 4, width = 6)
+g
+```
+
+<!-- The results demonstrate the need to use a balanced sampling design to properly assess and compare functional variation between and within species (Fig. \@ref(fig:varpart)). -->
+
+## Trait co-variation
+
+### Among species (PCA)
+
+### Within species (wPCA)
+
