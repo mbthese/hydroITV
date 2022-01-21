@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Introduction | hydroITV</title>
+  <title>Chapter 3 Virtual experiment | hydroITV</title>
   <meta name="description" content="Hydraulic trait inter- versus intra-specific local variability." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Introduction | hydroITV" />
+  <meta property="og:title" content="Chapter 3 Virtual experiment | hydroITV" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Introduction | hydroITV" />
+  <meta name="twitter:title" content="Chapter 3 Virtual experiment | hydroITV" />
   
   <meta name="twitter:description" content="Hydraulic trait inter- versus intra-specific local variability." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="traits.html"/>
+<link rel="prev" href="field-data.html"/>
+<link rel="next" href="traits-variation.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -243,27 +243,144 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="introduction" class="section level1 unnumbered">
-<h1>Introduction</h1>
-<p>This study aims to evaluate the inter- and intra-specific variation of hydraulic and leaf traits in collaboration with Marion Boisseaux.
-We evaluated the variation of the traits between measurements within leaves, between leaves within trees, in order to better study the inter- and intra-specific variation.
-We used a balanced and robust sampling of 10 species x 10 individuals per species representing 100 individuals.
-We first want to explore trait variation in covariation within each species and between species.
-If the results are convincing, we may want to further investigate variation within and between species with topography controlling diameter variation.
-Overall, our study can provide a first robust assessment of variation in hydraulic traits within and between species for tropical tree species,
-with possible underlying factors for this variation.</p>
-
+<div id="virtual-experiment" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Virtual experiment</h1>
+<p>This chapter explore the sampling design effect on the assessment of trait variation and co-variations.
+In particular, we explore the importance of a balanced design, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs.</p>
+<div id="material" class="section level2">
+<h2><span class="header-section-number">3.1</span> Material</h2>
+<p>We first simulated a trait for <span class="math inline">\(S=100\)</span> species with mean trait values sampled in a normal law centered on 10
+with an among-species trait variance <span class="math inline">\(\sigma_{S}=1\)</span>,
+including each <span class="math inline">\(I=100\)</span> individuals per species with trait values sampled in a normal law centered on species mean
+with a within-species trait variance <span class="math inline">\(\sigma_{I}=1\)</span>.</p>
+<p>We then simulated <span class="math inline">\(T=8\)</span> traits
+for <span class="math inline">\(S=100\)</span> species with mean trait values sampled in a multinormal law centered on 10
+with an among-species trait variance factor of <span class="math inline">\(\sigma_{S}=10\)</span>,
+including each <span class="math inline">\(I=100\)</span> individuals per species with trait values sampled in a multinormal law centered on species mean
+with a within-species trait variance factor <span class="math inline">\(\sigma_{I}=1\)</span>.
+The covariance matrix was generated using the <code>rcorrmatrix</code> function from package <code>clusterGeneration</code>.</p>
+<div class="figure"><span id="fig:virtualdatafig"></span>
+<img src="hydroITV_files/figure-html/virtualdatafig-1.png" alt="Trait distribution in the virtual community for univariate virtual data." width="768" />
+<p class="caption">
+Figure 3.1: Trait distribution in the virtual community for univariate virtual data.
+</p>
+</div>
+<div class="figure"><span id="fig:corvirtualdata2"></span>
+<img src="hydroITV_files/figure-html/corvirtualdata2-1.png" alt="Correlations among simulated traits for multivariate virtual data." width="768" />
+<p class="caption">
+Figure 3.2: Correlations among simulated traits for multivariate virtual data.
+</p>
+</div>
+<div class="figure"><span id="fig:pcavirtualdata2"></span>
+<img src="hydroITV_files/figure-html/pcavirtualdata2-1.png" alt="Among-species principal component analysis (PCA) with simulated traits for multivariate virtual data." width="768" />
+<p class="caption">
+Figure 3.3: Among-species principal component analysis (PCA) with simulated traits for multivariate virtual data.
+</p>
+</div>
+<div class="figure"><span id="fig:wpcavirtualdata2"></span>
+<img src="hydroITV_files/figure-html/wpcavirtualdata2-1.png" alt="Within-species principal component analysis (wPCA) with simulated traits for multivariate virtual data." width="768" />
+<p class="caption">
+Figure 3.4: Within-species principal component analysis (wPCA) with simulated traits for multivariate virtual data.
+</p>
+</div>
+</div>
+<div id="methods" class="section level2">
+<h2><span class="header-section-number">3.2</span> Methods</h2>
+<p>We repeated 100 times 3 sampling strategies on virtual data (e.g. for two repetitions in Fig. <a href="virtual-experiment.html#fig:virtualtraitdist">3.5</a>):</p>
+<ul>
+<li>sampling of 100 individuals unbalanced in species (25 species with 4 individuals)</li>
+<li>sampling of 100 individuals unbalanced in individuals (4 species with 25 individuals)</li>
+<li>sampling of 100 individuals balanced in species and individual (10 species with 10 individuals)</li>
+</ul>
+<p>We tested 4 metrics:</p>
+<ul>
+<li>The coefficient of variation <span class="math inline">\(CV_4\)</span></li>
+<li>The variance partitioning using linear mixed models</li>
+<li>Other traits correlations with T1</li>
+<li>Other traits within-species correlations with T1 when centering each trait per species</li>
+</ul>
+<div class="figure"><span id="fig:virtualtraitdist"></span>
+<img src="hydroITV_files/figure-html/virtualtraitdist-1.png" alt="Trait distribution per species after sampling with balanced and unbalanced sampling designs with two repetitions." width="768" />
+<p class="caption">
+Figure 3.5: Trait distribution per species after sampling with balanced and unbalanced sampling designs with two repetitions.
+</p>
+</div>
+</div>
+<div id="results" class="section level2">
+<h2><span class="header-section-number">3.3</span> Results</h2>
+<div id="trait-variation" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Trait variation</h3>
+<p>Both the coefficient of variation and the variance partitioning are best estimated with unbalanced sampling favoring individuals
+(boxplots medians in Fig. <a href="virtual-experiment.html#fig:cv">3.6</a> and Fig. <a href="virtual-experiment.html#fig:varpart">3.7</a>),
+but balanced sampling is very close and has less uncertainties (boxplots variances in Fig. <a href="virtual-experiment.html#fig:cv">3.6</a> and Fig. <a href="virtual-experiment.html#fig:varpart">3.7</a>).
+Unbalanced sampling favoring species bias the coefficient of variation and the variance partitioning toward lower values of intraspecific variation.
+Consequently balanced sampling seems the best strategy to assess trait variation in the community
+with both coefficient of variation and variance partitioning using linear mixed models.</p>
+<div class="figure"><span id="fig:cv"></span>
+<img src="hydroITV_files/figure-html/cv-1.png" alt="Effect of the sampling strategy on the coefficient of variation. Coefficients of variation were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
+<p class="caption">
+Figure 3.6: Effect of the sampling strategy on the coefficient of variation. Coefficients of variation were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+</p>
+</div>
+<div class="figure"><span id="fig:varpart"></span>
+<img src="hydroITV_files/figure-html/varpart-1.png" alt="Effect of the sampling strategy on variance partitioning. Variance partitionings were obtained 100 times using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
+<p class="caption">
+Figure 3.7: Effect of the sampling strategy on variance partitioning. Variance partitionings were obtained 100 times using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+</p>
+</div>
+</div>
+<div id="trait-co-variation" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Trait co-variation</h3>
+<p>Unbalanced sampling favoring species better estimate among-species correlations for traits (Fig. <a href="virtual-experiment.html#fig:spcorvirtual">3.8</a>)
+and unbalanced sampling favoring individuals better estimate within-species correlations for traits (Fig. <a href="virtual-experiment.html#fig:indcorvirtual">3.9</a>),
+but balanced sampling may have good estimations at both level to jointly estimate the two
+(e.g. T4 correlations in Fig. <a href="virtual-experiment.html#fig:spcorvirtual">3.8</a> and Fig. <a href="virtual-experiment.html#fig:indcorvirtual">3.9</a>).</p>
+<div class="figure"><span id="fig:spcorvirtual"></span>
+<img src="hydroITV_files/figure-html/spcorvirtual-1.png" alt="Effect of the sampling strategy on other traits correlations with T1. Correlations with T1 were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
+<p class="caption">
+Figure 3.8: Effect of the sampling strategy on other traits correlations with T1. Correlations with T1 were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+</p>
+</div>
+<div class="figure"><span id="fig:indcorvirtual"></span>
+<img src="hydroITV_files/figure-html/indcorvirtual-1.png" alt="Effect of the sampling strategy on other traits correlations with T1 when centering each trait per species. Correlations with T1 were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
+<p class="caption">
+Figure 3.9: Effect of the sampling strategy on other traits correlations with T1 when centering each trait per species. Correlations with T1 were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+</p>
+</div>
+</div>
+</div>
+<div id="discussion" class="section level2">
+<h2><span class="header-section-number">3.4</span> Discussion</h2>
+<p>Balanced sampling is the best strategy to assess trait variation in the community
+with both coefficient of variation and variance partitioning using linear mixed models (Fig. <a href="virtual-experiment.html#fig:cv">3.6</a> and Fig. <a href="virtual-experiment.html#fig:varpart">3.7</a>).
+But unbalanced sampling favoring the studied level is better suited to assess traits covariations in the community,
+despite interesting results of balanced sampling for a joint estimate of correlations at species and individuals levels
+(Fig. <a href="virtual-experiment.html#fig:spcorvirtual">3.8</a> and Fig. <a href="virtual-experiment.html#fig:indcorvirtual">3.9</a>).</p>
+</div>
+<div id="si" class="section level2">
+<h2><span class="header-section-number">3.5</span> SI</h2>
+<div class="figure"><span id="fig:pcavirtual1"></span>
+<img src="hydroITV_files/figure-html/pcavirtual1-1.png" alt="Effect of the sampling strategy on principal component analysis with T1. Principal component analysis were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
+<p class="caption">
+Figure 3.10: Effect of the sampling strategy on principal component analysis with T1. Principal component analysis were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+</p>
+</div>
+<div class="figure"><span id="fig:pcavirtual2"></span>
+<img src="hydroITV_files/figure-html/pcavirtual2-1.png" alt="Effect of the sampling strategy on principal component analysis correlations with T1. Principal component analysis were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
+<p class="caption">
+Figure 3.11: Effect of the sampling strategy on principal component analysis correlations with T1. Principal component analysis were obtained 100 times for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+</p>
 </div>
 
-
-
+</div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="traits.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="field-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="traits-variation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

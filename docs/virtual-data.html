@@ -51,81 +51,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
-<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-1.3.1/leaflet.js"></script>
-<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
-<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
-<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
 <script async defer src="https://hypothes.is/embed.js"></script>
 
 
-<style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
 
 <link rel="stylesheet" href="html/style.css" type="text/css" />
 </head>
@@ -149,13 +77,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="virtual-data.html"><a href="virtual-data.html"><i class="fa fa-check"></i><b>1</b> Virtual data</a><ul>
 <li class="chapter" data-level="1.1" data-path="virtual-data.html"><a href="virtual-data.html#simulation"><i class="fa fa-check"></i><b>1.1</b> Simulation</a></li>
 <li class="chapter" data-level="1.2" data-path="virtual-data.html"><a href="virtual-data.html#species-and-individual-sampling"><i class="fa fa-check"></i><b>1.2</b> Species and individual sampling</a></li>
-<li class="chapter" data-level="1.3" data-path="virtual-data.html"><a href="virtual-data.html#trait-variation"><i class="fa fa-check"></i><b>1.3</b> Trait variation</a><ul>
-<li class="chapter" data-level="1.3.1" data-path="virtual-data.html"><a href="virtual-data.html#coefficients-of-variation-cv"><i class="fa fa-check"></i><b>1.3.1</b> Coefficients of variation (CV)</a></li>
-<li class="chapter" data-level="1.3.2" data-path="virtual-data.html"><a href="virtual-data.html#variance-partitionning-lmm"><i class="fa fa-check"></i><b>1.3.2</b> Variance partitionning (LMM)</a></li>
-</ul></li>
-<li class="chapter" data-level="1.4" data-path="virtual-data.html"><a href="virtual-data.html#trait-co-variation"><i class="fa fa-check"></i><b>1.4</b> Trait co-variation</a></li>
-<li class="chapter" data-level="1.5" data-path="virtual-data.html"><a href="virtual-data.html#among-species-correlations"><i class="fa fa-check"></i><b>1.5</b> Among-species correlations</a><ul>
-<li class="chapter" data-level="1.5.1" data-path="virtual-data.html"><a href="virtual-data.html#within-species-correlations"><i class="fa fa-check"></i><b>1.5.1</b> Within-species correlations</a></li>
+<li class="chapter" data-level="1.3" data-path="virtual-data.html"><a href="virtual-data.html#trait-variation"><i class="fa fa-check"></i><b>1.3</b> Trait variation</a></li>
+<li class="chapter" data-level="1.4" data-path="virtual-data.html"><a href="virtual-data.html#trait-co-variation"><i class="fa fa-check"></i><b>1.4</b> Trait co-variation</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="virtual-data.html"><a href="virtual-data.html#among-species-correlations"><i class="fa fa-check"></i><b>1.4.1</b> Among-species correlations</a></li>
+<li class="chapter" data-level="1.4.2" data-path="virtual-data.html"><a href="virtual-data.html#within-species-correlations"><i class="fa fa-check"></i><b>1.4.2</b> Within-species correlations</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="traits.html"><a href="traits.html"><i class="fa fa-check"></i><b>2</b> Traits</a><ul>
@@ -247,69 +172,89 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 </div>
 <div id="virtual-data" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Virtual data</h1>
-<p>This chapter demonstrates the importance of a balanced design in the distribution of variance, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs. It also virtually explores the evaluation of leaf and measurement variation.</p>
+<p>This chapter explore the sampling design effect on the assessment of trait variation and co-variations.
+In particular, we explore the importance of a balanced design, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs.</p>
 <div id="simulation" class="section level2">
 <h2><span class="header-section-number">1.1</span> Simulation</h2>
-<p>We simulated thus <span class="math inline">\(T=8\)</span> trait
-for <span class="math inline">\(S=100\)</span> species with an among-species trait variance <span class="math inline">\(\sigma_{S}=1\)</span>
-including each <span class="math inline">\(S=100\)</span> individuals per species with an within-species trait variance <span class="math inline">\(\sigma_{I}=1\)</span>.</p>
+<p>We first simulated a trait for <span class="math inline">\(S=100\)</span> species with mean trait values sampled in a normal law centered on 10
+with an among-species trait variance <span class="math inline">\(\sigma_{S}=1\)</span>,
+including each <span class="math inline">\(I=100\)</span> individuals per species with trait values sampled in a normal law centered on species mean
+with a within-species trait variance <span class="math inline">\(\sigma_{I}=1\)</span>.</p>
+<p>We then simulated <span class="math inline">\(T=8\)</span> traits
+for <span class="math inline">\(S=100\)</span> species with mean trait values sampled in a multinormal law centered on 10
+with an among-species trait variance factor of <span class="math inline">\(\sigma_{S}=10\)</span>,
+including each <span class="math inline">\(I=100\)</span> individuals per species with trait values sampled in a multinormal law centered on species mean
+with a within-species trait variance factor <span class="math inline">\(\sigma_{I}=1\)</span>.
+The covariance matrix was generated using the <code>rcorrmatrix</code> function from package <code>clusterGeneration</code>.</p>
 <div class="figure"><span id="fig:virtualdatafig"></span>
-<img src="hydroITV_files/figure-html/virtualdatafig-1.png" alt="Trait distribution in the virtual community." width="768" />
+<img src="hydroITV_files/figure-html/virtualdatafig-1.png" alt="Trait distribution in the virtual community for univariate virtual data." width="768" />
 <p class="caption">
-Figure 1.1: Trait distribution in the virtual community.
+Figure 1.1: Trait distribution in the virtual community for univariate virtual data.
 </p>
 </div>
 <div class="figure"><span id="fig:corvirtualdata2"></span>
-<img src="hydroITV_files/figure-html/corvirtualdata2-1.png" alt="Correlations among simulated traits." width="768" />
+<img src="hydroITV_files/figure-html/corvirtualdata2-1.png" alt="Correlations among simulated traits for multivariate virtual data." width="768" />
 <p class="caption">
-Figure 1.2: Correlations among simulated traits.
+Figure 1.2: Correlations among simulated traits for multivariate virtual data.
+</p>
+</div>
+<div class="figure"><span id="fig:pcavirtualdata2"></span>
+<img src="hydroITV_files/figure-html/pcavirtualdata2-1.png" alt="Among-species principal component analysis (PCA) with simulated traits for multivariate virtual data." width="768" />
+<p class="caption">
+Figure 1.3: Among-species principal component analysis (PCA) with simulated traits for multivariate virtual data.
+</p>
+</div>
+<div class="figure"><span id="fig:wpcavirtualdata2"></span>
+<img src="hydroITV_files/figure-html/wpcavirtualdata2-1.png" alt="Within-species principal component analysis (wPCA) with simulated traits for multivariate virtual data." width="768" />
+<p class="caption">
+Figure 1.4: Within-species principal component analysis (wPCA) with simulated traits for multivariate virtual data.
 </p>
 </div>
 </div>
 <div id="species-and-individual-sampling" class="section level2">
 <h2><span class="header-section-number">1.2</span> Species and individual sampling</h2>
-<p>We tested the effect of 3 sampling strategies on variance partitioning (Fig. <a href="#fig:traitdist"><strong>??</strong></a>):</p>
+<p>We tested the effect of 3 sampling strategies on variance partitioning (e.g. for two repetitions in Fig. <a href="virtual-data.html#fig:virtualtraitdist">1.5</a>):</p>
 <ol style="list-style-type: decimal">
 <li>sampling of 100 individuals unbalanced in species (25 species with 4 individuals)</li>
 <li>sampling of 100 individuals unbalanced in individuals (4 species with 25 individuals)</li>
 <li>sampling of 100 individuals unbalanced in species and individual (10 species with 10 individuals)</li>
 </ol>
 <div class="figure"><span id="fig:virtualtraitdist"></span>
-<img src="hydroITV_files/figure-html/virtualtraitdist-1.png" alt="Trait distribution per species with balanced and unbalanced sampling design." width="768" />
+<img src="hydroITV_files/figure-html/virtualtraitdist-1.png" alt="Trait distribution per species after sampling with balanced and unbalanced sampling designs with two repetitions." width="768" />
 <p class="caption">
-Figure 1.3: Trait distribution per species with balanced and unbalanced sampling design.
+Figure 1.5: Trait distribution per species after sampling with balanced and unbalanced sampling designs with two repetitions.
 </p>
 </div>
 </div>
 <div id="trait-variation" class="section level2">
 <h2><span class="header-section-number">1.3</span> Trait variation</h2>
-<div id="coefficients-of-variation-cv" class="section level3">
-<h3><span class="header-section-number">1.3.1</span> Coefficients of variation (CV)</h3>
+<p>Both the coefficient of variation and the variance partitioning are best estimated with unbalanced sampling favoring individuals
+(boxplots medians in Fig. <a href="virtual-data.html#fig:cv">1.6</a> and Fig. <a href="virtual-data.html#fig:varpart">1.7</a>),
+but balanced sampling is very close and has less uncertainties (boxplots variances in Fig. <a href="virtual-data.html#fig:cv">1.6</a> and Fig. <a href="virtual-data.html#fig:varpart">1.7</a>).
+Unbalanced sampling favoring species bias the coefficient of variation and the variance partitioning toward lower values of intraspecific variation.
+Consequently balanced sampling seems the best strategy to assess trait variation in the community
+with both coefficient of variation and variance partitioning using linear mixed models.</p>
 <div class="figure"><span id="fig:cv"></span>
 <img src="hydroITV_files/figure-html/cv-1.png" alt="Effect of the sampling strategy on the coefficient of variation.  Coefficients of variation were obtained for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
 <p class="caption">
-Figure 1.4: Effect of the sampling strategy on the coefficient of variation. Coefficients of variation were obtained for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+Figure 1.6: Effect of the sampling strategy on the coefficient of variation. Coefficients of variation were obtained for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
 </p>
 </div>
-</div>
-<div id="variance-partitionning-lmm" class="section level3">
-<h3><span class="header-section-number">1.3.2</span> Variance partitionning (LMM)</h3>
 <div class="figure"><span id="fig:varpart"></span>
 <img src="hydroITV_files/figure-html/varpart-1.png" alt="Effect of the sampling strategy on variance partitioning. Variance partitioning was obtained using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
 <p class="caption">
-Figure 1.5: Effect of the sampling strategy on variance partitioning. Variance partitioning was obtained using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+Figure 1.7: Effect of the sampling strategy on variance partitioning. Variance partitioning was obtained using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
 </p>
-</div>
 </div>
 </div>
 <div id="trait-co-variation" class="section level2">
 <h2><span class="header-section-number">1.4</span> Trait co-variation</h2>
-</div>
-<div id="among-species-correlations" class="section level2">
-<h2><span class="header-section-number">1.5</span> Among-species correlations</h2>
+<div id="among-species-correlations" class="section level3">
+<h3><span class="header-section-number">1.4.1</span> Among-species correlations</h3>
 <p><img src="hydroITV_files/figure-html/spcorvirtual-1.png" width="768" /></p>
+</div>
 <div id="within-species-correlations" class="section level3">
-<h3><span class="header-section-number">1.5.1</span> Within-species correlations</h3>
+<h3><span class="header-section-number">1.4.2</span> Within-species correlations</h3>
 <p><img src="hydroITV_files/figure-html/indcorvirtual-1.png" width="768" /></p>
 
 </div>
