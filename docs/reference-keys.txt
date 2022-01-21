@@ -1,3 +1,7 @@
+fig:virtualdatafig
+fig:virtualtraitdist
+fig:cv
+fig:varpart
 tab:speciesTab
 fig:speciesPhylo
 tab:indMD
