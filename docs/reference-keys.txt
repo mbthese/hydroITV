@@ -34,8 +34,8 @@ trait-variation
 coefficients-of-variation-cv
 variance-partitionning-lmm
 trait-co-variation
-among-species-pca
-within-species-wpca
+among-species-correlations
+within-species-correlations
 traits
 leaf-traits
 hydraulic-traits
