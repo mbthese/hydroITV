@@ -184,10 +184,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="traits-variation.html"><a href="traits-variation.html#discussion"><i class="fa fa-check"></i><b>4.3</b> Discussion</a></li>
 <li class="chapter" data-level="4.4" data-path="traits-variation.html"><a href="traits-variation.html#sis"><i class="fa fa-check"></i><b>4.4</b> SIs</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="traits-variation.html"><a href="traits-variation.html#cv-table"><i class="fa fa-check"></i><b>4.4.1</b> CV table</a></li>
-<li class="chapter" data-level="4.4.2" data-path="traits-variation.html"><a href="traits-variation.html#variance-partitioning-fvfm-rwc"><i class="fa fa-check"></i><b>4.4.2</b> Variance partitioning FvFm &amp; RWC</a></li>
-<li class="chapter" data-level="4.4.3" data-path="traits-variation.html"><a href="traits-variation.html#individual-variation"><i class="fa fa-check"></i><b>4.4.3</b> Individual variation</a></li>
-<li class="chapter" data-level="4.4.4" data-path="traits-variation.html"><a href="traits-variation.html#leaf-variation-1"><i class="fa fa-check"></i><b>4.4.4</b> Leaf variation</a></li>
-<li class="chapter" data-level="4.4.5" data-path="traits-variation.html"><a href="traits-variation.html#measurement-error"><i class="fa fa-check"></i><b>4.4.5</b> Measurement error</a></li>
+<li class="chapter" data-level="4.4.2" data-path="traits-variation.html"><a href="traits-variation.html#individual-variation"><i class="fa fa-check"></i><b>4.4.2</b> Individual variation</a></li>
+<li class="chapter" data-level="4.4.3" data-path="traits-variation.html"><a href="traits-variation.html#leaf-variation-1"><i class="fa fa-check"></i><b>4.4.3</b> Leaf variation</a></li>
+<li class="chapter" data-level="4.4.4" data-path="traits-variation.html"><a href="traits-variation.html#measurement-error"><i class="fa fa-check"></i><b>4.4.4</b> Measurement error</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>5</b> Traits covariation</a><ul>
@@ -251,13 +250,19 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <p>This chapter demonstrates the importance of a balanced design in the distribution of variance, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs. It also virtually explores the evaluation of leaf and measurement variation.</p>
 <div id="simulation" class="section level2">
 <h2><span class="header-section-number">1.1</span> Simulation</h2>
-<p>We simulated thus <span class="math inline">\(T=1\)</span> trait
+<p>We simulated thus <span class="math inline">\(T=8\)</span> trait
 for <span class="math inline">\(S=100\)</span> species with an among-species trait variance <span class="math inline">\(\sigma_{S}=1\)</span>
 including each <span class="math inline">\(S=100\)</span> individuals per species with an within-species trait variance <span class="math inline">\(\sigma_{I}=1\)</span>.</p>
 <div class="figure"><span id="fig:virtualdatafig"></span>
 <img src="hydroITV_files/figure-html/virtualdatafig-1.png" alt="Trait distribution in the virtual community." width="768" />
 <p class="caption">
 Figure 1.1: Trait distribution in the virtual community.
+</p>
+</div>
+<div class="figure"><span id="fig:corvirtualdata2"></span>
+<img src="hydroITV_files/figure-html/corvirtualdata2-1.png" alt="Correlations among simulated traits." width="768" />
+<p class="caption">
+Figure 1.2: Correlations among simulated traits.
 </p>
 </div>
 </div>
@@ -272,7 +277,7 @@ Figure 1.1: Trait distribution in the virtual community.
 <div class="figure"><span id="fig:virtualtraitdist"></span>
 <img src="hydroITV_files/figure-html/virtualtraitdist-1.png" alt="Trait distribution per species with balanced and unbalanced sampling design." width="768" />
 <p class="caption">
-Figure 1.2: Trait distribution per species with balanced and unbalanced sampling design.
+Figure 1.3: Trait distribution per species with balanced and unbalanced sampling design.
 </p>
 </div>
 </div>
@@ -283,7 +288,7 @@ Figure 1.2: Trait distribution per species with balanced and unbalanced sampling
 <div class="figure"><span id="fig:cv"></span>
 <img src="hydroITV_files/figure-html/cv-1.png" alt="Effect of the sampling strategy on the coefficient of variation.  Coefficients of variation were obtained for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
 <p class="caption">
-Figure 1.3: Effect of the sampling strategy on the coefficient of variation. Coefficients of variation were obtained for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+Figure 1.4: Effect of the sampling strategy on the coefficient of variation. Coefficients of variation were obtained for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
 </p>
 </div>
 </div>
@@ -292,7 +297,7 @@ Figure 1.3: Effect of the sampling strategy on the coefficient of variation. Coe
 <div class="figure"><span id="fig:varpart"></span>
 <img src="hydroITV_files/figure-html/varpart-1.png" alt="Effect of the sampling strategy on variance partitioning. Variance partitioning was obtained using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species." width="768" />
 <p class="caption">
-Figure 1.4: Effect of the sampling strategy on variance partitioning. Variance partitioning was obtained using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
+Figure 1.5: Effect of the sampling strategy on variance partitioning. Variance partitioning was obtained using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species.
 </p>
 </div>
 </div>
@@ -301,9 +306,11 @@ Figure 1.4: Effect of the sampling strategy on variance partitioning. Variance p
 <h2><span class="header-section-number">1.4</span> Trait co-variation</h2>
 <div id="among-species-pca" class="section level3">
 <h3><span class="header-section-number">1.4.1</span> Among species (PCA)</h3>
+<p><img src="hydroITV_files/figure-html/unnamed-chunk-1-1.png" width="768" /></p>
 </div>
 <div id="within-species-wpca" class="section level3">
 <h3><span class="header-section-number">1.4.2</span> Within species (wPCA)</h3>
+<p><img src="hydroITV_files/figure-html/unnamed-chunk-2-1.png" width="768" /></p>
 
 </div>
 </div>

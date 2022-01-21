@@ -5,6 +5,7 @@ library(kableExtra)
 if(knitr:::is_html_output()) options(knitr.table.format = "html") 
 if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
 library(tidyverse)
+library(ggfortify)
 theme_set(bayesplot::theme_default())
 knitr::opts_chunk$set(
 	echo = F,
@@ -26,7 +27,8 @@ varcols <- c(species = "red", tree = "lightgreen",
 This chapter demonstrates the importance of a balanced design in the distribution of variance, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs. It also virtually explores the evaluation of leaf and measurement variation.
 
 ## Simulation
-We simulated thus $T=1$ trait 
+
+We simulated thus $T=8$ trait 
 for $S=100$ species with an among-species trait variance $\sigma_{S}=1$
 including each $S=100$ individuals per species with an within-species trait variance $\sigma_{I}=1$.
 
@@ -42,21 +44,41 @@ ft <- data.frame(species = 1:S, trait = rnorm(S, 10, sigma_s)) %>%
   mutate_at(c("species", "individual"), as.factor)
 ```
 
-```{r covmat, eval=FALSE}
-n <- 4  
-A <- matrix(runif(n^2)*2-1, ncol=n) 
-Sigma <- t(A) %*% A
-
-n <- 4
-rWishart(1,n,diag(n))
-
-clusterGeneration::genPositiveDefMat()
-clusterGeneration::rcorrmatrix()
+```{r virtualdata2}
+S <- 100
+I <- 100
+Tr <- 8
+sigma_s <- 1
+sigma_i <- 1
+# Cov <- matrix(runif(Tr^2)*2-1, ncol=Tr) ; Cov <- t(Cov) %*% Cov # method 1
+# Cov <- rWishart(1, Tr, diag(Tr))[,,1] # method 2
+# Cov <- clusterGeneration::genPositiveDefMat(Tr)$Sigma # method 3
+Cov <- clusterGeneration::rcorrmatrix(Tr) # method 4
+ft2 <- as.data.frame(mvtnorm::rmvnorm(S, mean = rnorm(Tr, 10), sigma=Cov*10)) %>% 
+  rename_all(funs(gsub("V", "T", .))) %>% 
+  mutate(species = 1:S) %>% 
+  rowwise() %>% 
+  mutate(traits = list(
+    as.data.frame(mvtnorm::rmvnorm(I, mean = c(T1, T2, T3, T4, T5, T6, T7, T8), sigma=Cov)) %>% 
+      rename_all(funs(gsub("V", "T", .))) %>% 
+      mutate(individual = 1:I)
+  )
+  ) %>% 
+  dplyr::select(species, traits) %>% 
+  unnest(traits)
 ```
 
 ```{r virtualdatafig, fig.cap="Trait distribution in the virtual community."}
 ggplot(ft, aes(trait, group = species)) +
   geom_density(fill = "grey", alpha = 0.5)
+```
+
+
+```{r corvirtualdata2, fig.cap="Correlations among simulated traits."}
+ft2 %>% 
+  dplyr::select(-species, -individual) %>% 
+  cor() %>% 
+  corrplot::corrplot.mixed()
 ```
 
 ## Species and individual sampling
@@ -186,5 +208,68 @@ ggplot(filter(vp, level == "tree"),
 
 ### Among species (PCA)
 
+```{r}
+autoplot(princomp(~ T1 + T2 + T3 + T4 + T5 + T6 + T7 + T8, data = ft2, cor = T), 
+         data = ft2 %>% mutate(species = as.factor(species)),
+         colour = "species", alpha = 0.5, size = 2,
+         loadings.label.colour = 'black', loadings.label.vjust = 1.1,
+         loadings = T, loadings.label = T, loadings.colour = 'black', loadings.label.repel = T) +
+  geom_hline(aes(yintercept = 0), col = 'black', linetype = "dotted") +
+  geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
+  scale_color_discrete(guide = "none")
+```
+
 ### Within species (wPCA)
+
+```{r}
+# wpca #
+wPCA <- ade4::withinpca(select(ft2, T1, T2, T3, T4, T5, T6, T7, T8), as.factor(ft2$species), 
+                  scannf = F, nf = 5)
+class(wPCA) <- c("pca", "dudi")
+# ind
+ind.coord <- wPCA$li
+dataind <- wPCA$tab
+dataind <- t(apply(dataind, 1, function(x){x*wPCA$norm} ))
+dataind <- t(apply(dataind, 1, function(x){x+wPCA$cent}))
+eigenvalues <- dataind[1:ncol(ind.coord)]
+pca.center <- rep(0, ncol(dataind))
+pca.scale <- rep(1, ncol(dataind))
+getdistance <- function(ind_row, center, scale){
+  return(sum(((ind_row-center)/scale)^2))
+}
+d2 <- apply(dataind, 1,getdistance, pca.center, pca.scale)
+cos2 <- function(ind.coord, d2){return(ind.coord^2/d2)}
+ind.cos2 <- apply(ind.coord, 2, cos2, d2)
+contrib <- function(ind.coord, eigenvalues, n.ind){
+  100*(1/n.ind)*(ind.coord^2/eigenvalues)
+}
+ind.contrib <- t(apply(ind.coord, 1, contrib,  eigenvalues, nrow(ind.coord)))
+colnames(ind.coord) <- colnames(ind.cos2) <-
+  colnames(ind.contrib) <- paste0("Dim.", 1:ncol(ind.coord)) 
+rnames <- rownames(ind.coord)
+if(is.null(rnames)) rnames <- as.character(1:nrow(ind.coord))
+rownames(ind.coord) <- rownames(ind.cos2) <- rownames(ind.contrib) <- rnames
+pca.ind = list(coord = ind.coord,  cos2 = ind.cos2, contrib = ind.contrib)
+# ind/var prep
+var <- factoextra::facto_summarize(wPCA, element = "var", 
+                                   result = c("coord", "contrib", "cos2"), axes = 1:2)
+colnames(var)[2:3] <-  c("x", "y")
+ind <- data.frame(pca.ind$coord[, 1:2, drop=FALSE])
+colnames(ind)<- c("x", "y")
+ind <- cbind(ind, ft2)
+## plot
+ggplot(ind, aes(x, y, colour = as.factor(species))) +
+  geom_hline(aes(yintercept = 0), col = 'black', linetype = "dotted") +
+  geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
+  geom_point(alpha = 0.5, size = 2) +
+  geom_segment(data = var, aes(x = 0, y = 0, xend = (x*5),
+                               yend = (y*5)), arrow = arrow(length = unit(1/2, "picas")),
+               color = "black") +
+  ggrepel::geom_text_repel(data = var, aes(x = x*5, y = y*5, label = name),
+                           box.padding = 0.8, segment.alpha = 0, color = "black") +
+  xlab(paste0("within PCA 1 (", round(wPCA$eig/sum(wPCA$eig)*100)[1], "%)")) +
+  ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
+  scale_color_discrete(guide = "none") +
+  scale_x_reverse() + scale_y_reverse()
+```
 
