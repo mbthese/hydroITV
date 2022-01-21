@@ -1,0 +1,275 @@
+```{r setupvirtualdata, include=FALSE}
+rm(list = ls()) ; invisible(gc()) ; set.seed(42)
+library(knitr)
+library(kableExtra)
+if(knitr:::is_html_output()) options(knitr.table.format = "html") 
+if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
+library(tidyverse)
+library(ggfortify)
+theme_set(bayesplot::theme_default())
+knitr::opts_chunk$set(
+	echo = F,
+	fig.height = 6,
+	fig.width = 8,
+	message = FALSE,
+	warning = FALSE,
+	cache = TRUE,
+	cache.lazy = F
+)
+varcols <- c(species = "red", tree = "lightgreen", 
+             sample = "lightblue", measure = "orange")
+```
+
+# (PART) Material {-}
+
+# Virtual data
+
+This chapter demonstrates the importance of a balanced design in the distribution of variance, in contrast to the many papers reporting inter- and intraspecific variation in unbalanced designs. It also virtually explores the evaluation of leaf and measurement variation.
+
+## Simulation
+
+We simulated thus $T=8$ trait 
+for $S=100$ species with an among-species trait variance $\sigma_{S}=1$
+including each $S=100$ individuals per species with an within-species trait variance $\sigma_{I}=1$.
+
+```{r virtualdata}
+S <- 100
+I <- 100
+sigma_s <- 1
+sigma_i <- 1
+ft <- data.frame(species = 1:S, trait = rnorm(S, 10, sigma_s)) %>% 
+  rowwise() %>% 
+  mutate(trait = list(data.frame(individual = 1:I, trait = rnorm(I, trait, sigma_i)))) %>% 
+  unnest(trait) %>% 
+  mutate_at(c("species", "individual"), as.factor)
+```
+
+```{r virtualdata2}
+S <- 100
+I <- 100
+Tr <- 8
+sigma_s <- 1
+sigma_i <- 1
+# Cov <- matrix(runif(Tr^2)*2-1, ncol=Tr) ; Cov <- t(Cov) %*% Cov # method 1
+# Cov <- rWishart(1, Tr, diag(Tr))[,,1] # method 2
+# Cov <- clusterGeneration::genPositiveDefMat(Tr)$Sigma # method 3
+Cov <- clusterGeneration::rcorrmatrix(Tr) # method 4
+ft2 <- as.data.frame(mvtnorm::rmvnorm(S, mean = rnorm(Tr, 10), sigma=Cov*10)) %>% 
+  rename_all(funs(gsub("V", "T", .))) %>% 
+  mutate(species = 1:S) %>% 
+  rowwise() %>% 
+  mutate(traits = list(
+    as.data.frame(mvtnorm::rmvnorm(I, mean = c(T1, T2, T3, T4, T5, T6, T7, T8), sigma=Cov)) %>% 
+      rename_all(funs(gsub("V", "T", .))) %>% 
+      mutate(individual = 1:I)
+  )
+  ) %>% 
+  dplyr::select(species, traits) %>% 
+  unnest(traits)
+```
+
+```{r virtualdatafig, fig.cap="Trait distribution in the virtual community."}
+ggplot(ft, aes(trait, group = species)) +
+  geom_density(fill = "grey", alpha = 0.5)
+```
+
+
+```{r corvirtualdata2, fig.cap="Correlations among simulated traits."}
+ft2 %>% 
+  dplyr::select(-species, -individual) %>% 
+  cor() %>% 
+  corrplot::corrplot.mixed()
+```
+
+## Species and individual sampling
+
+```{r virtualsamplingfunction}
+sampling <- function(data, species, individuals){
+  Nsp <- species
+  data %>% 
+    filter(species %in% sample(1:max(as.numeric(data$species)), Nsp)) %>% 
+    group_by(species) %>% 
+    sample_n(individuals) %>% 
+    ungroup()
+}
+```
+
+We tested the effect of 3 sampling strategies on variance partitioning (Fig. \@ref(fig:traitdist)):
+
+1. sampling of 100 individuals unbalanced in species (25 species with 4 individuals)
+1. sampling of 100 individuals unbalanced in individuals (4 species with 25 individuals)
+1. sampling of 100 individuals unbalanced in species and individual (10 species with 10 individuals)
+
+```{r virtualtraitdist, fig.cap="Trait distribution per species with balanced and unbalanced sampling design."}
+R <- 2
+lapply(as.list(1:R), function(r)
+  list("unbalanced species" = sampling(ft, 25, 4), 
+       "unbalanced individuals" = sampling(ft, 4, 25), 
+       "balanced"  = sampling(ft, 10, 10)) %>% 
+    bind_rows(.id = "sampling") %>% 
+    mutate(repetition = paste("repetition", r))) %>% 
+  bind_rows() %>% 
+  mutate(sampling = factor(sampling, levels = c("full", "unbalanced species",
+                                                "unbalanced individuals", "balanced"))) %>% 
+  ggplot(aes(trait, group = as.factor(species))) +
+  geom_density(alpha = 0.3) +
+  facet_grid(repetition ~ sampling, scales = "free")
+```
+
+## Trait variation
+
+### Coefficients of variation (CV)
+
+```{r cvfunction}
+cv <- function(traits){
+  if(any(is.na(traits)))
+    traits=traits[!is.na(traits)]
+  N=length(traits)
+  y_bar=mean(traits)
+  s2_hat=var(traits)
+  cv_2=s2_hat/y_bar^2
+  cv_1=sqrt(cv_2)
+  gamma_1=sum(((traits-y_bar)/s2_hat^0.5)^3)/N
+  gamma_2=sum(((traits-y_bar)/s2_hat^0.5)^4)/N
+  bias=cv_2^(3/2)/N*(3*cv_2^0.5-2*gamma_1)
+  bias2=cv_1^3/N-cv_1/4/N-cv_1^2*gamma_1/2/N-cv_1*gamma_2/8/N
+  cv1=sd(traits)/mean(traits)
+  cv4=cv_1-bias2
+  re=cv4
+  return(re)
+} 
+```
+
+```{r cv, fig.cap="Effect of the sampling strategy on the coefficient of variation.  Coefficients of variation were obtained for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species."}
+options(dplyr.summarise.inform = FALSE)
+R <- 100
+cv_sampling <- lapply(as.list(1:R), function(r)
+  list("unbalanced species" = sampling(ft, 25, 4),
+       "unbalanced individuals" = sampling(ft, 4, 25),
+       "balanced"  = sampling(ft, 10, 10)) %>%
+    bind_rows(.id = "sampling") %>%
+    group_by(sampling, species) %>%
+    summarise(cv = cv(trait)) %>%
+    group_by(sampling) %>%
+    summarise(cv = median(cv)) %>%
+    mutate(repetition = r)) %>%
+  bind_rows()
+cv_full <- ft %>%
+  group_by(species) %>%
+  summarise(cv = cv(trait)) %>%
+  ungroup() %>%
+  summarise(cv = mean(cv))
+ggplot(cv_sampling, aes(sampling, cv)) +
+  geom_boxplot() +
+  geom_hline(aes(yintercept = cv), linetype = "dashed",
+             data = cv_full) +
+  ylab(expression(CV[4])) + xlab("Sampling strategy")
+```
+
+### Variance partitionning (LMM)
+
+```{r varpartfunction}
+varpart <- function(data){
+  var <- ape::varcomp(nlme::lme(trait ~ 1, random=~1|species, data), 1)
+  return(
+    data.frame(level = names(var), variance = as.vector(var)) %>% 
+      mutate(level = recode(level, "Within" = "tree"))
+  )
+}
+```
+
+```{r varpart, fig.cap="Effect of the sampling strategy on variance partitioning. Variance partitioning was obtained using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species."}
+R <- 100
+vp <- lapply(as.list(1:R), function(r)
+  list("unbalanced species" = sampling(ft, 25, 4),
+       "unbalanced individuals" = sampling(ft, 4, 25),
+       "balanced"  = sampling(ft, 10, 10)) %>%
+    bind_rows(.id = "sampling") %>%
+    group_by(sampling) %>%
+    do(var = varpart(.)) %>%
+    unnest(var) %>%
+    mutate(repetition = r)) %>%
+  bind_rows() %>%
+  mutate(level = factor(level, levels = c("species", "tree")))
+vp_med <- vp %>%
+  group_by(sampling, level) %>%
+  summarise(variance = median(variance))
+ggplot(filter(vp, level == "tree"),
+       aes(x = sampling, y = variance)) +
+  geom_bar(aes(fill = level), stat = "identity", position = "stack", data = vp_med) +
+  geom_boxplot(alpha = 0.6, width = 0.3) +
+  geom_hline(aes(yintercept = 0.5), linetype = "dashed") +
+  scale_fill_manual(expression(sigma^2),
+                    values = unname(varcols[c("species", "tree")])) +
+  ylab("Percentage of variance") + xlab("Sampling strategy")
+```
+
+## Trait co-variation
+
+### Among species (PCA)
+
+```{r}
+autoplot(princomp(~ T1 + T2 + T3 + T4 + T5 + T6 + T7 + T8, data = ft2, cor = T), 
+         data = ft2 %>% mutate(species = as.factor(species)),
+         colour = "species", alpha = 0.5, size = 2,
+         loadings.label.colour = 'black', loadings.label.vjust = 1.1,
+         loadings = T, loadings.label = T, loadings.colour = 'black', loadings.label.repel = T) +
+  geom_hline(aes(yintercept = 0), col = 'black', linetype = "dotted") +
+  geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
+  scale_color_discrete(guide = "none")
+```
+
+### Within species (wPCA)
+
+```{r}
+# wpca #
+wPCA <- ade4::withinpca(select(ft2, T1, T2, T3, T4, T5, T6, T7, T8), as.factor(ft2$species), 
+                  scannf = F, nf = 5)
+class(wPCA) <- c("pca", "dudi")
+# ind
+ind.coord <- wPCA$li
+dataind <- wPCA$tab
+dataind <- t(apply(dataind, 1, function(x){x*wPCA$norm} ))
+dataind <- t(apply(dataind, 1, function(x){x+wPCA$cent}))
+eigenvalues <- dataind[1:ncol(ind.coord)]
+pca.center <- rep(0, ncol(dataind))
+pca.scale <- rep(1, ncol(dataind))
+getdistance <- function(ind_row, center, scale){
+  return(sum(((ind_row-center)/scale)^2))
+}
+d2 <- apply(dataind, 1,getdistance, pca.center, pca.scale)
+cos2 <- function(ind.coord, d2){return(ind.coord^2/d2)}
+ind.cos2 <- apply(ind.coord, 2, cos2, d2)
+contrib <- function(ind.coord, eigenvalues, n.ind){
+  100*(1/n.ind)*(ind.coord^2/eigenvalues)
+}
+ind.contrib <- t(apply(ind.coord, 1, contrib,  eigenvalues, nrow(ind.coord)))
+colnames(ind.coord) <- colnames(ind.cos2) <-
+  colnames(ind.contrib) <- paste0("Dim.", 1:ncol(ind.coord)) 
+rnames <- rownames(ind.coord)
+if(is.null(rnames)) rnames <- as.character(1:nrow(ind.coord))
+rownames(ind.coord) <- rownames(ind.cos2) <- rownames(ind.contrib) <- rnames
+pca.ind = list(coord = ind.coord,  cos2 = ind.cos2, contrib = ind.contrib)
+# ind/var prep
+var <- factoextra::facto_summarize(wPCA, element = "var", 
+                                   result = c("coord", "contrib", "cos2"), axes = 1:2)
+colnames(var)[2:3] <-  c("x", "y")
+ind <- data.frame(pca.ind$coord[, 1:2, drop=FALSE])
+colnames(ind)<- c("x", "y")
+ind <- cbind(ind, ft2)
+## plot
+ggplot(ind, aes(x, y, colour = as.factor(species))) +
+  geom_hline(aes(yintercept = 0), col = 'black', linetype = "dotted") +
+  geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
+  geom_point(alpha = 0.5, size = 2) +
+  geom_segment(data = var, aes(x = 0, y = 0, xend = (x*5),
+                               yend = (y*5)), arrow = arrow(length = unit(1/2, "picas")),
+               color = "black") +
+  ggrepel::geom_text_repel(data = var, aes(x = x*5, y = y*5, label = name),
+                           box.padding = 0.8, segment.alpha = 0, color = "black") +
+  xlab(paste0("within PCA 1 (", round(wPCA$eig/sum(wPCA$eig)*100)[1], "%)")) +
+  ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
+  scale_color_discrete(guide = "none") +
+  scale_x_reverse() + scale_y_reverse()
+```
+

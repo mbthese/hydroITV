@@ -20,10 +20,6 @@ log_abs_trans <- function() {
 }
 ```
 
-# Traits covariation
-
-Subsequent analysis aimed to explore co-variations of individual traits. 
-Specifically, we investigated individual traits co-variation at several taxonomic scales: among species, and within species.
 
 ```{r inndpcadata}
 # data #
@@ -31,13 +27,13 @@ ft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa
                                 "traits") %>% 
   filter(StudyLevel == "tree") %>% 
   dplyr::select(Genus, Species, Tree, LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin, DBH, TWI) %>% 
-  mutate_at(c("gmin", "RWC", "FvFm", "LA", "LT", "LDMC", "CC", "Ptlp", "SLA", "LSWC"), abs) %>% 
-  mutate_at(c("gmin", "RWC", "FvFm", "LA", "LT", "LDMC", "CC", "Ptlp", "SLA", "LSWC"), log) %>% 
+  mutate_at(c("gmin", "LA", "LT", "LDMC", "CC", "Ptlp", "SLA", "LSWC"), abs) %>% 
+  mutate_at(c("gmin", "LA", "LT", "LDMC", "CC", "Ptlp", "SLA", "LSWC"), log) %>% 
   mutate(Ptlp = -Ptlp) %>% 
   na.omit() %>% 
   mutate(SpeciesLong = paste(Genus, Species))
 # wpca #
-wPCA <- ade4::withinpca(select(ft, gmin, RWC, FvFm, LA, LT, LDMC, CC, Ptlp, SLA, LSWC), as.factor(ft$SpeciesLong), 
+wPCA <- ade4::withinpca(select(ft, gmin, LA, LT, LDMC, CC, Ptlp, SLA, LSWC), as.factor(ft$SpeciesLong), 
                   scannf = F, nf = 5)
 class(wPCA) <- c("pca", "dudi")
 # ind
@@ -73,8 +69,25 @@ colnames(ind)<- c("x", "y")
 ind <- cbind(ind, ft)
 ```
 
-```{r pcaArticle}
-g.among <- autoplot(princomp(~ gmin + RWC + FvFm + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 
+# Traits covariation
+
+Subsequent analysis aimed to explore co-variations of individual traits. 
+Specifically, we investigated individual traits co-variation at several taxonomic scales: among species, and within species.
+
+## Methods
+
+We performed a Principal Component Analysis to investigate the multivariate trait covariation. 
+
+Using the among PCA, a "classic" PCA, we aim to evaluate trait syndroms characterizing species strategies. 
+
+For the within PCA, all the gravity centers are placed back at the origin and the individuals are being represented with a maximal variance. We eliminate the species effect to study the individual strategies. 
+
+The among-PCA searches the axes at the center of gravity and emphasizes on the differences between groups (here, species) whereas the within-PCA searches for the shared-axes in each group. 
+
+## Results
+
+```{r pcaArticle, fig.cap="Among (A) and Within-species (B) principal component analysis (A - PCA and B - wPCA) of leaf traits across individuals in 10 Neotropical tree species. Circle colors indicate the species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (Gmin)."}
+g.among <- autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 
          data = ft,
          colour = "SpeciesLong", alpha = 0.5, size = 2,
          loadings.label.colour = 'black', loadings.label.vjust = 1.1,
@@ -107,9 +120,40 @@ g <- gridExtra::grid.arrange(g.among, g.within, g.legend, layout_matrix = rbind(
 # ggsave(filename = "~/Téléchargements/Fig3.png", plot = g, bg = "white", height = 4, width = 6)
 ```
 
+```{r corrplotTraits, fig.cap="ACorrelation of leaf traits across individuals in 10 Neotropical tree species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin)."}
+dplyr::select(ft, -Genus, -Species, -Tree, -SpeciesLong, -DBH, -TWI, -FvFm, -RWC) %>% 
+  cor() %>% 
+  corrplot::corrplot.mixed()
+```
+
+**Sylvain:**
+
+* We seem to have the classical conservative-acquisitive spectrum or slow-fast spectrum among and within species with SLA opposing LT, CC, LT, and LDMC less visible among than within species
+* $g_{min}$ covary with the conservative-acquisitive or slow-fast spectrum with decreased conductance and a better conservation of water and gas for conservative slow species
+* The second axis seems to oppose $\pi_{TLP}$ to LA among and within species but less visible among than within species, congruent with @Marechaux2020a but opposed to the result of @Guillemot2022, and might be related to the stature-recruitment spectrum described in @Guillemot2022
+* *I'm uncertain for the moment on how to interpret LSWC.*
+
+
+**Marion** 
+* Among-PCA: We recognize the classic LES opposing SLA with LDMC in the first axis while Ptlp drives the second axis with LSWC. 
+
+* gmin contributes to both axis. A low gmin can help maintain leaf hydration status (reduced leaks). Higher gmin were observed in fast-growing species which were associated with the investment in small and numerous stomata, which allowed higher carbon assimilation rates but also increased water leaks, with negative impacts on leaf survival under
+drought (Machado et al 2021)
+
+* Ptlp is linked with LA: smaller leaves have a more negative πtlp (higher drought tolerance). 
+
+* LSWC: According to our analysis, high LSWC is linked to more negative Ptlp. The absolute amount of stored water would contribute to greater drought tolerance, more backed-up water? A lower gmin would be easier to maintain with less stored water.
+
+* we must be careful when interpreting trait co-variation using the among-pca as a general rule of behavior for all individuals within each species when we clearly see another use of the traits for each individual (within PCA). *ex: Protium stevensonii species tend to be more conservative-type species (higer LDMC in the among-PCA) but some individuals of the P. stevensonii explore a different strategy (within-PCA).
+
+ 
+
+## Discussion
+
+## SIs
 
 ```{r indpcadbh}
-autoplot(princomp(~ gmin + RWC + FvFm + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 
+autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 
          data = ft,
          colour = "SpeciesLong", alpha = 0.5, size = "DBH",
          loadings.label.size = 6,
@@ -124,7 +168,7 @@ autoplot(princomp(~ gmin + RWC + FvFm + LA + LT + LDMC + CC + Ptlp + SLA + LSWC,
 
 
 ```{r indpcatwi}
-autoplot(princomp(~ gmin + RWC + FvFm + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 
+autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 
          data = ft,
          colour = "SpeciesLong", alpha = 0.5, size = "TWI",
          loadings.label.size = 6,
@@ -138,7 +182,7 @@ autoplot(princomp(~ gmin + RWC + FvFm + LA + LT + LDMC + CC + Ptlp + SLA + LSWC,
 ```
 
 ```{r indpcasp}
-autoplot(princomp(~ gmin + RWC + FvFm + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 
+autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, cor = T), 
          data = ft,
          colour = "SpeciesLong", alpha = 0.5,
          loadings = F, loadings.label = F) +
@@ -163,7 +207,7 @@ ggplot(ind, aes(x, y, colour = SpeciesLong)) +
   ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Within-species PCA - DBH") 
+  ggtitle("Within-species PCA - DBH")
 ```
 
 ```{r indwpcatwi}
@@ -180,24 +224,5 @@ ggplot(ind, aes(x, y, colour = SpeciesLong)) +
   ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Within-species PCA - TWI") 
+  ggtitle("Within-species PCA - TWI")
 ```
-
-```{r indwpcadbhtwi}
-ggplot(ind, aes(x, y, colour = TWI)) +
-  geom_hline(aes(yintercept = 0), col = 'black', linetype = "dotted") +
-  geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
-  geom_point(aes(size = DBH), alpha = 0.5) +
-  geom_segment(data = var, aes(x = 0, y = 0, xend = (x*5),
-                               yend = (y*5)), arrow = arrow(length = unit(1/2, "picas")),
-               color = "black") +
-  ggrepel::geom_text_repel(data = var, aes(x = x*5, y = y*5, label = name),
-                           box.padding = 0.8, segment.alpha = 0, color = "black") +
-  xlab(paste0("within PCA 1 (", round(wPCA$eig/sum(wPCA$eig)*100)[1], "%)")) +
-  ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
-  scale_size_continuous(trans = "log") +
-  viridis::scale_color_viridis(direction = -1, trans = "log", option = "B") +
-  ggtitle("Within-species PCA - DBH & TWI") 
-```
-
-

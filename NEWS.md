@@ -1,3 +1,27 @@
+hydroITV 1.0.0.9024
+* virtual multidimensiona data
+
+hydroITV 1.0.0.9023
+* virtual data cv & lmm with reps
+* updated lmm & cv with field data
+
+hydroITV 1.0.0.9022
+* post-meeting
+* meeting section
+* added parts
+* added pull request from Marion
+* started Virtual data
+
+hydroITV 1.0.0.9021
+* sylvain's first interpretations
+
+hydroITV 1.0.0.9020
+* results in 3 parts: variation, covariation, determinant
+
+hydroITV 1.0.0.9019
+* rm RWC and FvFm from main results
+* simplified CVs
+
 hydroITV 1.0.0.9018
 * integrating @mbthese CVs
 

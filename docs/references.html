@@ -24,14 +24,14 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-01-18" />
+<meta name="date" content="2022-01-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="literature.html"/>
+<link rel="prev" href="meetings.html"/>
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -145,9 +145,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="balance-sampling.html"><a href="balance-sampling.html"><i class="fa fa-check"></i><b>1</b> Balance sampling</a><ul>
-<li class="chapter" data-level="1.1" data-path="balance-sampling.html"><a href="balance-sampling.html#species-and-individual-sampling"><i class="fa fa-check"></i><b>1.1</b> Species and individual sampling</a></li>
-<li class="chapter" data-level="1.2" data-path="balance-sampling.html"><a href="balance-sampling.html#leaf-variations-and-measurement-errors"><i class="fa fa-check"></i><b>1.2</b> Leaf variations and measurement errors</a></li>
+<li class="part"><span><b>I Material</b></span></li>
+<li class="chapter" data-level="1" data-path="virtual-data.html"><a href="virtual-data.html"><i class="fa fa-check"></i><b>1</b> Virtual data</a><ul>
+<li class="chapter" data-level="1.1" data-path="virtual-data.html"><a href="virtual-data.html#simulation"><i class="fa fa-check"></i><b>1.1</b> Simulation</a></li>
+<li class="chapter" data-level="1.2" data-path="virtual-data.html"><a href="virtual-data.html#species-and-individual-sampling"><i class="fa fa-check"></i><b>1.2</b> Species and individual sampling</a></li>
+<li class="chapter" data-level="1.3" data-path="virtual-data.html"><a href="virtual-data.html#trait-variation"><i class="fa fa-check"></i><b>1.3</b> Trait variation</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="virtual-data.html"><a href="virtual-data.html#coefficients-of-variation-cv"><i class="fa fa-check"></i><b>1.3.1</b> Coefficients of variation (CV)</a></li>
+<li class="chapter" data-level="1.3.2" data-path="virtual-data.html"><a href="virtual-data.html#variance-partitionning-lmm"><i class="fa fa-check"></i><b>1.3.2</b> Variance partitionning (LMM)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="virtual-data.html"><a href="virtual-data.html#trait-co-variation"><i class="fa fa-check"></i><b>1.4</b> Trait co-variation</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="virtual-data.html"><a href="virtual-data.html#among-species-pca"><i class="fa fa-check"></i><b>1.4.1</b> Among species (PCA)</a></li>
+<li class="chapter" data-level="1.4.2" data-path="virtual-data.html"><a href="virtual-data.html#within-species-wpca"><i class="fa fa-check"></i><b>1.4.2</b> Within species (wPCA)</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="traits.html"><a href="traits.html"><i class="fa fa-check"></i><b>2</b> Traits</a><ul>
 <li class="chapter" data-level="2.1" data-path="traits.html"><a href="traits.html#leaf-traits"><i class="fa fa-check"></i><b>2.1</b> Leaf traits</a></li>
@@ -156,39 +165,61 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="traits.html"><a href="traits.html#measured-traits"><i class="fa fa-check"></i><b>2.4</b> Measured traits</a></li>
 <li class="chapter" data-level="2.5" data-path="traits.html"><a href="traits.html#protocols"><i class="fa fa-check"></i><b>2.5</b> Protocols</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="individuals.html"><a href="individuals.html"><i class="fa fa-check"></i><b>3</b> Individuals</a><ul>
-<li class="chapter" data-level="3.1" data-path="individuals.html"><a href="individuals.html#species"><i class="fa fa-check"></i><b>3.1</b> Species</a></li>
-<li class="chapter" data-level="3.2" data-path="individuals.html"><a href="individuals.html#metradica"><i class="fa fa-check"></i><b>3.2</b> METRADICA</a></li>
-<li class="chapter" data-level="3.3" data-path="individuals.html"><a href="individuals.html#candidates"><i class="fa fa-check"></i><b>3.3</b> Candidates</a></li>
-<li class="chapter" data-level="3.4" data-path="individuals.html"><a href="individuals.html#maps"><i class="fa fa-check"></i><b>3.4</b> Maps</a></li>
-<li class="chapter" data-level="3.5" data-path="individuals.html"><a href="individuals.html#extra-fth"><i class="fa fa-check"></i><b>3.5</b> Extra FTH</a></li>
-<li class="chapter" data-level="3.6" data-path="individuals.html"><a href="individuals.html#extra-post---fth"><i class="fa fa-check"></i><b>3.6</b> Extra Post - FTH</a></li>
-<li class="chapter" data-level="3.7" data-path="individuals.html"><a href="individuals.html#leaf-variation"><i class="fa fa-check"></i><b>3.7</b> Leaf variation</a></li>
+<li class="chapter" data-level="3" data-path="field-data.html"><a href="field-data.html"><i class="fa fa-check"></i><b>3</b> Field data</a><ul>
+<li class="chapter" data-level="3.1" data-path="field-data.html"><a href="field-data.html#species"><i class="fa fa-check"></i><b>3.1</b> Species</a></li>
+<li class="chapter" data-level="3.2" data-path="field-data.html"><a href="field-data.html#metradica"><i class="fa fa-check"></i><b>3.2</b> METRADICA</a></li>
+<li class="chapter" data-level="3.3" data-path="field-data.html"><a href="field-data.html#candidates"><i class="fa fa-check"></i><b>3.3</b> Candidates</a></li>
+<li class="chapter" data-level="3.4" data-path="field-data.html"><a href="field-data.html#maps"><i class="fa fa-check"></i><b>3.4</b> Maps</a></li>
+<li class="chapter" data-level="3.5" data-path="field-data.html"><a href="field-data.html#extra-fth"><i class="fa fa-check"></i><b>3.5</b> Extra FTH</a></li>
+<li class="chapter" data-level="3.6" data-path="field-data.html"><a href="field-data.html#extra-post---fth"><i class="fa fa-check"></i><b>3.6</b> Extra Post - FTH</a></li>
+<li class="chapter" data-level="3.7" data-path="field-data.html"><a href="field-data.html#leaf-variation"><i class="fa fa-check"></i><b>3.7</b> Leaf variation</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html"><i class="fa fa-check"></i><b>4</b> Traits variation: variance partitionning</a><ul>
-<li class="chapter" data-level="4.1" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#all"><i class="fa fa-check"></i><b>4.1</b> All</a></li>
-<li class="chapter" data-level="4.2" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#measurement-error"><i class="fa fa-check"></i><b>4.2</b> Measurement error</a></li>
-<li class="chapter" data-level="4.3" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#leaf-variation-1"><i class="fa fa-check"></i><b>4.3</b> Leaf variation</a></li>
-<li class="chapter" data-level="4.4" data-path="traits-variation-variance-partitionning.html"><a href="traits-variation-variance-partitionning.html#individual-variation"><i class="fa fa-check"></i><b>4.4</b> Individual variation</a></li>
+<li class="part"><span><b>II Methodology</b></span></li>
+<li class="chapter" data-level="4" data-path="traits-variation.html"><a href="traits-variation.html"><i class="fa fa-check"></i><b>4</b> Traits variation</a><ul>
+<li class="chapter" data-level="4.1" data-path="traits-variation.html"><a href="traits-variation.html#methods"><i class="fa fa-check"></i><b>4.1</b> Methods</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="traits-variation.html"><a href="traits-variation.html#variance-partitionning"><i class="fa fa-check"></i><b>4.1.1</b> Variance partitionning</a></li>
+<li class="chapter" data-level="4.1.2" data-path="traits-variation.html"><a href="traits-variation.html#coefficient-of-variation-cv"><i class="fa fa-check"></i><b>4.1.2</b> Coefficient of variation (CV)</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="traits-variation-coefficient-of-variation.html"><a href="traits-variation-coefficient-of-variation.html"><i class="fa fa-check"></i><b>5</b> Traits variation: coefficient of variation</a><ul>
-<li class="chapter" data-level="5.1" data-path="traits-variation-coefficient-of-variation.html"><a href="traits-variation-coefficient-of-variation.html#cv-per-species"><i class="fa fa-check"></i><b>5.1</b> CV per species</a></li>
-<li class="chapter" data-level="5.2" data-path="traits-variation-coefficient-of-variation.html"><a href="traits-variation-coefficient-of-variation.html#global-cv"><i class="fa fa-check"></i><b>5.2</b> Global CV</a></li>
+<li class="chapter" data-level="4.2" data-path="traits-variation.html"><a href="traits-variation.html#results"><i class="fa fa-check"></i><b>4.2</b> Results</a></li>
+<li class="chapter" data-level="4.3" data-path="traits-variation.html"><a href="traits-variation.html#discussion"><i class="fa fa-check"></i><b>4.3</b> Discussion</a></li>
+<li class="chapter" data-level="4.4" data-path="traits-variation.html"><a href="traits-variation.html#sis"><i class="fa fa-check"></i><b>4.4</b> SIs</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="traits-variation.html"><a href="traits-variation.html#cv-table"><i class="fa fa-check"></i><b>4.4.1</b> CV table</a></li>
+<li class="chapter" data-level="4.4.2" data-path="traits-variation.html"><a href="traits-variation.html#individual-variation"><i class="fa fa-check"></i><b>4.4.2</b> Individual variation</a></li>
+<li class="chapter" data-level="4.4.3" data-path="traits-variation.html"><a href="traits-variation.html#leaf-variation-1"><i class="fa fa-check"></i><b>4.4.3</b> Leaf variation</a></li>
+<li class="chapter" data-level="4.4.4" data-path="traits-variation.html"><a href="traits-variation.html#measurement-error"><i class="fa fa-check"></i><b>4.4.4</b> Measurement error</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>6</b> Traits covariation</a></li>
-<li class="chapter" data-level="7" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html"><i class="fa fa-check"></i><b>7</b> Ontogeny and topography effects</a><ul>
-<li class="chapter" data-level="7.1" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#intercept"><i class="fa fa-check"></i><b>7.1</b> Intercept</a></li>
-<li class="chapter" data-level="7.2" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#dbh"><i class="fa fa-check"></i><b>7.2</b> DBH</a></li>
-<li class="chapter" data-level="7.3" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#twi"><i class="fa fa-check"></i><b>7.3</b> TWI</a></li>
-<li class="chapter" data-level="7.4" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#summary"><i class="fa fa-check"></i><b>7.4</b> Summary</a></li>
-<li class="chapter" data-level="7.5" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#check"><i class="fa fa-check"></i><b>7.5</b> Check</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>8</b> Literature</a><ul>
-<li class="chapter" data-level="8.1" data-path="literature.html"><a href="literature.html#hajek2016"><i class="fa fa-check"></i><b>8.1</b> <span class="citation">Hajek <em>et al.</em> (<span>2016</span>)</span></a></li>
-<li class="chapter" data-level="8.2" data-path="literature.html"><a href="literature.html#lobo2018"><i class="fa fa-check"></i><b>8.2</b> <span class="citation">Lobo <em>et al.</em> (<span>2018</span>)</span></a></li>
-<li class="chapter" data-level="8.3" data-path="literature.html"><a href="literature.html#westerband2021"><i class="fa fa-check"></i><b>8.3</b> <span class="citation">Westerband <em>et al.</em> (<span>2021</span>)</span></a></li>
-<li class="chapter" data-level="8.4" data-path="literature.html"><a href="literature.html#martinez-vilalta2009"><i class="fa fa-check"></i><b>8.4</b> <span class="citation">Martínez-Vilalta <em>et al.</em> (<span>2009</span>)</span></a></li>
-<li class="chapter" data-level="8.5" data-path="literature.html"><a href="literature.html#rosas2019"><i class="fa fa-check"></i><b>8.5</b> <span class="citation">Rosas <em>et al.</em> (<span>2019</span>)</span></a></li>
+<li class="chapter" data-level="5" data-path="traits-covariation.html"><a href="traits-covariation.html"><i class="fa fa-check"></i><b>5</b> Traits covariation</a><ul>
+<li class="chapter" data-level="5.1" data-path="traits-covariation.html"><a href="traits-covariation.html#methods-1"><i class="fa fa-check"></i><b>5.1</b> Methods</a></li>
+<li class="chapter" data-level="5.2" data-path="traits-covariation.html"><a href="traits-covariation.html#results-1"><i class="fa fa-check"></i><b>5.2</b> Results</a></li>
+<li class="chapter" data-level="5.3" data-path="traits-covariation.html"><a href="traits-covariation.html#discussion-1"><i class="fa fa-check"></i><b>5.3</b> Discussion</a></li>
+<li class="chapter" data-level="5.4" data-path="traits-covariation.html"><a href="traits-covariation.html#sis-1"><i class="fa fa-check"></i><b>5.4</b> SIs</a></li>
+</ul></li>
+<li class="part"><span><b>III Ecology</b></span></li>
+<li class="chapter" data-level="6" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html"><i class="fa fa-check"></i><b>6</b> Ontogeny and topography effects</a><ul>
+<li class="chapter" data-level="6.1" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#methods-2"><i class="fa fa-check"></i><b>6.1</b> Methods</a></li>
+<li class="chapter" data-level="6.2" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#results-2"><i class="fa fa-check"></i><b>6.2</b> Results</a></li>
+<li class="chapter" data-level="6.3" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#discussion-2"><i class="fa fa-check"></i><b>6.3</b> Discussion</a></li>
+<li class="chapter" data-level="6.4" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#sis-2"><i class="fa fa-check"></i><b>6.4</b> SIs</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#intercept"><i class="fa fa-check"></i><b>6.4.1</b> Intercept</a></li>
+<li class="chapter" data-level="6.4.2" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#dbh"><i class="fa fa-check"></i><b>6.4.2</b> DBH</a></li>
+<li class="chapter" data-level="6.4.3" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#summary"><i class="fa fa-check"></i><b>6.4.3</b> Summary</a></li>
+<li class="chapter" data-level="6.4.4" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html#check"><i class="fa fa-check"></i><b>6.4.4</b> Check</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>IV Appendix</b></span></li>
+<li class="chapter" data-level="7" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>7</b> Literature</a><ul>
+<li class="chapter" data-level="7.1" data-path="literature.html"><a href="literature.html#hajek2016"><i class="fa fa-check"></i><b>7.1</b> <span class="citation">Hajek <em>et al.</em> (<span>2016</span>)</span></a></li>
+<li class="chapter" data-level="7.2" data-path="literature.html"><a href="literature.html#lobo2018"><i class="fa fa-check"></i><b>7.2</b> <span class="citation">Lobo <em>et al.</em> (<span>2018</span>)</span></a></li>
+<li class="chapter" data-level="7.3" data-path="literature.html"><a href="literature.html#westerband2021"><i class="fa fa-check"></i><b>7.3</b> <span class="citation">Westerband <em>et al.</em> (<span>2021</span>)</span></a></li>
+<li class="chapter" data-level="7.4" data-path="literature.html"><a href="literature.html#martinez-vilalta2009"><i class="fa fa-check"></i><b>7.4</b> <span class="citation">Martínez-Vilalta <em>et al.</em> (<span>2009</span>)</span></a></li>
+<li class="chapter" data-level="7.5" data-path="literature.html"><a href="literature.html#rosas2019"><i class="fa fa-check"></i><b>7.5</b> <span class="citation">Rosas <em>et al.</em> (<span>2019</span>)</span></a></li>
+<li class="chapter" data-level="7.6" data-path="literature.html"><a href="literature.html#kannenberg2021"><i class="fa fa-check"></i><b>7.6</b> <span class="citation">Kannenberg <em>et al.</em> (<span>2021</span>)</span></a></li>
+<li class="chapter" data-level="7.7" data-path="literature.html"><a href="literature.html#guillemot2022"><i class="fa fa-check"></i><b>7.7</b> <span class="citation">Guillemot <em>et al.</em> (<span>2022</span>)</span></a></li>
+<li class="chapter" data-level="7.8" data-path="literature.html"><a href="literature.html#marechaux2020a"><i class="fa fa-check"></i><b>7.8</b> <span class="citation">Maréchaux <em>et al.</em> (<span>2020</span>)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="meetings.html"><a href="meetings.html"><i class="fa fa-check"></i><b>8</b> Meetings</a><ul>
+<li class="chapter" data-level="8.1" data-path="meetings.html"><a href="meetings.html#ecophysio"><i class="fa fa-check"></i><b>8.1</b> 20/01/22 - Ecophysio+</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -222,10 +253,28 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <p>BARRs, H.D. &amp; WEATHERLEy, P.E. (1962). A RE-EXAMINATION OF THE RELATIVE TURGIDITY TECHNIQUE FOR ESTIMATING WATER DEFICITS IN LEAVES By H. D. BARRs* and P. E. WEATHERLEyt. <em>Aust.J.Biol.Sci</em>, 413–428.</p>
 </div>
 <div>
+<p>Brown, J.H. (1984). On the Relationship between Abundance and Distribution of Species. <em>The American Naturalist</em>, <strong>124</strong>, 255–279. Retrieved from <a href="https://www.journals.uchicago.edu/doi/10.1086/284267">https://www.journals.uchicago.edu/doi/10.1086/284267</a></p>
+</div>
+<div>
+<p>Clark, J.S. (2010). Individuals and the variation needed for high species diversity in forest trees. <em>Science</em>, <strong>327</strong>, 1129–1132. Retrieved from <a href="http://science.sciencemag.org/content/327/5969/1129%20http://www.sciencemag.org/cgi/doi/10.1126/science.1183506">http://science.sciencemag.org/content/327/5969/1129 http://www.sciencemag.org/cgi/doi/10.1126/science.1183506</a></p>
+</div>
+<div>
+<p>Guillemot, J., Martin‐StPaul, N.K., Bulascoschi, L., Poorter, L., Morin, X., Pinho, B.X., Maire, G., Bittencourt, P., Oliveira, R.S., Bongers, F., Brouwer, R., Pereira, L., Melo, G.A.G., Boonman, C.C.F., Brown, K.A., Cerabolini, B.E.L., Niinemets, Ü., Onoda, Y., Schneider, J.V., Sheremetiev, S. &amp; Brancalion, P.H.S. (2022). Small and slow is safe: on the drought tolerance of tropical tree species. <em>Global Change Biology</em>, 0–3.</p>
+</div>
+<div>
 <p>Hajek, P., Kurjak, D., Von Wühlisch, G., Delzon, S. &amp; Schuldt, B. (2016). Intraspecific variation in wood anatomical, hydraulic, and foliar traits in ten European beech provenances differing in growth yield. <em>Frontiers in Plant Science</em>, <strong>7</strong>, 1–14.</p>
 </div>
 <div>
+<p>Helsen, K., Acharya, K.P., Brunet, J., Cousins, S.A.O., Decocq, G., Hermy, M., Kolb, A., Lemke, I.H., Lenoir, J., Plue, J., Verheyen, K., De Frenne, P. &amp; Graae, B.J. (2017). Biotic and abiotic drivers of intraspecific trait variation within plant populations of three herbaceous plant species along a latitudinal gradient. <em>BMC Ecology</em>, <strong>17</strong>, 1–12. Retrieved from <a href="https://doi.org/10.1186/s12898-017-0151-y">https://doi.org/10.1186/s12898-017-0151-y</a></p>
+</div>
+<div>
+<p>Kannenberg, S.A., Guo, J.S., Novick, K.A., Anderegg, W.R.L., Feng, X., Kennedy, D., Konings, A.G., Martínez‐Vilalta, J. &amp; Matheny, A.M. (2021). Opportunities, challenges and pitfalls in characterizing plant water‐use strategies. <em>Functional Ecology</em>, 1–14.</p>
+</div>
+<div>
 <p>Lobo, A., Torres-Ruiz, J.M., Burlett, R., Lemaire, C., Parise, C., Francioni, C., Truffaut, L., Tomášková, I., Hansen, J.K., Kjær, E.D., Kremer, A. &amp; Delzon, S. (2018). Assessing inter- and intraspecific variability of xylem vulnerability to embolism in oaks. <em>Forest Ecology and Management</em>, <strong>424</strong>, 53–61.</p>
+</div>
+<div>
+<p>Maréchaux, I., Saint-André, L., Bartlett, M.K., Sack, L. &amp; Chave, J. (2020). Leaf drought tolerance cannot be inferred from classic leaf traits in a tropical rainforest. <em>Journal of Ecology</em>, <strong>108</strong>, 1030–1045.</p>
 </div>
 <div>
 <p>Martínez-Vilalta, J., Cochard, H., Mencuccini, M., Sterck, F., Herrero, A., Korhonen, J.F.J., Llorens, P., Nikinmaa, E., Nolè, A., Poyatos, R., Ripullone, F., Sass-Klaassen, U. &amp; Zweifel, R. (2009). Hydraulic adjustment of Scots pine across Europe. <em>New Phytologist</em>, <strong>184</strong>, 353–364.</p>
@@ -239,6 +288,9 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 <div>
 <p>Westerband, A.C., Funk, J.L. &amp; Barton, K.E. (2021). Intraspecific trait variation in plants: a renewed focus on its role in ecological processes. <em>Annals of botany</em>, <strong>127</strong>, 397–410.</p>
 </div>
+<div>
+<p>Yang, J., Lu, J., Chen, Y., Yan, E., Hu, J., Wang, X. &amp; Shen, G. (2020). Large Underestimation of Intraspecific Trait Variation and Its Improvements. <em>Frontiers in Plant Science</em>, <strong>11</strong>, 1–9.</p>
+</div>
 </div>
 </div>
             </section>
@@ -246,7 +298,7 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
           </div>
         </div>
       </div>
-<a href="literature.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="meetings.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
@@ -291,7 +343,8 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "subsection"
+"collapse": "section",
+"scroll_highlight": true
 }
 });
 });

@@ -18,7 +18,7 @@ opts_chunk$set(
 crs <- '+proj=longlat +datum=WGS84' # leaflet CRS
 ```
 
-# Individuals
+# Field data
 
 This chapter define sampled species and individuals. 
 Specifically, this chapter details:

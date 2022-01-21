@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>hydroITV</title>
+  <title>Chapter 4 Traits variation | hydroITV</title>
   <meta name="description" content="Hydraulic trait inter- versus intra-specific local variability." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="hydroITV" />
+  <meta property="og:title" content="Chapter 4 Traits variation | hydroITV" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="hydroITV" />
+  <meta name="twitter:title" content="Chapter 4 Traits variation | hydroITV" />
   
   <meta name="twitter:description" content="Hydraulic trait inter- versus intra-specific local variability." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="introduction.html"/>
+<link rel="prev" href="field-data.html"/>
+<link rel="next" href="traits-covariation.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -245,27 +245,512 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class = rmdreview>
 This book is in <b><a href="open.html#open">Open Review</a></b>. I want your feedback to make the book better for you and other readers. To add your annotation, <span style="background-color: #3297FD; color: white">select some text</span> and then click the <i class="h-icon-annotate"></i> on the pop-up menu. To see the annotations of others, click the <i class="h-icon-chevron-left"></i> in the upper right hand corner of the page <i class="fa fa-arrow-circle-right  fa-rotate-315" aria-hidden="true"></i>
 </div>
-<div id="header">
-<h1 class="title">hydroITV</h1>
-<h2 class="subtitle"><em>Hydraulic trait inter- versus intra-specific local variability.</em></h2>
-<p class="author"><em>Sylvain Schmitt</em></p>
-<p class="date"><em>2022-01-21</em></p>
+<div id="traits-variation" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Traits variation</h1>
+<p>Subsequent analysis aimed to assess variations in leaf traits among species, individuals, leaves and measurements.</p>
+<div id="methods" class="section level2">
+<h2><span class="header-section-number">4.1</span> Methods</h2>
+<div id="variance-partitionning" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Variance partitionning</h3>
+<p>Variance partitioning was obtained using linear mixed models for every trait and each pairs of levels studied. We aim to understand how much of the leaf trait variation is due to :<br />
+- measurement error,
+- within-tree leaf variation,
+- leaf sample repetitions among trees,
+- intra- and inter-specific variation.</p>
+<p><em>example for intra- and inter-specific variation</em>: We estimated the among-species variance in our trait of interest from the comparison of the observed variance within and between species. In this case, <em>Tree</em> and <em>Species</em> are considered random effects but tree is nested in species.</p>
+<p>model &lt;- lme(trait~1, random = ~1|Species/Tree, data)</p>
 </div>
-<div id="preface" class="section level1 unnumbered">
-<h1>Preface</h1>
-<p>This study aims to evaluate the inter- and intra-specific variation of hydraulic and leaf traits in collaboration with Marion Boisseaux. We evaluated the variation of the traits between measurements within leaves, between leaves within trees, in order to better study the inter- and intra-specific variation. We used a balanced and robust sampling of 10 species x 10 individuals per species representing 100 individuals. We first want to explore trait variation in covariation within each species and between species. If the results are convincing, we may want to further investigate variation within and between species with topography controlling diameter variation. Overall, our study can provide a first robust assessment of variation in hydraulic traits within and between species for tropical tree species, with possible underlying factors for this variation.</p>
-<p>Have a nice reading.</p>
-<div align="right">
-<p><em>Sylvain</em></p>
+<div id="coefficient-of-variation-cv" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> Coefficient of variation (CV)</h3>
+<p>Coefficient of variation (CV) is defined as the standard deviation divided by the mean and expressed as a percentage.
+It does not require any <em>ad hoc</em> assumptions.
+It is unitless and therefore convenient to compare variation of traits among species.</p>
+<p>According to <span class="citation">Yang <em>et al.</em> (<a href="#ref-Yang2020" role="doc-biblioref">2020</a>)</span>,
+the best ITV estimator is CV1 when N &gt;100.</p>
+<p><span class="math display">\[CV1=\frac{sd(traits)}{mean(traits)}\]</span></p>
+<p>For non-normal distribution of raw data or even after a logarithm transformation, CV4, or Bao’s estimator, is preferred:</p>
+<p><span class="math display">\[CV4=CV1-(\frac{CV1^3}{N}-\frac{CV1}{4N}-\frac{CV1^2\times\gamma_1}{2N}-\frac{CV1\times\gamma_2}{8N})\]</span></p>
+<p>Where gamma is Pearson’s measure of skewness and kurtosis of the trait sample distribution.</p>
+<p>Log-transformation places less weight on the extreme large values resulting in a more robust estimation of ITV.
+It also reduced the skewness of the data, which makes it easier to handle.</p>
+<p>We will calculate CV4 using the <a href="from%20https://www.github.com/guochunshen/CV"><code>CV</code> package</a>.</p>
+<p>For each trait, we described the magnitude of intraspecific variation by calculating coefficients of variation (CV) across each species.</p>
+<p>The log-transformation reduces the proportional bias of ITV <span class="citation">(Yang <em>et al.</em> <a href="#ref-Yang2020" role="doc-biblioref">2020</a>)</span>.
+CV only makes sense only on positive data, so we take the <span class="math inline">\(abs(P_{TLP})\)</span>.</p>
+<p><em>Beware: CV was sometimes calculated for n&lt;10 samples for some trait per species!</em></p>
+</div>
+</div>
+<div id="results" class="section level2">
+<h2><span class="header-section-number">4.2</span> Results</h2>
+<div class="figure"><span id="fig:figVarPart"></span>
+<img src="hydroITV_files/figure-html/figVarPart-1.png" alt=" Variance partitioning of leaf traits across study levels. Variance partitioning was obtained using linear mixed models for every trait and each pairs of levels studied:  measurement error, i.e. measurement repetitions among leave samples, within-tree leaf variation, i.e. leaf sample repetitions among trees, and intra- and inter-specific variation, i.e. individual repetitions among species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor ($\pi_{TLP}$), and leaf minimum conductance ($g_{min}$)." width="768" />
+<p class="caption">
+Figure 4.1:  Variance partitioning of leaf traits across study levels. Variance partitioning was obtained using linear mixed models for every trait and each pairs of levels studied: measurement error, i.e. measurement repetitions among leave samples, within-tree leaf variation, i.e. leaf sample repetitions among trees, and intra- and inter-specific variation, i.e. individual repetitions among species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (<span class="math inline">\(\pi_{TLP}\)</span>), and leaf minimum conductance (<span class="math inline">\(g_{min}\)</span>).
+</p>
+</div>
+<div class="figure"><span id="fig:cvspfig"></span>
+<img src="hydroITV_files/figure-html/cvspfig-1.png" alt="Intraspecific coefficient of variation for leaf traits across species. Coefficient of variation used was $CV_4$. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor ($\pi_{TLP}$), and leaf minimum conductance ($g_{min}$). Dashed grey line shows the mean across species with the value given in black as a percentage." width="768" />
+<p class="caption">
+Figure 4.2: Intraspecific coefficient of variation for leaf traits across species. Coefficient of variation used was <span class="math inline">\(CV_4\)</span>. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (<span class="math inline">\(\pi_{TLP}\)</span>), and leaf minimum conductance (<span class="math inline">\(g_{min}\)</span>). Dashed grey line shows the mean across species with the value given in black as a percentage.
+</p>
+</div>
+<p><strong>Sylvain:</strong></p>
+<ul>
+<li>Leaf traits show moderate non-negligible CV within species (8-16%) except high for <span class="math inline">\(g_{min}\)</span> and LDMC (resp. 39% and 33%) and low for LT (4%), with strong variation among species for LDMC (from 4% with <em>P stevensonii</em> to 76% with <em>T. melonii</em>).</li>
+<li>Leaf traits show strong interspecific variation (40-63%), except for SLA and LDMC (resp. 9% and 24%), but also strong intraspecific variation for all traits (30-91%)</li>
+<li>Leaf trait intraspecific variation is mostly due to the individual tree (55-88%) except for a strong variability across samples within tree for LA and CC (resp. 79% and 100%)</li>
+<li>Leaf trait intra-sample variation is almost only due to sample (82-100%) except for a non-negligible measure error within sample for LT and <span class="math inline">\(\pi_{TLP}\)</span> (resp. 9% and 14%)</li>
+<li>Coefficient of variation and variance partitioning thus provide complementary information, with for instance high individual variation with SLA (91%) due to species weak variability (9%) more than intraspecific variability (CV=8%) (=&gt;see SI boxplots)</li>
+<li>Results can drive sampling, e.g. <span class="math inline">\(\pi_{TLP}\)</span> ii a better candidate than <span class="math inline">\(g_{min}\)</span> at the interspecific level with both strong species variability (55%) and a low coefficient of intraspecific variation (16%)</li>
+<li>All together results indicate non-negligible intraspecific trait variation, including hydraulic traits, questioning sampling methodology and determinants of this variation unexplained by measurement error or within individual variation across samples</li>
+</ul>
+<p><strong>Marion:</strong></p>
+<ul>
+<li><p>All traits exhibited considerable intraspecific variation, with CVs ranging from approximately 4–39% (Fig. <a href="traits-variation.html#fig:cvspfig">4.2</a>). LT, CC and SLA exhibited low variation at 4 %, 5% and 8 % respectively. LA, <span class="math inline">\(P_{tlp}\)</span>, LSWC had intermediate variation, from 13-16 %. LDMC and <span class="math inline">\(g_{min}\)</span>) varied with the highest CVs ≥ 30 %.</p></li>
+<li><p>We have two species with composed leaves: Tachgali melinonii and Jacarando copaia. Throughout all the traits, these two species expressed high (sometimes the highest) CV, meaning the highest dispersion of individuals, highest ITV for these species. We must be careful with this interpretation as we measured the leaflets and not the leaves. But leaflets may be more plastic than leaves.</p></li>
+<li><p>we must be aware of estimation biais: CV4 may overestimate ITV when the distribution of raw or log-transformed trait data is close to the normal distribution <span class="citation">(<span class="citeproc-not-found" data-reference-id="Yang"><strong>???</strong></span>)</span>.</p></li>
+</ul>
+</div>
+<div id="discussion" class="section level2">
+<h2><span class="header-section-number">4.3</span> Discussion</h2>
+<p>CV allows us to compare the distribution of trait values when those are expressed in different units.
+The higher the CV is, the higher the dispersion of the individual values around the mean.
+CV offers a way to directly compare variation among species with different abundances <span class="citation">(Helsen <em>et al.</em> <a href="#ref-Helsen2017" role="doc-biblioref">2017</a>)</span>.
+Studies have shown a positive relationship between species ITV and niche breadth <span class="citation">(Clark <a href="#ref-Clark2010" role="doc-biblioref">2010</a>)</span>
+species with larger ITV tend to have larger geographical ranges than species with smaller ITV <span class="citation">(Brown <a href="#ref-Brown1984" role="doc-biblioref">1984</a>)</span>.</p>
+</div>
+<div id="sis" class="section level2">
+<h2><span class="header-section-number">4.4</span> SIs</h2>
+<div id="cv-table" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> CV table</h3>
+<table>
+<caption>
+<span id="tab:cvsptab">Table 4.1: </span>Coefficients of variation (<span class="math inline">\(CV_4\)</span>) across each species.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+SpeciesLong
+</th>
+<th style="text-align:right;">
+LA
+</th>
+<th style="text-align:right;">
+SLA
+</th>
+<th style="text-align:right;">
+LT
+</th>
+<th style="text-align:right;">
+CC
+</th>
+<th style="text-align:right;">
+LDMC
+</th>
+<th style="text-align:right;">
+LSWC
+</th>
+<th style="text-align:right;">
+Ptlp
+</th>
+<th style="text-align:right;">
+gmin
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Casearia javitensis
+</td>
+<td style="text-align:right;">
+0.094
+</td>
+<td style="text-align:right;">
+0.034
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+<td style="text-align:right;">
+0.035
+</td>
+<td style="text-align:right;">
+0.285
+</td>
+<td style="text-align:right;">
+0.146
+</td>
+<td style="text-align:right;">
+0.176
+</td>
+<td style="text-align:right;">
+0.446
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Chrysophyllum prieurii
+</td>
+<td style="text-align:right;">
+0.113
+</td>
+<td style="text-align:right;">
+0.098
+</td>
+<td style="text-align:right;">
+0.019
+</td>
+<td style="text-align:right;">
+0.035
+</td>
+<td style="text-align:right;">
+0.369
+</td>
+<td style="text-align:right;">
+0.071
+</td>
+<td style="text-align:right;">
+0.077
+</td>
+<td style="text-align:right;">
+0.425
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Conceveiba guianensis
+</td>
+<td style="text-align:right;">
+0.076
+</td>
+<td style="text-align:right;">
+0.105
+</td>
+<td style="text-align:right;">
+0.047
+</td>
+<td style="text-align:right;">
+0.052
+</td>
+<td style="text-align:right;">
+0.364
+</td>
+<td style="text-align:right;">
+0.222
+</td>
+<td style="text-align:right;">
+0.155
+</td>
+<td style="text-align:right;">
+0.395
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gustavia hexapetala
+</td>
+<td style="text-align:right;">
+0.106
+</td>
+<td style="text-align:right;">
+0.038
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+0.047
+</td>
+<td style="text-align:right;">
+0.224
+</td>
+<td style="text-align:right;">
+0.123
+</td>
+<td style="text-align:right;">
+0.212
+</td>
+<td style="text-align:right;">
+0.475
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Jacaranda copaia
+</td>
+<td style="text-align:right;">
+0.213
+</td>
+<td style="text-align:right;">
+0.072
+</td>
+<td style="text-align:right;">
+0.042
+</td>
+<td style="text-align:right;">
+0.095
+</td>
+<td style="text-align:right;">
+0.217
+</td>
+<td style="text-align:right;">
+0.235
+</td>
+<td style="text-align:right;">
+0.235
+</td>
+<td style="text-align:right;">
+0.393
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Laetia procera
+</td>
+<td style="text-align:right;">
+0.169
+</td>
+<td style="text-align:right;">
+0.054
+</td>
+<td style="text-align:right;">
+0.066
+</td>
+<td style="text-align:right;">
+0.057
+</td>
+<td style="text-align:right;">
+0.669
+</td>
+<td style="text-align:right;">
+0.123
+</td>
+<td style="text-align:right;">
+0.247
+</td>
+<td style="text-align:right;">
+0.400
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Protium stevensonii
+</td>
+<td style="text-align:right;">
+0.083
+</td>
+<td style="text-align:right;">
+0.019
+</td>
+<td style="text-align:right;">
+0.022
+</td>
+<td style="text-align:right;">
+0.066
+</td>
+<td style="text-align:right;">
+0.045
+</td>
+<td style="text-align:right;">
+0.088
+</td>
+<td style="text-align:right;">
+0.138
+</td>
+<td style="text-align:right;">
+0.256
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tachigali melinonii
+</td>
+<td style="text-align:right;">
+0.265
+</td>
+<td style="text-align:right;">
+0.153
+</td>
+<td style="text-align:right;">
+0.033
+</td>
+<td style="text-align:right;">
+0.046
+</td>
+<td style="text-align:right;">
+0.759
+</td>
+<td style="text-align:right;">
+0.168
+</td>
+<td style="text-align:right;">
+0.170
+</td>
+<td style="text-align:right;">
+0.392
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Virola michelii
+</td>
+<td style="text-align:right;">
+0.143
+</td>
+<td style="text-align:right;">
+0.184
+</td>
+<td style="text-align:right;">
+0.040
+</td>
+<td style="text-align:right;">
+0.058
+</td>
+<td style="text-align:right;">
+0.214
+</td>
+<td style="text-align:right;">
+0.145
+</td>
+<td style="text-align:right;">
+0.144
+</td>
+<td style="text-align:right;">
+0.307
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Virola surimensis
+</td>
+<td style="text-align:right;">
+0.071
+</td>
+<td style="text-align:right;">
+0.035
+</td>
+<td style="text-align:right;">
+0.046
+</td>
+<td style="text-align:right;">
+0.023
+</td>
+<td style="text-align:right;">
+0.136
+</td>
+<td style="text-align:right;">
+0.084
+</td>
+<td style="text-align:right;">
+0.071
+</td>
+<td style="text-align:right;">
+0.397
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mean
+</td>
+<td style="text-align:right;">
+0.133
+</td>
+<td style="text-align:right;">
+0.079
+</td>
+<td style="text-align:right;">
+0.035
+</td>
+<td style="text-align:right;">
+0.051
+</td>
+<td style="text-align:right;">
+0.328
+</td>
+<td style="text-align:right;">
+0.140
+</td>
+<td style="text-align:right;">
+0.162
+</td>
+<td style="text-align:right;">
+0.389
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="individual-variation" class="section level3">
+<h3><span class="header-section-number">4.4.2</span> Individual variation</h3>
+<div class="figure"><span id="fig:indBoxplots"></span>
+<img src="hydroITV_files/figure-html/indBoxplots-1.png" alt="Traits distributions when testing for individual variation." width="768" />
+<p class="caption">
+Figure 4.3: Traits distributions when testing for individual variation.
+</p>
+</div>
+<div class="figure"><span id="fig:indBoxplotsDate"></span>
+<img src="hydroITV_files/figure-html/indBoxplotsDate-1.png" alt="Traits distributions when testing for individual variation and sampling date." width="768" />
+<p class="caption">
+Figure 4.4: Traits distributions when testing for individual variation and sampling date.
+</p>
+</div>
+<div class="figure"><span id="fig:indDBH"></span>
+<img src="hydroITV_files/figure-html/indDBH-1.png" alt="Traits distributions when testing for individual variation and diameter." width="768" />
+<p class="caption">
+Figure 4.5: Traits distributions when testing for individual variation and diameter.
+</p>
+</div>
+<div class="figure"><span id="fig:indTWIsp"></span>
+<img src="hydroITV_files/figure-html/indTWIsp-1.png" alt="Traits distributions when testing for species and individual variation with topography." width="768" />
+<p class="caption">
+Figure 4.6: Traits distributions when testing for species and individual variation with topography.
+</p>
+</div>
+</div>
+<div id="leaf-variation-1" class="section level3">
+<h3><span class="header-section-number">4.4.3</span> Leaf variation</h3>
+<div class="figure"><span id="fig:leafBoxplots"></span>
+<img src="hydroITV_files/figure-html/leafBoxplots-1.png" alt="Traits distributions when testing for leaf variation." width="768" />
+<p class="caption">
+Figure 4.7: Traits distributions when testing for leaf variation.
+</p>
+</div>
+</div>
+<div id="measurement-error" class="section level3">
+<h3><span class="header-section-number">4.4.4</span> Measurement error</h3>
+<div class="figure"><span id="fig:measureBoxplots"></span>
+<img src="hydroITV_files/figure-html/measureBoxplots-1.png" alt="Traits distributions when testing for measurement error." width="768" />
+<p class="caption">
+Figure 4.8: Traits distributions when testing for measurement error.
+</p>
+</div>
 
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Brown1984">
+<p>Brown, J.H. (1984). On the Relationship between Abundance and Distribution of Species. <em>The American Naturalist</em>, <strong>124</strong>, 255–279. Retrieved from <a href="https://www.journals.uchicago.edu/doi/10.1086/284267">https://www.journals.uchicago.edu/doi/10.1086/284267</a></p>
+</div>
+<div id="ref-Clark2010">
+<p>Clark, J.S. (2010). Individuals and the variation needed for high species diversity in forest trees. <em>Science</em>, <strong>327</strong>, 1129–1132. Retrieved from <a href="http://science.sciencemag.org/content/327/5969/1129%20http://www.sciencemag.org/cgi/doi/10.1126/science.1183506">http://science.sciencemag.org/content/327/5969/1129 http://www.sciencemag.org/cgi/doi/10.1126/science.1183506</a></p>
+</div>
+<div id="ref-Helsen2017">
+<p>Helsen, K., Acharya, K.P., Brunet, J., Cousins, S.A.O., Decocq, G., Hermy, M., Kolb, A., Lemke, I.H., Lenoir, J., Plue, J., Verheyen, K., De Frenne, P. &amp; Graae, B.J. (2017). Biotic and abiotic drivers of intraspecific trait variation within plant populations of three herbaceous plant species along a latitudinal gradient. <em>BMC Ecology</em>, <strong>17</strong>, 1–12. Retrieved from <a href="https://doi.org/10.1186/s12898-017-0151-y">https://doi.org/10.1186/s12898-017-0151-y</a></p>
+</div>
+<div id="ref-Yang2020">
+<p>Yang, J., Lu, J., Chen, Y., Yan, E., Hu, J., Wang, X. &amp; Shen, G. (2020). Large Underestimation of Intraspecific Trait Variation and Its Improvements. <em>Frontiers in Plant Science</em>, <strong>11</strong>, 1–9.</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="introduction.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="field-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="traits-covariation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -1,6 +1,6 @@
 .Rproj.user
 .Rhistory
-.Rdata
+.RData
 .Ruserdata
 _bookdown_*
 
@@ -15,4 +15,4 @@ maps
 data/traits
 
 # models
-models/*.RData
+models/*.Rdata
