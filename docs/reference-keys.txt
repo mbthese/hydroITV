@@ -1,3 +1,8 @@
+fig:virtualdatafig
+fig:corvirtualdata2
+fig:virtualtraitdist
+fig:cv
+fig:varpart
 tab:speciesTab
 fig:speciesPhylo
 tab:indMD
@@ -10,7 +15,6 @@ fig:samplingleafvar
 fig:figVarPart
 fig:cvspfig
 tab:cvsptab
-fig:figVarPartRWCFvFm
 fig:indBoxplots
 fig:indBoxplotsDate
 fig:indDBH
@@ -54,7 +58,6 @@ results
 discussion
 sis
 cv-table
-variance-partitioning-fvfm-rwc
 individual-variation
 leaf-variation-1
 measurement-error

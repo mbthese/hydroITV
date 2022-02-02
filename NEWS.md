@@ -1,3 +1,10 @@
+hydroITV 1.0.0.9024
+* virtual multidimensiona data
+
+hydroITV 1.0.0.9023
+* virtual data cv & lmm with reps
+* updated lmm & cv with field data
+
 hydroITV 1.0.0.9022
 * post-meeting
 * meeting section

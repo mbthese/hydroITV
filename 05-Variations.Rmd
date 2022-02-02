@@ -9,7 +9,7 @@ opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
   cache = T, cache.lazy = F)
 varcols <- c(species = "red", tree = "lightgreen", 
-             sample = "lightblue", measure = "orange", residual = "grey")
+             sample = "lightblue", measure = "orange")
 log_abs_trans <- function() {
     scales::trans_new(
         name = "log_abs", 
@@ -52,6 +52,29 @@ cv_long <- reshape2::melt(cv, "SpeciesLong", variable.name = "trait", value.name
   mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "gmin" = "g[min]"))
 ```
 
+```{r, eval=F}
+on the link between CV and mu
+googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit#gid=0",
+                                   range = "traits") %>% 
+  filter(StudyLevel == "tree") %>% 
+  mutate(SpeciesLong = paste(Genus, Species)) %>% 
+  mutate_at(c("gmin", "LA", "LT", "LDMC", "CC", "Ptlp", "SLA", "LSWC"), abs) %>%  
+  mutate_at(c("gmin", "LA", "LT", "LDMC", "CC", "Ptlp", "SLA", "LSWC"), log) %>% 
+  dplyr::select(SpeciesLong, gmin, LA, LT, LDMC, CC, Ptlp, SLA, LSWC) %>% 
+  reshape2::melt("SpeciesLong", variable.name = "Trait") %>% 
+  na.omit() %>% 
+  mutate(Trait = recode(Trait, "Ptlp" = "pi[TLP]", "gmin" = "g[min]")) %>% 
+  group_by(Trait, SpeciesLong) %>% 
+  summarise(cv = cv(value), mean = mean(value)) %>% 
+  ggplot(aes(x = mean, y = cv)) +
+  geom_point() +
+  facet_wrap(~ Trait, scales = "free", nrow = 2, labeller = label_parsed) +
+  ylab(expression(CV[4])) + xlab(expression(mu)) +
+  geom_smooth(method = "lm") +
+  ggpubr::stat_cor()
+```
+
+
 ```{r datavar}
 ft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
                                   "traits")
@@ -61,13 +84,11 @@ vars_meas <- filter(ft, StudyLevel == "measure") %>%
   reshape2::melt(c("Sample", "Measure"), variable.name = "trait") %>% 
   na.omit() %>% 
   group_by(trait, Sample) %>% 
-  # summarise(N = n()) %>% ggplot(aes(N)) + geom_histogram()
-  sample_n(5) %>% 
   group_by(trait) %>% 
-  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Sample/Measure, data = .) %>% 
+  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Sample, data = .) %>% 
        ape::varcomp(scale = F, cum = F) %>% 
        as.vector() %>% 
-       data.frame(level = c("Sample", "Measure", "Residual"), variance = as.vector(.))) %>% 
+       data.frame(level = c("Sample", "Measure"), variance = as.vector(.))) %>% 
   unnest(var) %>% 
   select(-`.`) %>% 
   group_by(trait) %>% 
@@ -79,13 +100,11 @@ vars_leaf <- filter(ft, StudyLevel == "leaf") %>%
   reshape2::melt(c("Tree", "Sample"), variable.name = "trait") %>% 
   na.omit() %>% 
   group_by(trait, Tree) %>% 
-  # summarise(N = n()) %>% ggplot(aes(N)) + geom_histogram()
-  sample_n(9) %>% 
   group_by(trait) %>% 
-  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Tree/Sample, data = .) %>% 
+  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Tree, data = .) %>% 
        ape::varcomp(scale = F, cum = F) %>% 
        as.vector() %>% 
-       data.frame(level = c("Tree", "Sample", "Residual"), variance = as.vector(.))) %>% 
+       data.frame(level = c("Tree", "Sample"), variance = as.vector(.))) %>% 
   unnest(var) %>% 
   select(-`.`) %>% 
   group_by(trait) %>% 
@@ -96,14 +115,12 @@ vars_tree <- filter(ft, StudyLevel == "tree") %>%
   dplyr::select(Species, Tree, LA, SLA, LT, CC, LDMC, FvFm, RWC, LSWC, Ptlp, gmin) %>% 
   reshape2::melt(c("Species", "Tree"), variable.name = "trait") %>% 
   na.omit() %>% 
-  group_by(trait, Species) %>% 
-  # summarise(N = n()) %>% ggplot(aes(N)) + geom_histogram()
-  sample_n(6) %>% 
+  group_by(trait, Species) %>%
   group_by(trait) %>% 
-  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Species/Tree, data = .) %>% 
+  do(var = nlme::lme(log(abs(value)) ~ 1, random=~1|Species, data = .) %>% 
        ape::varcomp(scale = F, cum = F) %>% 
        as.vector() %>% 
-       data.frame(level = c("Species", "Tree", "Residual"), variance = as.vector(.))) %>% 
+       data.frame(level = c("Species", "Tree"), variance = as.vector(.))) %>% 
   unnest(var) %>% 
   select(-`.`) %>% 
   group_by(trait) %>% 
@@ -112,12 +129,12 @@ vars_tree <- filter(ft, StudyLevel == "tree") %>%
 
 vars <- bind_rows(vars_meas, vars_leaf, vars_tree) %>% 
   mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "gmin" = "g[min]", "FvFm" = "frac(Fv,Fm)")) %>% 
-  mutate(level = factor(level, levels = c("Species", "Tree", "Sample", "Measure", "Residual"))) %>% 
+  mutate(level = factor(level, levels = c("Species", "Tree", "Sample", "Measure"))) %>% 
   mutate(study = factor(study, levels = c("Measure / Sample", "Sample / Tree", "Tree / Species"))) %>% 
   mutate(pct_text = paste0(round(pct), "%")) %>% 
   mutate(pct_text = gsub("^0%", "", pct_text))
 
-rm(vars_meas, vars_leaf, vars_tree) 
+rm(vars_meas, vars_leaf, vars_tree)  
 ```
 
 # (PART) Methodology {-}
@@ -183,24 +200,21 @@ vars %>%
   xlab("Trait") + ylab("Percentage of variance") +
   scale_x_discrete(labels = scales::parse_format()) +
   facet_wrap(.~trait, labeller = "label_parsed",  nrow = 2) +
-  theme(legend.position = "bottom", axis.text.x = element_text(angle = 90), axis.title.x = element_blank()) 
+  theme(legend.position = "bottom", axis.text.x = element_text(angle = 90), axis.title.x = element_blank())   
 ```
 
 ```{r cvspfig, fig.cap="Intraspecific coefficient of variation for leaf traits across species. Coefficient of variation used was $CV_4$. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor ($\\pi_{TLP}$), and leaf minimum conductance ($g_{min}$). Dashed grey line shows the mean across species with the value given in black as a percentage.", fig.height=6, fig.width=8}
 cv_long %>%  
   filter(SpeciesLong != "mean") %>% 
-  ggplot(aes(x = SpeciesLong, y = CV)) +
-  geom_hline(aes(yintercept = CV), linetype = "dashed", col = "lightgrey",
-             data = filter(cv_long, SpeciesLong == "mean")) +
-  geom_text(aes(label = paste0("CV = ",round(CV, 2)*100, "%")), x = "Jacaranda copaia", y = 0.55, col = "black",
+  ggplot(aes(x = trait, y = CV)) +
+  geom_boxplot() +
+  geom_jitter(aes(col = SpeciesLong)) +
+  geom_text(aes(label = paste0(round(CV, 2)*100, "%")), y = 0.55, col = "black",
             data = filter(cv_long, SpeciesLong == "mean")) +
-  geom_boxplot(aes(fill = SpeciesLong, col = SpeciesLong), shape = "circle") +
-  facet_wrap(~ trait, scales = "free_x", labeller = label_parsed, nrow = 2) +
-  theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
-        legend.position = "bottom", legend.title = element_blank()) +
-  guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
-  guides(fill = guide_legend(nrow = 4, byrow = TRUE)) + 
-  ylab(expression(CV[4]))
+  theme(axis.title.x = element_blank(), axis.text.x = element_text()) +
+  ylab(expression(CV[4])) +
+  scale_color_discrete("") +
+  scale_x_discrete(labels = scales::label_parse())
 ```
 
 **Sylvain:**
@@ -236,22 +250,6 @@ species with larger ITV tend to have larger geographical ranges than species wit
 
 ```{r cvsptab}
 knitr::kable(cv, caption = "Coefficients of variation ($CV_4$) across each species.", digits = 3) 
-```
-
-### Variance partitioning FvFm & RWC
-
-```{r figVarPartRWCFvFm, fig.cap=" Variance partitioning of leaf traits across study levels. Variance partitioning was obtained using linear mixed models for every trait and each pairs of levels studied:  measurement error, i.e. measurement repetitions among leave samples, within-tree leaf variation, i.e. leaf sample repetitions among trees, and intra- and inter-specific variation, i.e. individual repetitions among species. Leaf traits include leaf maximum photochemical quantum yield (FvFm), and leaf relative water content (RWC)."}
-vars %>% 
-  filter(trait %in% c("frac(Fv,Fm)", "RWC")) %>% 
-  ggplot(aes(x = study, y = pct, fill = level)) +
-  geom_bar(stat = "identity", position = "stack") +
-  geom_text(aes(y = pct, label = pct_text), col = "white", position = position_stack(vjust = .5)) +
-  scale_fill_manual(expression(sigma^2),
-                    values = unname(varcols[c("species", "tree", "sample", "measure", "residual")])) +
-  xlab("Trait") + ylab("percentage of variance") +
-  scale_x_discrete(labels = scales::parse_format()) +
-  facet_wrap(.~trait, labeller = "label_parsed") +
-  theme(legend.position = "bottom", axis.text.x = element_text(angle = 90), axis.title.x = element_blank())
 ```
 
 ### Individual variation
