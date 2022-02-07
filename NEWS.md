@@ -1,5 +1,8 @@
+hydroITV 1.0.0.9025
+* virtual sampling multidimensional tested with correlations
+
 hydroITV 1.0.0.9024
-* virtual multidimensiona data
+* virtual multidimensional data
 
 hydroITV 1.0.0.9023
 * virtual data cv & lmm with reps

@@ -136,9 +136,6 @@ vars <- bind_rows(vars_meas, vars_leaf, vars_tree) %>%
 
 rm(vars_meas, vars_leaf, vars_tree)  
 ```
-
-# (PART) Methodology {-}
-
 # Traits variation
 
 Subsequent analysis aimed to assess variations in leaf traits among species, individuals, leaves and measurements.
