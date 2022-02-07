@@ -1,3 +1,6 @@
+hydroITV 1.0.0.9026
+* 7/2/22 meeting
+
 hydroITV 1.0.0.9025
 * virtual sampling multidimensional tested with correlations
 

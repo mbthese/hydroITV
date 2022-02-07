@@ -20,3 +20,36 @@
     * include in methodology paper
     * describe the result as potential spectrum without details in the results section
     * avoid to discuss it in discussion an keep it for Dani's "ecology" paper
+
+## 7/02/22 Marion & Sylvain
+
+**Sylvain's notes**:
+
+* Schedule meeting Daniela & Geraldine
+* **Data**
+    * Schedule CC measurement error 
+    * add corrected gmin *SS*
+    * test gmin inference with MARS *SS*
+    * clean species names in DB *SS*
+    * deposit DB on TRY *SS*
+* **Analyses**
+    * Compute all pairwise correlations (not only T1) *SS*
+    * Update gmin in results *SS*
+    * Compute metrics for virtual analyses for bias (mean or median error) and uncertainty (variance in the estimate) *MB*
+* **Writing**
+    * Choose between "hydraulic traits" and "water-related" traits (see S. Trueba pers. com.) *SS*
+    * **Introduction**
+        * Hook *MB*
+        * Trait *MB*
+        * Intraspecific variation *MB*
+        * Sampling *SS*
+        * Our work *SS*
+    * **M&Ms**
+        * Virtual *SS*
+        * Field *MB*
+        * Analyses *MB*
+    * **Results**
+        * Virtual *SS*
+        * Field *MB*
+    * **Discussion** waiting for the other parts
+    
