@@ -66,7 +66,7 @@ var <- factoextra::facto_summarize(wPCA, element = "var",
 colnames(var)[2:3] <-  c("x", "y")
 ind <- data.frame(pca.ind$coord[, 1:2, drop=FALSE])
 colnames(ind)<- c("x", "y")
-ind <- cbind(ind, ft)
+ind <- cbind(ind, ft) 
 ```
 
 # Traits covariation
@@ -117,13 +117,13 @@ g.within <- ggplot(ind, aes(x, y, colour = SpeciesLong)) +
   scale_color_discrete(guide = "none") +
   ggtitle("B - Within-species")
 g <- gridExtra::grid.arrange(g.among, g.within, g.legend, layout_matrix = rbind(c(1,2), c(3,3)), heights = c(3,1))
-# ggsave(filename = "~/Téléchargements/Fig3.png", plot = g, bg = "white", height = 4, width = 6)
+# ggsave(filename = "~/Téléchargements/Fig3.png", plot = g, bg = "white", height = 4, width = 6) 
 ```
 
 ```{r corrplotTraits, fig.cap="ACorrelation of leaf traits across individuals in 10 Neotropical tree species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin)."}
 dplyr::select(ft, -Genus, -Species, -Tree, -SpeciesLong, -DBH, -TWI, -FvFm, -RWC) %>% 
   cor() %>% 
-  corrplot::corrplot.mixed()
+  corrplot::corrplot.mixed() 
 ```
 
 **Sylvain:**
@@ -163,7 +163,7 @@ autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, c
   geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Among-species PCA - DBH")
+  ggtitle("Among-species PCA - DBH") 
 ```
 
 
@@ -178,7 +178,7 @@ autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, c
   geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Among-species PCA - TWI")
+  ggtitle("Among-species PCA - TWI") 
 ```
 
 ```{r indpcasp}
@@ -189,7 +189,7 @@ autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, c
   geom_hline(aes(yintercept = 0), col = 'black', linetype = "dotted") +
   geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
   scale_color_discrete("") +
-  ggtitle("Among-species PCA - Species") +
+  ggtitle("Among-species PCA - Species") + 
   stat_ellipse(aes(group = SpeciesLong, fill = SpeciesLong, col = SpeciesLong), level = 0.5)
 ```
 
@@ -207,7 +207,7 @@ ggplot(ind, aes(x, y, colour = SpeciesLong)) +
   ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Within-species PCA - DBH")
+  ggtitle("Within-species PCA - DBH") 
 ```
 
 ```{r indwpcatwi}
@@ -224,5 +224,5 @@ ggplot(ind, aes(x, y, colour = SpeciesLong)) +
   ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Within-species PCA - TWI")
+  ggtitle("Within-species PCA - TWI") 
 ```

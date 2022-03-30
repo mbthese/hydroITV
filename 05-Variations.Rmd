@@ -49,7 +49,7 @@ cv <- bind_rows(cv,
                   summarise_all(mean) %>% 
                   mutate(SpeciesLong = "mean"))
 cv_long <- reshape2::melt(cv, "SpeciesLong", variable.name = "trait", value.name = "CV") %>% 
-  mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "gmin" = "g[min]"))
+  mutate(trait = recode(trait, "Ptlp" = "pi[TLP]", "gmin" = "g[min]")) 
 ```
 
 ```{r, eval=F}
@@ -134,7 +134,7 @@ vars <- bind_rows(vars_meas, vars_leaf, vars_tree) %>%
   mutate(pct_text = paste0(round(pct), "%")) %>% 
   mutate(pct_text = gsub("^0%", "", pct_text))
 
-rm(vars_meas, vars_leaf, vars_tree)  
+rm(vars_meas, vars_leaf, vars_tree)   
 ```
 # Traits variation
 

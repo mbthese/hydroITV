@@ -63,7 +63,7 @@ names(mdata) <- traits
 species <- ft %>% 
   separate(SpeciesLong, c("Genus", "Species"), remove = F) %>% 
   dplyr::select(SpeciesLong, Genus, Species, SpeciesNum) %>% 
-  unique()
+  unique() 
 ```
 
 ```{r fits}
@@ -72,7 +72,7 @@ species <- ft %>%
 #   sampling(model, chains = 2, data = x, save_warmup = F))
 # names(fits) <- traits
 # save(mdata, fits, file = "models/m1.Rdata")
-load("models/m1.Rdata")  
+load("models/m1.Rdata") 
 ```
 
 # (PART) Ecology {-}

@@ -246,11 +246,18 @@ cv_full <- ft %>%
   summarise(cv = cv(trait)) %>%
   ungroup() %>%
   summarise(cv = mean(cv))
+cv_label <- cv_sampling %>% 
+  group_by(sampling) %>% 
+  summarise(m = median(cv), s = sd(cv)) %>% 
+  mutate(b =  m - cv_full$cv) %>% 
+  mutate(label = paste0("b =", round(b,4), ", sd=", round(s,4)))
 ggplot(cv_sampling, aes(sampling, cv)) +
   geom_boxplot() +
   geom_hline(aes(yintercept = cv), linetype = "dashed",
              data = cv_full) +
-  ylab(expression(CV[4])) + xlab("Sampling strategy")
+  ylab(expression(CV[4])) + xlab("Sampling strategy") +
+  geom_text(aes(label = label), y = 0.13, data = cv_label) +
+  ylim(NA,0.13)
 ```
 
 ```{r varpartfunction}
@@ -279,6 +286,12 @@ vp <- lapply(as.list(1:R), function(r)
 vp_med <- vp %>%
   group_by(sampling, level) %>%
   summarise(variance = median(variance))
+vp_label <- vp %>% 
+  filter(level == "tree") %>% 
+  group_by(sampling) %>% 
+  summarise(m = median(variance), s = sd(variance)) %>% 
+  mutate(b =  m - 0.5) %>% 
+  mutate(label = paste0("b =", round(b,4), ", sd=", round(s,4)))
 ggplot(filter(vp, level == "tree"),
        aes(x = sampling, y = variance)) +
   geom_bar(aes(fill = level), stat = "identity", position = "stack", data = vp_med) +
@@ -286,7 +299,9 @@ ggplot(filter(vp, level == "tree"),
   geom_hline(aes(yintercept = 0.5), linetype = "dashed") +
   scale_fill_manual(expression(sigma^2),
                     values = unname(varcols[c("species", "tree")])) +
-  ylab("Percentage of variance") + xlab("Sampling strategy")
+  ylab("Percentage of variance") + xlab("Sampling strategy") +
+  geom_text(aes(label = label), y = 1.05, data = vp_label) +
+  ylim(NA, 1.1)
 ```
 
 ### Trait co-variation

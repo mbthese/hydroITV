@@ -1,3 +1,6 @@
+hydroITV 1.0.0.9027
+* fixed V. surinamensis & virtual exp bias & sd
+
 hydroITV 1.0.0.9026
 * 7/2/22 meeting
 
