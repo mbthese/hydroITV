@@ -186,6 +186,22 @@ CV only makes sense only on positive data, so we take the $abs(P_{TLP})$.
 
 ## Results
 
+```{r tab1, eval=F}
+data <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit#gid=0",
+                                   range = "traits") %>% 
+  mutate(Species = paste(Genus, Species)) %>% 
+  mutate(Tree = paste(Plot, SubPlot, TreeFieldNum)) %>% 
+  mutate(Sample = paste(Tree, Sample)) %>% 
+  mutate(Measure = paste(Sample, Measure)) %>% 
+  dplyr::select(StudyLevel, Species, Tree, Sample, Measure, LA, SLA, LT, CC, LDMC, LSWC, Ptlp, gmin) %>% 
+  reshape2::melt(c("StudyLevel", "Species", "Tree", "Sample", "Measure"), variable.name = "Trait") %>% 
+  filter(Trait == "LA") %>% 
+  group_by(StudyLevel) %>% 
+  summarise(Species = length(unique(Species)), Tree = length(unique(Tree)),
+            Sample  = length(unique(Sample)), Measure  = length(unique(Measure)))
+```
+
+
 ```{r figVarPart, fig.width=8, fig.height=8, fig.cap=" Variance partitioning of leaf traits across study levels. Variance partitioning was obtained using linear mixed models for every trait and each pairs of levels studied:  measurement error, i.e. measurement repetitions among leave samples, within-tree leaf variation, i.e. leaf sample repetitions among trees, and intra- and inter-specific variation, i.e. individual repetitions among species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor ($\\pi_{TLP}$), and leaf minimum conductance ($g_{min}$)."}
 vars %>% 
   filter(!(trait %in% c("frac(Fv,Fm)", "RWC"))) %>% 
@@ -204,7 +220,7 @@ vars %>%
 cv_long %>%  
   filter(SpeciesLong != "mean") %>% 
   ggplot(aes(x = trait, y = CV)) +
-  geom_boxplot() +
+  geom_boxplot(outlier.shape = NA) +
   geom_jitter(aes(col = SpeciesLong)) +
   geom_text(aes(label = paste0(round(CV, 2)*100, "%")), y = 0.55, col = "black",
             data = filter(cv_long, SpeciesLong == "mean")) +
