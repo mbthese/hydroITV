@@ -233,7 +233,7 @@ make_map("P16SE.png", "P16 South-East", c(13:15, 18:20, 23:25))
 Candidate individuals from the P16 were not enough for the FTH field campaign. 
 We added individuals from the P6:
 
-```{r}
+```{r, eval=F}
 missings <- data.frame(
   spcode = c("Casjav", "Congui", "Jaccop", "Proste", "Tacmel", "Virmic", "Virsur"),
   inds = c(5, 1, 4, 4, 4, 1, 4),
