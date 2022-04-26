@@ -74,7 +74,7 @@ ftsp <- read_csv("data/211124_TraitDatabase_species_means_updatedNames.csv") %>%
     LDMC = `LDMC.mg.g_mean`, LSWC = `LSWC_E.per_corr_mean`, 
     Ptlp = `ptlp_mean`, gmin = `gmin.slope_mean`) %>% 
   mutate(SpeciesLong = paste(Genus_CorrBota, Species_CorrBota)) %>% 
-  dplyr::select(SpeciesLong, LDMC, LSWC, Ptlp, gmin)
+  dplyr::select(SpeciesLong, LDMC, LSWC, Ptlp, gmin) 
 ```
 
 # Traits covariation
@@ -92,7 +92,7 @@ ftsp %>%
   na.omit() %>% 
   group_by(trait) %>% 
   summarise(N = n()) %>% 
-  kable(caption = "Number of species mean value per trait in common.")
+  kable(caption = "Number of species mean value per trait in common.") 
 ```
 
 ## Methods
@@ -141,7 +141,7 @@ cors %>%
   scale_color_discrete(guide = "none") +
   xlab("Species mean correlations (Pearson's r)") +
   ylab("Individual minus species mean correlations (Pearson's r)") +
-  ggtitle(paste0("Pearson's r = ", round(test$estimate, 3)), paste0("p = ", round(test$p.value, 4)))
+  ggtitle(paste0("Pearson's r = ", round(test$estimate, 3)), paste0("p = ", round(test$p.value, 4))) 
 ```
 
 ## Discussion
@@ -153,7 +153,7 @@ cors %>%
 ```{r corrplotTraits, fig.cap="Correlation of leaf traits across individuals in 10 Neotropical tree species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin)."}
 dplyr::select(ft, -Genus, -Species, -Tree, -SpeciesLong, -DBH, -TWI, -FvFm, -RWC) %>% 
   cor() %>% 
-  corrplot::corrplot.mixed() 
+  corrplot::corrplot.mixed()  
 ```
 
 ```{r pcaArticle, fig.cap="Among (A) and Within-species (B) principal component analysis (A - PCA and B - wPCA) of leaf traits across individuals in 10 Neotropical tree species. Circle colors indicate the species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (Gmin)."}
@@ -186,7 +186,7 @@ g.within <- ggplot(ind, aes(x, y, colour = SpeciesLong)) +
   ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
   scale_color_discrete(guide = "none") +
   ggtitle("B - Within-species")
-g <- gridExtra::grid.arrange(g.among, g.within, g.legend, layout_matrix = rbind(c(1,2), c(3,3)), heights = c(3,1))
+g <- gridExtra::grid.arrange(g.among, g.within, g.legend, layout_matrix = rbind(c(1,2), c(3,3)), heights = c(3,1)) 
 # ggsave(filename = "~/Téléchargements/Fig3.png", plot = g, bg = "white", height = 4, width = 6) 
 ```
 
@@ -201,7 +201,7 @@ autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, c
   geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Among-species PCA - DBH") 
+  ggtitle("Among-species PCA - DBH")  
 ```
 
 
@@ -216,7 +216,7 @@ autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, c
   geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Among-species PCA - TWI") 
+  ggtitle("Among-species PCA - TWI")  
 ```
 
 ```{r indpcasp}
@@ -228,7 +228,7 @@ autoplot(princomp(~ gmin + LA + LT + LDMC + CC + Ptlp + SLA + LSWC, data = ft, c
   geom_vline(aes(xintercept = 0), col = 'black', linetype = "dotted") +
   scale_color_discrete("") +
   ggtitle("Among-species PCA - Species") + 
-  stat_ellipse(aes(group = SpeciesLong, fill = SpeciesLong, col = SpeciesLong), level = 0.5)
+  stat_ellipse(aes(group = SpeciesLong, fill = SpeciesLong, col = SpeciesLong), level = 0.5) 
 ```
 
 ```{r indwpcadbh}
@@ -245,7 +245,7 @@ ggplot(ind, aes(x, y, colour = SpeciesLong)) +
   ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Within-species PCA - DBH") 
+  ggtitle("Within-species PCA - DBH")  
 ```
 
 ```{r indwpcatwi}
@@ -262,7 +262,7 @@ ggplot(ind, aes(x, y, colour = SpeciesLong)) +
   ylab(paste0("within PCA 2 (", round(wPCA$eig/sum(wPCA$eig)*100)[2], "%)")) +
   scale_size_continuous(trans = "log") +
   scale_color_discrete("") +
-  ggtitle("Within-species PCA - TWI") 
+  ggtitle("Within-species PCA - TWI")  
 ```
 
 ### Old interpretations

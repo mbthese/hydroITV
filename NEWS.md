@@ -1,3 +1,6 @@
+hydroITV 1.0.0.9029
+* updated gmin
+
 hydroITV 1.0.0.9028
 * quick comparison with Daniela's data
 
