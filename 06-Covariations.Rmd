@@ -74,7 +74,7 @@ ftsp <- read_csv("data/211124_TraitDatabase_species_means_updatedNames.csv") %>%
     LDMC = `LDMC.mg.g_mean`, LSWC = `LSWC_E.per_corr_mean`, 
     Ptlp = `ptlp_mean`, gmin = `gmin.slope_mean`) %>% 
   mutate(SpeciesLong = paste(Genus_CorrBota, Species_CorrBota)) %>% 
-  dplyr::select(SpeciesLong, LDMC, LSWC, Ptlp, gmin) 
+  dplyr::select(SpeciesLong, LDMC, LSWC, Ptlp, gmin)  
 ```
 
 # Traits covariation
@@ -103,7 +103,7 @@ We performed a Principal Component Analysis to investigate the multivariate trai
 
 ## Results
 
-```{r corspind, fig.cap="Correlation of among- and within-species trait correlations. The X-axis represents the correlations of the mean trait values of the species, while the Y-axis represents the correlations of the individual trait value minus the mean trait value of the corresponding species, thus revealing the coordination of traits between and within species. Points color and label indicate trait pairs for every correlations, while the title indicate the correlation of correlations and associated p-value. The colour and label of the dots indicate the pairs of traits for each correlation, while the title indicates the correlation of all pairs of correlations and the associated p-value. The grey line represents the expected position of the points for a correlation of 1 for trait correlations among- and within-species. Leaf traits include leaf dry matter content (LDMC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin). Within-species trait values originate from this study including 100 individuals from 10 species, while among trait values originate from Daniela Kreber's PhD with 30 to 102 species per trait. All trait values have been measured using the same protocol in the Paracou research station."}
+```{r corspind, fig.cap="Correlation of among- and within-species trait correlations. The X-axis represents the absolute correlations of the mean trait values of the species, while the Y-axis represents the absolute correlations of the individual trait value minus the mean trait value of the corresponding species, thus revealing the coordination of traits between and within species. Points color and label indicate trait pairs for every correlations, while the title indicate the correlation of correlations and associated p-value. The colour and label of the dots indicate the pairs of traits for each correlation, while the title indicates the correlation of all pairs of correlations and the associated p-value. The grey line represents the expected position of the points for a correlation of 1 for trait correlations among- and within-species. Leaf traits include leaf dry matter content (LDMC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin). Within-species trait values originate from this study including 100 individuals from 10 species, while among trait values originate from Daniela Kreber's PhD with 30 to 102 species per trait. All trait values have been measured using the same protocol in the Paracou research station."}
 corsp <- ftsp %>% 
   dplyr::select(-SpeciesLong) %>% 
   cor(use = "pairwise.complete.obs") %>% 
@@ -134,13 +134,13 @@ cors %>%
   mutate(pair = paste(sort(c(trait1, trait2)), collapse = "-")) %>% 
   group_by(pair) %>% 
   sample_n(1) %>% 
-  ggplot(aes(cor_species, cor_inds, col = pair, label = pair)) +
+  ggplot(aes(abs(cor_species), abs(cor_inds), col = pair, label = pair)) +
   geom_abline(slope = 1, intercept = 0, col = "darkgrey") +
   geom_point() +
   ggrepel::geom_text_repel() +
   scale_color_discrete(guide = "none") +
-  xlab("Species mean correlations (Pearson's r)") +
-  ylab("Individual minus species mean correlations (Pearson's r)") +
+  xlab("Species absolute mean correlations (Pearson's r)") +
+  ylab("Individual minus species absolute mean correlations (Pearson's r)") +
   ggtitle(paste0("Pearson's r = ", round(test$estimate, 3)), paste0("p = ", round(test$p.value, 4))) 
 ```
 
