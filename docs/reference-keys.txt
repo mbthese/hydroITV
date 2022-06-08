@@ -74,8 +74,6 @@ methods-2
 results-2
 discussion-2
 sis-1
-pcas
-old-interpretations
 ontogeny-and-topography-effects
 methods-3
 results-3

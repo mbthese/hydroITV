@@ -1,3 +1,6 @@
+hydroITV 1.0.0.9030
+* covaraitions all traits
+
 hydroITV 1.0.0.9029
 * updated gmin
 

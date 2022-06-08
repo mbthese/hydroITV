@@ -68,13 +68,19 @@ ind <- data.frame(pca.ind$coord[, 1:2, drop=FALSE])
 colnames(ind)<- c("x", "y")
 ind <- cbind(ind, ft) 
 # Daniela data
-ftsp <- read_csv("data/211124_TraitDatabase_species_means_updatedNames.csv") %>% 
+dani <- read_csv("data/211124_TraitDatabase_species_means_updatedNames.csv") %>% 
   dplyr::rename(
     # LA = NA, SLA = NA, LT = NA, CC = NA, 
-    LDMC = `LDMC.mg.g_mean`, LSWC = `LSWC_E.per_corr_mean`, 
+    # LDMC = `LDMC.mg.g_mean`, 
+    LSWC = `LSWC_E.per_corr_mean`, 
     Ptlp = `ptlp_mean`, gmin = `gmin.slope_mean`) %>% 
   mutate(SpeciesLong = paste(Genus_CorrBota, Species_CorrBota)) %>% 
-  dplyr::select(SpeciesLong, LDMC, LSWC, Ptlp, gmin)  
+  dplyr::select(SpeciesLong, LSWC, Ptlp, gmin)  
+fg <- readxl::read_xlsx("data/Appendix_S2-6___S8-13.xlsx", "App.S6-ok", skip = 3) %>% 
+  mutate(SpeciesLong = gsub("_", " ", Species)) %>% 
+    dplyr::rename(LA = Leaf_Area, SLA = SLA, LT = Thickness, CC = Chlorophyll_content) %>%
+  dplyr::select(SpeciesLong, LA, SLA, LT, CC)
+ftsp <- left_join(dani, fg) ; rm(dani, fg)
 ```
 
 # Traits covariation
@@ -84,7 +90,7 @@ Specifically, we investigated individual traits co-variation at several taxonomi
 
 ## Material
 
-**Describe Daniela's data here.**
+We used data from Vleminckx *et al,* (2021) and Krebber *et al,* (in prep) to obtain the average trait value per species in 94 to 102 species per trait species per trait in order to have a balanced sampling with respect to intra-species variation.
 
 ```{r ftspN}
 ftsp %>% 
@@ -92,18 +98,18 @@ ftsp %>%
   na.omit() %>% 
   group_by(trait) %>% 
   summarise(N = n()) %>% 
-  kable(caption = "Number of species mean value per trait in common.") 
+  kable(caption = "Number of species mean value per trai.")  
 ```
 
 ## Methods
 
-We performed a Principal Component Analysis to investigate the multivariate trait covariation. Using the among PCA, a "classic" PCA, we aim to evaluate trait syndroms characterizing species strategies. For the within PCA, all the gravity centers are placed back at the origin and the individuals are being represented with a maximal variance. We eliminate the species effect to study the individual strategies. The among-PCA searches the axes at the center of gravity and emphasizes on the differences between groups (here, species) whereas the within-PCA searches for the shared-axes in each group. 
-
-**Describe the within and among species comparisons of Pearson's correlations.**
+We used species mean values to calculate pairwise Pearson correlation coefficients for each pair of traits. We used individual trait values minus species mean trait values to measure intraspecific variability independent of species variation. We calculated pairwise Pearson correlation coefficients for each pair of traits using individual trait values minus the species mean. Finally, we compared the absolute values of Pearson's correlation coefficients for each pair of traits within and between species to explore the conservatism of trait coordination across scales.
 
 ## Results
 
-```{r corspind, fig.cap="Correlation of among- and within-species trait correlations. The X-axis represents the absolute correlations of the mean trait values of the species, while the Y-axis represents the absolute correlations of the individual trait value minus the mean trait value of the corresponding species, thus revealing the coordination of traits between and within species. Points color and label indicate trait pairs for every correlations, while the title indicate the correlation of correlations and associated p-value. The colour and label of the dots indicate the pairs of traits for each correlation, while the title indicates the correlation of all pairs of correlations and the associated p-value. The grey line represents the expected position of the points for a correlation of 1 for trait correlations among- and within-species. Leaf traits include leaf dry matter content (LDMC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin). Within-species trait values originate from this study including 100 individuals from 10 species, while among trait values originate from Daniela Kreber's PhD with 30 to 102 species per trait. All trait values have been measured using the same protocol in the Paracou research station."}
+We observe a strong and significant correlation of trait coordination within and among species (Pearson'$r=0645, p<10^{-6}$), with no marked differences between carbon-related and water-related traits.
+
+```{r corspind, fig.cap="Correlation of among- and within-species trait correlations. The X-axis represents the absolute correlations of the mean trait values of the species, while the Y-axis represents the absolute correlations of the individual trait value minus the mean trait value of the corresponding species, thus revealing the coordination of traits among and within species. Points colour indicates the type of traits implicated in the trait pairs, with either carbon-related traits (green), water-related traits (blue), or carbon- and water-related traits (red). Label indicate trait pairs. The title indicate the correlation of correlations and the associated p-value. The grey line represents the expected position of the points for a correlation of 1 for trait correlations among- and within-species. Leaf traits include specific leaf area (SLA), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin). Within-species trait values originate from this study including 100 individuals from 10 species, while among trait values originate from Vleminckx *et al,* (2021) and Krebber *et al,* (in prep) with 94 to 102 species per trait. All trait values have been measured using the same protocol in the Paracou research station."}
 corsp <- ftsp %>% 
   dplyr::select(-SpeciesLong) %>% 
   cor(use = "pairwise.complete.obs") %>% 
@@ -113,7 +119,7 @@ corsp <- ftsp %>%
   unique() %>% 
   filter(trait1 != trait2)
 corind <- ft %>% 
-  dplyr::select(SpeciesLong, Tree, LDMC, LSWC, Ptlp, gmin) %>% 
+  dplyr::select(SpeciesLong, Tree, LA, SLA, LT, CC, LSWC, Ptlp, gmin) %>% 
   reshape2::melt(c("SpeciesLong", "Tree"), variable.name = "trait") %>% 
   group_by(SpeciesLong, trait) %>% 
   mutate(value = value - mean(value)) %>% 
@@ -130,25 +136,36 @@ rm(corsp, corind)
 test <- cor.test(cors$cor_species, cors$cor_inds)
 cors %>% 
   mutate(trait2 = as.character(trait2)) %>% 
+  mutate(type1 = ifelse(trait1 %in% c("LSWC", "Ptlp", "gmin"), "water", "carbon")) %>% 
+  mutate(type2 = ifelse(trait2 %in% c("LSWC", "Ptlp", "gmin"), "water", "carbon")) %>% 
   rowwise() %>% 
+  mutate(type = paste(sort(unique(c(type1, type2))), collapse = " ")) %>% 
+  dplyr::select(-type1, type2) %>% 
+  mutate(type = recode(type, "water" = "water-related", "carbon" = "carbon-related", 
+                       "carbon water" = "carbon- and water-related")) %>% 
   mutate(pair = paste(sort(c(trait1, trait2)), collapse = "-")) %>% 
   group_by(pair) %>% 
   sample_n(1) %>% 
-  ggplot(aes(abs(cor_species), abs(cor_inds), col = pair, label = pair)) +
+  ggplot(aes(abs(cor_species), abs(cor_inds), col = type, label = pair)) +
   geom_abline(slope = 1, intercept = 0, col = "darkgrey") +
   geom_point() +
   ggrepel::geom_text_repel() +
-  scale_color_discrete(guide = "none") +
   xlab("Species absolute mean correlations (Pearson's r)") +
   ylab("Individual minus species absolute mean correlations (Pearson's r)") +
-  ggtitle(paste0("Pearson's r = ", round(test$estimate, 3)), paste0("p = ", round(test$p.value, 4))) 
+  ggtitle(paste0("Pearson's r = ", round(test$estimate, 3)), paste0("p = ", formatC(test$p.value, format = "e", digits = 2))) +
+  theme(legend.position = "bottom") + scale_x_sqrt() + scale_y_sqrt() +
+  scale_color_discrete("Pair type")
 ```
 
 ## Discussion
 
+Carbon- and water-related traits coordination into ecological strategies are consistent within and among species (see @Schmitt2020 for discussion about consistent strategies across levels). 
+
 ## SIs
 
-### PCAs
+<!-- ### PCAs -->
+
+We performed a Principal Component Analysis to investigate the multivariate trait covariation. Using the among PCA, a "classic" PCA, we aim to evaluate trait syndroms characterizing species strategies. For the within PCA, all the gravity centers are placed back at the origin and the individuals are being represented with a maximal variance. We eliminate the species effect to study the individual strategies. The among-PCA searches the axes at the center of gravity and emphasizes on the differences between groups (here, species) whereas the within-PCA searches for the shared-axes in each group. 
 
 ```{r corrplotTraits, fig.cap="Correlation of leaf traits across individuals in 10 Neotropical tree species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin)."}
 dplyr::select(ft, -Genus, -Species, -Tree, -SpeciesLong, -DBH, -TWI, -FvFm, -RWC) %>% 
@@ -265,25 +282,25 @@ ggplot(ind, aes(x, y, colour = SpeciesLong)) +
   ggtitle("Within-species PCA - TWI")  
 ```
 
-### Old interpretations
+<!-- ### Old interpretations -->
 
-**Sylvain:**
+<!-- **Sylvain:** -->
 
-* We seem to have the classical conservative-acquisitive spectrum or slow-fast spectrum among and within species with SLA opposing LT, CC, LT, and LDMC less visible among than within species
-* $g_{min}$ covary with the conservative-acquisitive or slow-fast spectrum with decreased conductance and a better conservation of water and gas for conservative slow species
-* The second axis seems to oppose $\pi_{TLP}$ to LA among and within species but less visible among than within species, congruent with @Marechaux2020a but opposed to the result of @Guillemot2022, and might be related to the stature-recruitment spectrum described in @Guillemot2022
-* *I'm uncertain for the moment on how to interpret LSWC.*
+<!-- * We seem to have the classical conservative-acquisitive spectrum or slow-fast spectrum among and within species with SLA opposing LT, CC, LT, and LDMC less visible among than within species -->
+<!-- * $g_{min}$ covary with the conservative-acquisitive or slow-fast spectrum with decreased conductance and a better conservation of water and gas for conservative slow species -->
+<!-- * The second axis seems to oppose $\pi_{TLP}$ to LA among and within species but less visible among than within species, congruent with @Marechaux2020a but opposed to the result of @Guillemot2022, and might be related to the stature-recruitment spectrum described in @Guillemot2022 -->
+<!-- * *I'm uncertain for the moment on how to interpret LSWC.* -->
 
 
-**Marion** 
-* Among-PCA: We recognize the classic LES opposing SLA with LDMC in the first axis while Ptlp drives the second axis with LSWC. 
+<!-- **Marion**  -->
+<!-- * Among-PCA: We recognize the classic LES opposing SLA with LDMC in the first axis while Ptlp drives the second axis with LSWC.  -->
 
-* gmin contributes to both axis. A low gmin can help maintain leaf hydration status (reduced leaks). Higher gmin were observed in fast-growing species which were associated with the investment in small and numerous stomata, which allowed higher carbon assimilation rates but also increased water leaks, with negative impacts on leaf survival under
-drought (Machado et al 2021)
+<!-- * gmin contributes to both axis. A low gmin can help maintain leaf hydration status (reduced leaks). Higher gmin were observed in fast-growing species which were associated with the investment in small and numerous stomata, which allowed higher carbon assimilation rates but also increased water leaks, with negative impacts on leaf survival under -->
+<!-- drought (Machado et al 2021) -->
 
-* Ptlp is linked with LA: smaller leaves have a more negative πtlp (higher drought tolerance). 
+<!-- * Ptlp is linked with LA: smaller leaves have a more negative πtlp (higher drought tolerance).  -->
 
-* LSWC: According to our analysis, high LSWC is linked to more negative Ptlp. The absolute amount of stored water would contribute to greater drought tolerance, more backed-up water? A lower gmin would be easier to maintain with less stored water.
+<!-- * LSWC: According to our analysis, high LSWC is linked to more negative Ptlp. The absolute amount of stored water would contribute to greater drought tolerance, more backed-up water? A lower gmin would be easier to maintain with less stored water. -->
 
-* we must be careful when interpreting trait co-variation using the among-pca as a general rule of behavior for all individuals within each species when we clearly see another use of the traits for each individual (within PCA). *ex: Protium stevensonii species tend to be more conservative-type species (higer LDMC in the among-PCA) but some individuals of the P. stevensonii explore a different strategy (within-PCA).
+<!-- * we must be careful when interpreting trait co-variation using the among-pca as a general rule of behavior for all individuals within each species when we clearly see another use of the traits for each individual (within PCA). *ex: Protium stevensonii species tend to be more conservative-type species (higer LDMC in the among-PCA) but some individuals of the P. stevensonii explore a different strategy (within-PCA). -->
 

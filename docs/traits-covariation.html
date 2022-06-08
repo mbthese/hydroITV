@@ -24,7 +24,7 @@
 <meta name="author" content="Sylvain Schmitt" />
 
 
-<meta name="date" content="2022-05-05" />
+<meta name="date" content="2022-06-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -192,10 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2" data-path="traits-covariation.html"><a href="traits-covariation.html#methods-2"><i class="fa fa-check"></i><b>5.2</b> Methods</a></li>
 <li class="chapter" data-level="5.3" data-path="traits-covariation.html"><a href="traits-covariation.html#results-2"><i class="fa fa-check"></i><b>5.3</b> Results</a></li>
 <li class="chapter" data-level="5.4" data-path="traits-covariation.html"><a href="traits-covariation.html#discussion-2"><i class="fa fa-check"></i><b>5.4</b> Discussion</a></li>
-<li class="chapter" data-level="5.5" data-path="traits-covariation.html"><a href="traits-covariation.html#sis-1"><i class="fa fa-check"></i><b>5.5</b> SIs</a><ul>
-<li class="chapter" data-level="5.5.1" data-path="traits-covariation.html"><a href="traits-covariation.html#pcas"><i class="fa fa-check"></i><b>5.5.1</b> PCAs</a></li>
-<li class="chapter" data-level="5.5.2" data-path="traits-covariation.html"><a href="traits-covariation.html#old-interpretations"><i class="fa fa-check"></i><b>5.5.2</b> Old interpretations</a></li>
-</ul></li>
+<li class="chapter" data-level="5.5" data-path="traits-covariation.html"><a href="traits-covariation.html#sis-1"><i class="fa fa-check"></i><b>5.5</b> SIs</a></li>
 </ul></li>
 <li class="part"><span><b>III Ecology</b></span></li>
 <li class="chapter" data-level="6" data-path="ontogeny-and-topography-effects.html"><a href="ontogeny-and-topography-effects.html"><i class="fa fa-check"></i><b>6</b> Ontogeny and topography effects</a><ul>
@@ -254,10 +251,10 @@ This book is in <b><a href="open.html#open">Open Review</a></b>. I want your fee
 Specifically, we investigated individual traits co-variation at several taxonomic scales: among species, and within species.</p>
 <div id="material-1" class="section level2">
 <h2><span class="header-section-number">5.1</span> Material</h2>
-<p><strong>Describe Daniela’s data here.</strong></p>
+<p>We used data from Vleminckx <em>et al,</em> (2021) and Krebber <em>et al,</em> (in prep) to obtain the average trait value per species in 94 to 102 species per trait species per trait in order to have a balanced sampling with respect to intra-species variation.</p>
 <table>
 <caption>
-<span id="tab:ftspN">Table 5.1: </span>Number of species mean value per trait in common.
+<span id="tab:ftspN">Table 5.1: </span>Number of species mean value per trai.
 </caption>
 <thead>
 <tr>
@@ -270,14 +267,6 @@ N
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-LDMC
-</td>
-<td style="text-align:right;">
-30
-</td>
-</tr>
 <tr>
 <td style="text-align:left;">
 LSWC
@@ -302,30 +291,63 @@ gmin
 102
 </td>
 </tr>
+<tr>
+<td style="text-align:left;">
+LA
+</td>
+<td style="text-align:right;">
+94
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SLA
+</td>
+<td style="text-align:right;">
+94
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LT
+</td>
+<td style="text-align:right;">
+94
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CC
+</td>
+<td style="text-align:right;">
+94
+</td>
+</tr>
 </tbody>
 </table>
 </div>
 <div id="methods-2" class="section level2">
 <h2><span class="header-section-number">5.2</span> Methods</h2>
-<p>We performed a Principal Component Analysis to investigate the multivariate trait covariation. Using the among PCA, a “classic” PCA, we aim to evaluate trait syndroms characterizing species strategies. For the within PCA, all the gravity centers are placed back at the origin and the individuals are being represented with a maximal variance. We eliminate the species effect to study the individual strategies. The among-PCA searches the axes at the center of gravity and emphasizes on the differences between groups (here, species) whereas the within-PCA searches for the shared-axes in each group.</p>
-<p><strong>Describe the within and among species comparisons of Pearson’s correlations.</strong></p>
+<p>We used species mean values to calculate pairwise Pearson correlation coefficients for each pair of traits. We used individual trait values minus species mean trait values to measure intraspecific variability independent of species variation. We calculated pairwise Pearson correlation coefficients for each pair of traits using individual trait values minus the species mean. Finally, we compared the absolute values of Pearson’s correlation coefficients for each pair of traits within and between species to explore the conservatism of trait coordination across scales.</p>
 </div>
 <div id="results-2" class="section level2">
 <h2><span class="header-section-number">5.3</span> Results</h2>
+<p>We observe a strong and significant correlation of trait coordination within and among species (Pearson’<span class="math inline">\(r=0645, p&lt;10^{-6}\)</span>), with no marked differences between carbon-related and water-related traits.</p>
 <div class="figure"><span id="fig:corspind"></span>
-<img src="hydroITV_files/figure-html/corspind-1.png" alt="Correlation of among- and within-species trait correlations. The X-axis represents the absolute correlations of the mean trait values of the species, while the Y-axis represents the absolute correlations of the individual trait value minus the mean trait value of the corresponding species, thus revealing the coordination of traits between and within species. Points color and label indicate trait pairs for every correlations, while the title indicate the correlation of correlations and associated p-value. The colour and label of the dots indicate the pairs of traits for each correlation, while the title indicates the correlation of all pairs of correlations and the associated p-value. The grey line represents the expected position of the points for a correlation of 1 for trait correlations among- and within-species. Leaf traits include leaf dry matter content (LDMC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin). Within-species trait values originate from this study including 100 individuals from 10 species, while among trait values originate from Daniela Kreber's PhD with 30 to 102 species per trait. All trait values have been measured using the same protocol in the Paracou research station." width="768" />
+<img src="hydroITV_files/figure-html/corspind-1.png" alt="Correlation of among- and within-species trait correlations. The X-axis represents the absolute correlations of the mean trait values of the species, while the Y-axis represents the absolute correlations of the individual trait value minus the mean trait value of the corresponding species, thus revealing the coordination of traits among and within species. Points colour indicates the type of traits implicated in the trait pairs, with either carbon-related traits (green), water-related traits (blue), or carbon- and water-related traits (red). Label indicate trait pairs. The title indicate the correlation of correlations and the associated p-value. The grey line represents the expected position of the points for a correlation of 1 for trait correlations among- and within-species. Leaf traits include specific leaf area (SLA), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin). Within-species trait values originate from this study including 100 individuals from 10 species, while among trait values originate from Vleminckx *et al,* (2021) and Krebber *et al,* (in prep) with 94 to 102 species per trait. All trait values have been measured using the same protocol in the Paracou research station." width="768" />
 <p class="caption">
-Figure 5.1: Correlation of among- and within-species trait correlations. The X-axis represents the absolute correlations of the mean trait values of the species, while the Y-axis represents the absolute correlations of the individual trait value minus the mean trait value of the corresponding species, thus revealing the coordination of traits between and within species. Points color and label indicate trait pairs for every correlations, while the title indicate the correlation of correlations and associated p-value. The colour and label of the dots indicate the pairs of traits for each correlation, while the title indicates the correlation of all pairs of correlations and the associated p-value. The grey line represents the expected position of the points for a correlation of 1 for trait correlations among- and within-species. Leaf traits include leaf dry matter content (LDMC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin). Within-species trait values originate from this study including 100 individuals from 10 species, while among trait values originate from Daniela Kreber’s PhD with 30 to 102 species per trait. All trait values have been measured using the same protocol in the Paracou research station.
+Figure 5.1: Correlation of among- and within-species trait correlations. The X-axis represents the absolute correlations of the mean trait values of the species, while the Y-axis represents the absolute correlations of the individual trait value minus the mean trait value of the corresponding species, thus revealing the coordination of traits among and within species. Points colour indicates the type of traits implicated in the trait pairs, with either carbon-related traits (green), water-related traits (blue), or carbon- and water-related traits (red). Label indicate trait pairs. The title indicate the correlation of correlations and the associated p-value. The grey line represents the expected position of the points for a correlation of 1 for trait correlations among- and within-species. Leaf traits include specific leaf area (SLA), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin). Within-species trait values originate from this study including 100 individuals from 10 species, while among trait values originate from Vleminckx <em>et al,</em> (2021) and Krebber <em>et al,</em> (in prep) with 94 to 102 species per trait. All trait values have been measured using the same protocol in the Paracou research station.
 </p>
 </div>
 </div>
 <div id="discussion-2" class="section level2">
 <h2><span class="header-section-number">5.4</span> Discussion</h2>
+<p>Carbon- and water-related traits coordination into ecological strategies are consistent within and among species (see <span class="citation">Schmitt <em>et al.</em> (<a href="#ref-Schmitt2020" role="doc-biblioref">2020</a>)</span> for discussion about consistent strategies across levels).</p>
 </div>
 <div id="sis-1" class="section level2">
 <h2><span class="header-section-number">5.5</span> SIs</h2>
-<div id="pcas" class="section level3">
-<h3><span class="header-section-number">5.5.1</span> PCAs</h3>
+<!-- ### PCAs -->
+<p>We performed a Principal Component Analysis to investigate the multivariate trait covariation. Using the among PCA, a “classic” PCA, we aim to evaluate trait syndroms characterizing species strategies. For the within PCA, all the gravity centers are placed back at the origin and the individuals are being represented with a maximal variance. We eliminate the species effect to study the individual strategies. The among-PCA searches the axes at the center of gravity and emphasizes on the differences between groups (here, species) whereas the within-PCA searches for the shared-axes in each group.</p>
 <div class="figure"><span id="fig:corrplotTraits"></span>
 <img src="hydroITV_files/figure-html/corrplotTraits-1.png" alt="Correlation of leaf traits across individuals in 10 Neotropical tree species. Leaf traits include specific leaf area (SLA), leaf dry matter content (LDMC), leaf fresh thickness (LT), leaf area (LA) leaf chlorophyll content (CC), leaf saturated water content (LSWC), leaf water potential at which leaf cells lose turgor (Ptlp), and leaf minimum conductance (gmin)." width="768" />
 <p class="caption">
@@ -343,27 +365,20 @@ Figure 5.3: Among (A) and Within-species (B) principal component analysis (A - P
 <p><img src="hydroITV_files/figure-html/indpcasp-1.png" width="768" /></p>
 <p><img src="hydroITV_files/figure-html/indwpcadbh-1.png" width="768" /></p>
 <p><img src="hydroITV_files/figure-html/indwpcatwi-1.png" width="768" /></p>
-</div>
-<div id="old-interpretations" class="section level3">
-<h3><span class="header-section-number">5.5.2</span> Old interpretations</h3>
-<p><strong>Sylvain:</strong></p>
-<ul>
-<li>We seem to have the classical conservative-acquisitive spectrum or slow-fast spectrum among and within species with SLA opposing LT, CC, LT, and LDMC less visible among than within species</li>
-<li><span class="math inline">\(g_{min}\)</span> covary with the conservative-acquisitive or slow-fast spectrum with decreased conductance and a better conservation of water and gas for conservative slow species</li>
-<li>The second axis seems to oppose <span class="math inline">\(\pi_{TLP}\)</span> to LA among and within species but less visible among than within species, congruent with <span class="citation">Maréchaux <em>et al.</em> (<a href="#ref-Marechaux2020a" role="doc-biblioref">2020</a>)</span> but opposed to the result of <span class="citation">Guillemot <em>et al.</em> (<a href="#ref-Guillemot2022" role="doc-biblioref">2022</a>)</span>, and might be related to the stature-recruitment spectrum described in <span class="citation">Guillemot <em>et al.</em> (<a href="#ref-Guillemot2022" role="doc-biblioref">2022</a>)</span></li>
-<li><em>I’m uncertain for the moment on how to interpret LSWC.</em></li>
-</ul>
-<p><strong>Marion</strong>
-* Among-PCA: We recognize the classic LES opposing SLA with LDMC in the first axis while Ptlp drives the second axis with LSWC.</p>
-<ul>
-<li><p>gmin contributes to both axis. A low gmin can help maintain leaf hydration status (reduced leaks). Higher gmin were observed in fast-growing species which were associated with the investment in small and numerous stomata, which allowed higher carbon assimilation rates but also increased water leaks, with negative impacts on leaf survival under
-drought (Machado et al 2021)</p></li>
-<li><p>Ptlp is linked with LA: smaller leaves have a more negative πtlp (higher drought tolerance).</p></li>
-<li><p>LSWC: According to our analysis, high LSWC is linked to more negative Ptlp. The absolute amount of stored water would contribute to greater drought tolerance, more backed-up water? A lower gmin would be easier to maintain with less stored water.</p></li>
-<li><p>we must be careful when interpreting trait co-variation using the among-pca as a general rule of behavior for all individuals within each species when we clearly see another use of the traits for each individual (within PCA). *ex: Protium stevensonii species tend to be more conservative-type species (higer LDMC in the among-PCA) but some individuals of the P. stevensonii explore a different strategy (within-PCA).</p></li>
-</ul>
+<!-- ### Old interpretations -->
+<!-- **Sylvain:** -->
+<!-- * We seem to have the classical conservative-acquisitive spectrum or slow-fast spectrum among and within species with SLA opposing LT, CC, LT, and LDMC less visible among than within species -->
+<!-- * $g_{min}$ covary with the conservative-acquisitive or slow-fast spectrum with decreased conductance and a better conservation of water and gas for conservative slow species -->
+<!-- * The second axis seems to oppose $\pi_{TLP}$ to LA among and within species but less visible among than within species, congruent with @Marechaux2020a but opposed to the result of @Guillemot2022, and might be related to the stature-recruitment spectrum described in @Guillemot2022 -->
+<!-- * *I'm uncertain for the moment on how to interpret LSWC.* -->
+<!-- **Marion**  -->
+<!-- * Among-PCA: We recognize the classic LES opposing SLA with LDMC in the first axis while Ptlp drives the second axis with LSWC.  -->
+<!-- * gmin contributes to both axis. A low gmin can help maintain leaf hydration status (reduced leaks). Higher gmin were observed in fast-growing species which were associated with the investment in small and numerous stomata, which allowed higher carbon assimilation rates but also increased water leaks, with negative impacts on leaf survival under -->
+<!-- drought (Machado et al 2021) -->
+<!-- * Ptlp is linked with LA: smaller leaves have a more negative πtlp (higher drought tolerance).  -->
+<!-- * LSWC: According to our analysis, high LSWC is linked to more negative Ptlp. The absolute amount of stored water would contribute to greater drought tolerance, more backed-up water? A lower gmin would be easier to maintain with less stored water. -->
+<!-- * we must be careful when interpreting trait co-variation using the among-pca as a general rule of behavior for all individuals within each species when we clearly see another use of the traits for each individual (within PCA). *ex: Protium stevensonii species tend to be more conservative-type species (higer LDMC in the among-PCA) but some individuals of the P. stevensonii explore a different strategy (within-PCA). -->
 
-</div>
 </div>
 </div>
 
@@ -371,11 +386,8 @@ drought (Machado et al 2021)</p></li>
 
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-Guillemot2022">
-<p>Guillemot, J., Martin‐StPaul, N.K., Bulascoschi, L., Poorter, L., Morin, X., Pinho, B.X., Maire, G., Bittencourt, P., Oliveira, R.S., Bongers, F., Brouwer, R., Pereira, L., Melo, G.A.G., Boonman, C.C.F., Brown, K.A., Cerabolini, B.E.L., Niinemets, Ü., Onoda, Y., Schneider, J.V., Sheremetiev, S. &amp; Brancalion, P.H.S. (2022). Small and slow is safe: on the drought tolerance of tropical tree species. <em>Global Change Biology</em>, 0–3.</p>
-</div>
-<div id="ref-Marechaux2020a">
-<p>Maréchaux, I., Saint-André, L., Bartlett, M.K., Sack, L. &amp; Chave, J. (2020). Leaf drought tolerance cannot be inferred from classic leaf traits in a tropical rainforest. <em>Journal of Ecology</em>, <strong>108</strong>, 1030–1045.</p>
+<div id="ref-Schmitt2020">
+<p>Schmitt, S., Hérault, B., Ducouret, É., Baranger, A., Tysklind, N., Heuertz, M., Marcon, É., Cazal, S.O. &amp; Derroire, G. (2020). Topography consistently drives intra- and inter-specific leaf trait variation within tree species complexes in a Neotropical forest. <em>Oikos</em>, <strong>129</strong>, 1521–1530. Retrieved from <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488%20https://onlinelibrary.wiley.com/doi/10.1111/oik.07488">https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.07488 https://onlinelibrary.wiley.com/doi/10.1111/oik.07488</a></p>
 </div>
 </div>
             </section>
