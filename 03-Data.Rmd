@@ -1,9 +1,6 @@
 ```{r setupinds, include=FALSE}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
-library(kableExtra)
-if(knitr:::is_html_output()) options(knitr.table.format = "html") 
-if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
 library(tidyverse)
 library(V.PhyloMaker)
 library(ggfortify)
@@ -63,11 +60,14 @@ load("save/phylogeny.Rdata")
 fortify(tree$scenario.3) %>% 
   mutate(species = gsub("_", " ", label)) %>% 
   left_join(paracou) %>% 
-  ggtree(aes(col = taxon), layout="circular") + 
-  geom_tiplab2(aes(alpha = !is.na(taxon), size = !is.na(taxon))) +
+  mutate(species = ifelse(is.na(taxon), NA, species)) %>% 
+  separate(species, c("genus", "species")) %>% 
+  mutate(species = ifelse(is.na(taxon), NA, paste0(substr(genus, 1, 1), ". ", species))) %>% 
+  ggtree(aes(col = species), layout="circular") + 
+  geom_tiplab2(aes(label = species), size = 3) +
   theme_tree(legend.position='right', legend.text = element_text(face = "italic")) +
-  scale_alpha_manual("taxon", values = c(0.2, 1)) +
-  scale_size_manual("taxon", values = c(1, 2))
+  scale_color_discrete(guide = "none") +
+  xlim(0, 175)
 ```
 
 ## METRADICA

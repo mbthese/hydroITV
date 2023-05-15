@@ -26,8 +26,9 @@ options(knitr.kable.NA = '')
 ```
 
 ```{r mdata}
-ft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
-                                "traits") %>% 
+# ft <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/19eULgGa02RS6hwn2ngeEu4akF2YdaQGHS5xSac2hIYI/edit?usp=sharing",
+#                                 "traits") %>% 
+ft <- readxl::read_excel("data/hydroITV.xlsx", "traits") %>% 
   filter(StudyLevel == "tree") %>% 
   mutate(SpeciesLong = paste(Genus, Species)) %>% 
   mutate(SpeciesNum = as.numeric(as.factor(SpeciesLong))) %>% 
@@ -98,7 +99,7 @@ lapply(fits, function(fit)
   mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
   left_join(species) %>% 
   mutate(SpeciesLong = ifelse(is.na(SpeciesLong), "All", SpeciesLong)) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]",
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "LMA" = "frac(1,SLA)",
                         "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
   ggplot(aes(x = SpeciesLong, 
              xend = SpeciesLong,
@@ -108,16 +109,17 @@ lapply(fits, function(fit)
                size = 1, show.legend = F, alpha = 0.5) +
   geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
   coord_flip() +
-  datatools::scale_x_reordered() +
+  tidytext::scale_x_reordered() +
   facet_wrap(~ trait, labeller = label_parsed, scales = "free_x", nrow = 2) +
   xaxis_title(F) +
   ylab(expression(TWI)) +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
   geom_hline(yintercept = 0, linetype = "dashed", col = "grey") +
-  scale_color_manual(values = c("black", scales::hue_pal()(10))) +
+  scale_color_manual(values = c("black",  ggpubfigs::friendly_pal(10, name = "bright_seven", type = "continuous"))) +
+  scale_fill_manual(values = c("black",  ggpubfigs::friendly_pal(10, name = "bright_seven", type = "continuous"))) +
   theme(legend.position = "bottom", legend.title = element_blank()) +
   guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
-  guides(fill = guide_legend(nrow = 4, byrow = TRUE)) 
+  guides(fill = guide_legend(nrow = 4, byrow = TRUE))
 ```
 
 **Sylvain:**
@@ -139,7 +141,8 @@ lapply(fits, function(fit)
   mutate(SpeciesNum = gsub("([[:punct:]])", "", SpeciesNum)) %>% 
   mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
   left_join(species) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "Gmin" = "g[min]", "LMA" = "frac(1,SLA)", 
+                        "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
   ggplot(aes(x = SpeciesLong, 
              xend = SpeciesLong,
              color = SpeciesLong, fill = SpeciesLong)) +
@@ -169,7 +172,7 @@ lapply(fits, function(fit)
   mutate(SpeciesNum = gsub("([[:punct:]])", "", SpeciesNum)) %>% 
   mutate(SpeciesNum = as.numeric(SpeciesNum)) %>% 
   left_join(species) %>% 
-  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]",
+  mutate(trait = recode(trait, "Ptlp" = "-pi[TLP]", "LMA" = "frac(1,SLA)",
                         "Gmin" = "g[min]", "invLA" = "frac(1,LA)", "invLSWC" = "frac(1,LSWC)")) %>% 
   ggplot(aes(x = SpeciesLong, 
              xend = SpeciesLong,
@@ -179,7 +182,7 @@ lapply(fits, function(fit)
                size = 1, show.legend = F, alpha = 0.5) +
   geom_segment(aes(y = l, yend = h), size = 2, alpha = 0.5) +
   coord_flip() +
-  datatools::scale_x_reordered() +
+  tidytext::scale_x_reordered() +
   facet_wrap(~ trait, labeller = label_parsed, scales = "free_x", nrow = 2) +
   xaxis_title(F) +
   ylab(expression(beta[DBH])) +
@@ -187,7 +190,9 @@ lapply(fits, function(fit)
   geom_hline(yintercept = 0, linetype = "dashed", col = "grey")   +
   theme(legend.position = "bottom", legend.title = element_blank()) +
   guides(color = guide_legend(nrow = 4, byrow = TRUE)) +
-  guides(fill = guide_legend(nrow = 4, byrow = TRUE)) 
+  guides(fill = guide_legend(nrow = 4, byrow = TRUE)) +
+  scale_color_manual(values = ggpubfigs::friendly_pal(10, name = "bright_seven", type = "continuous")) +
+  scale_fill_manual(values = ggpubfigs::friendly_pal(10, name = "bright_seven", type = "continuous"))
 ```
 
 ### Summary

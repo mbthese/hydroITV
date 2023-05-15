@@ -2,8 +2,6 @@
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
 library(knitr)
 library(kableExtra)
-if(knitr:::is_html_output()) options(knitr.table.format = "html") 
-if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
 library(tidyverse)
 library(ggfortify)
 theme_set(bayesplot::theme_default())
@@ -44,11 +42,11 @@ The covariance matrix was generated using the `rcorrmatrix` function from packag
 ```{r virtualdata}
 S <- 100
 I <- 100
-sigma_s <- 1
-sigma_i <- 1
+sigma_s <- abs(rnorm(1, 2))
+sigma_i <- abs(rnorm(S, mean = 2))
 ft <- data.frame(species = 1:S, trait = rnorm(S, 10, sigma_s)) %>% 
   rowwise() %>% 
-  mutate(trait = list(data.frame(individual = 1:I, trait = rnorm(I, trait, sigma_i)))) %>% 
+  mutate(trait = list(data.frame(individual = 1:I, trait = rnorm(I, trait, sigma_i[species])))) %>% 
   unnest(trait) %>% 
   mutate_at(c("species", "individual"), as.factor)
 ```
@@ -231,8 +229,8 @@ cv <- function(traits){
 options(dplyr.summarise.inform = FALSE)
 R <- 100
 cv_sampling <- lapply(as.list(1:R), function(r)
-  list("unbalanced species" = sampling(ft, 25, 4),
-       "unbalanced individuals" = sampling(ft, 4, 25),
+  list("favouring species" = sampling(ft, 25, 4),
+       "favouring individuals" = sampling(ft, 4, 25),
        "balanced"  = sampling(ft, 10, 10)) %>%
     bind_rows(.id = "sampling") %>%
     group_by(sampling, species) %>%
@@ -273,8 +271,8 @@ varpart <- function(data){
 ```{r varpart, fig.cap="Effect of the sampling strategy on variance partitioning. Variance partitionings were obtained 100 times using linear mixed models for every sampling strategy: 4 individuals in 25 species (unbalanced species), 25 individuals in 4 species (unbalanced individuals), and 10 individuals in 10 species (balanced). Dashed line represents the expected variance partitioning based on the full community of 100 individuals in 100 species."}
 R <- 100
 vp <- lapply(as.list(1:R), function(r)
-  list("unbalanced species" = sampling(ft, 25, 4),
-       "unbalanced individuals" = sampling(ft, 4, 25),
+  list("favouring species" = sampling(ft, 25, 4),
+       "favouring individuals" = sampling(ft, 4, 25),
        "balanced"  = sampling(ft, 10, 10)) %>%
     bind_rows(.id = "sampling") %>%
     group_by(sampling) %>%
@@ -296,7 +294,8 @@ ggplot(filter(vp, level == "tree"),
        aes(x = sampling, y = variance)) +
   geom_bar(aes(fill = level), stat = "identity", position = "stack", data = vp_med) +
   geom_boxplot(alpha = 0.6, width = 0.3) +
-  geom_hline(aes(yintercept = 0.5), linetype = "dashed") +
+  # geom_hline(aes(yintercept = 0.5), linetype = "dashed") +
+  geom_hline(aes(yintercept = median(sigma_i)/(median(sigma_i)+sigma_s)), linetype = "dashed") +
   scale_fill_manual(expression(sigma^2),
                     values = unname(varcols[c("species", "tree")])) +
   ylab("Percentage of variance") + xlab("Sampling strategy") +
@@ -305,7 +304,8 @@ ggplot(filter(vp, level == "tree"),
 ```
 
 ```{r, 	fig.height=4,	fig.width=8}
-cowplot::plot_grid(
+# theme_set(bayesplot::theme_default(base_family = "Helvetica"))
+g <- cowplot::plot_grid(
   cv_sampling %>% 
     mutate(sampling = gsub(" ", "\n", sampling)) %>% 
     ggplot(aes(sampling, cv)) +
@@ -319,16 +319,20 @@ cowplot::plot_grid(
     mutate(sampling = gsub(" ", "\n", sampling)) %>% 
     ggplot(aes(x = sampling, y = variance)) +
     geom_bar(aes(fill = level), stat = "identity", position = "stack", data = mutate(vp_med, sampling = gsub(" ", "\n", sampling))) +
-    geom_boxplot(alpha = 0.6, width = 0.3) +
+    geom_boxplot(alpha = 0.6, width = 0.3, fill = "white") +
     geom_hline(aes(yintercept = 0.5), linetype = "dashed") +
     scale_fill_manual(guide = "none",
-                      values = unname(varcols[c("species", "tree")])) +
+                      # values = unname(varcols[c("species", "tree")])) +
+                      values = c("#d81b60", "#00ff00")) +
     ylab("Percentage of variance") + xlab("Sampling strategy") +
     geom_text(aes(label = label), y = 1.08, data = mutate(vp_label, sampling = gsub(" ", "\n", sampling))) +
     ylim(NA, 1.1),
   nrow = 1,
   labels = c("A.", "B.") 
-)
+) 
+g
+# ggsave("~/Téléchargements/Fig1.eps", g, dpi = 600, width = 8, height = 5, device = cairo_ps)
+ggsave("~/Téléchargements/Fig1.png", g, dpi = 600, width = 8, height = 5)
 ```
 
 

@@ -157,6 +157,44 @@ cors %>%
   scale_color_discrete("Pair type")
 ```
 
+
+
+
+```{r cvspind, eval=F}
+cv <- function(traits){
+  if(any(is.na(traits)))
+    traits=traits[!is.na(traits)]
+  N=length(traits)
+  y_bar=mean(traits)
+  s2_hat=var(traits)
+  cv_2=s2_hat/y_bar^2
+  cv_1=sqrt(cv_2)
+  gamma_1=sum(((traits-y_bar)/s2_hat^0.5)^3)/N
+  gamma_2=sum(((traits-y_bar)/s2_hat^0.5)^4)/N
+  bias=cv_2^(3/2)/N*(3*cv_2^0.5-2*gamma_1)
+  bias2=cv_1^3/N-cv_1/4/N-cv_1^2*gamma_1/2/N-cv_1*gamma_2/8/N
+  cv1=sd(traits)/mean(traits)
+  cv4=cv_1-bias2
+  re=cv4
+  return(re)
+} 
+ft %>% 
+  dplyr::select(SpeciesLong, LA, SLA, LT, CC, LSWC, Ptlp, gmin) %>% 
+  reshape2::melt("SpeciesLong") %>% 
+  group_by(SpeciesLong, variable) %>% 
+  summarise(cv_ind = cv(log(abs(value)))) %>% 
+  group_by(variable) %>% 
+  summarise(cv_ind = median(cv_ind)) %>% 
+  left_join(ftsp %>% 
+              reshape2::melt("SpeciesLong") %>% 
+              group_by(variable) %>% 
+              summarise(cv_sp = cv(log(abs(value))))) %>% 
+  ggplot(aes(cv_ind*100, cv_sp*100, label = variable)) +
+  geom_abline(slope = 1, intercept = 0, col = "darkgrey") +
+  geom_point() +
+  ggrepel::geom_text_repel()
+```
+
 ## Discussion
 
 Carbon- and water-related traits coordination into ecological strategies are consistent within and among species (see @Schmitt2020 for discussion about consistent strategies across levels). 
