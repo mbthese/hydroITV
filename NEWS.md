@@ -1,3 +1,15 @@
+hydroITV 1.0.0.9030
+* covaraitions all traits
+
+hydroITV 1.0.0.9029
+* updated gmin
+
+hydroITV 1.0.0.9028
+* quick comparison with Daniela's data
+
+hydroITV 1.0.0.9027
+* fixed V. surinamensis & virtual exp bias & sd
+
 hydroITV 1.0.0.9026
 * 7/2/22 meeting
 
